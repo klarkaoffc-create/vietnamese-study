@@ -1,0 +1,52 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run validate-content
+      - run: npm run typecheck
+      - run: npm test
+      # Project sites live under https://<user>.github.io/<repo>/ so the
+      # bundle must be built with that base path. User/organisation sites
+      # (repo named <user>.github.io) use "/".
+      - name: Compute base path
+        id: base
+        run: |
+          REPO="${GITHUB_REPOSITORY#*/}"
+          if [[ "$REPO" == *.github.io ]]; then echo "path=/" >> "$GITHUB_OUTPUT"; else echo "path=/$REPO/" >> "$GITHUB_OUTPUT"; fi
+      - run: npm run build
+        env:
+          BASE_PATH: ${{ steps.base.outputs.path }}
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

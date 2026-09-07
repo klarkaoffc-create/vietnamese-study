@@ -1,0 +1,33 @@
+{
+  "id": "exam-01",
+  "block": 1,
+  "title": "Egzamin 1 (Bài 1–5)",
+  "questionCount": 25,
+  "minProductionShare": 0.5,
+  "exercises": [
+    {
+      "id": "e-exam-01-intro-typed",
+      "type": "typed",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Przedstaw się pełnym zdaniem: „Mam na imię Lan.” (mình)",
+      "answerLang": "vi",
+      "answers": ["Mình tên là Lan.", "Mình tên là Lan"],
+      "grammar": ["g-bai-02-la"],
+      "level": 2
+    },
+    {
+      "id": "e-exam-01-order-age",
+      "type": "ordering",
+      "skill": "word-order",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Ułóż pytanie: „Ile pani (cô) ma lat?”",
+      "tokens": ["Cô", "bao nhiêu", "tuổi?"],
+      "translation": "Ile pani ma lat?",
+      "grammar": ["g-bai-03-age"],
+      "level": 2
+    }
+  ]
+}

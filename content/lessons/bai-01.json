@@ -1,0 +1,240 @@
+{
+  "id": "bai-01",
+  "number": 1,
+  "title": "Głoski, tony, zaimki i powitania",
+  "titleVi": "Bài 1",
+  "summary": "Alfabet i wymowa (północ / południe), sześć tonów, podstawowe zwroty grzecznościowe oraz zaimki osobowe zależne od wieku.",
+  "icon": "🔤",
+  "sourceFile": "source-lessons/bái 1.docx",
+  "objectives": [
+    "przeczytać wietnamskie litery i dwuznaki, znając różnice między wymową północną i południową",
+    "rozpoznać sześć tonów po znaku diakrytycznym",
+    "przywitać się, podziękować i przeprosić",
+    "wybrać właściwy zaimek do rozmówcy w zależności od jego wieku i płci"
+  ],
+  "vocabulary": [
+    { "id": "v-bai-01-xin-chao", "vi": "Xin chào!", "pl": "Dzień dobry! / Cześć!", "category": "phrase", "tags": ["greeting"], "examples": [{ "vi": "Xin chào! Chào chị!", "pl": "Dzień dobry! Dzień dobry pani!" }] },
+    { "id": "v-bai-01-chao", "vi": "chào", "pl": "witać (się); cześć", "category": "verb", "tags": ["greeting"], "examples": [{ "vi": "Chào anh!", "pl": "Cześć! (do trochę starszego mężczyzny)" }, { "vi": "Chào Anna!", "pl": "Cześć, Anno!" }] },
+    { "id": "v-bai-01-cam-on", "vi": "Cảm ơn", "pl": "Dziękuję", "category": "phrase", "tags": ["greeting"] },
+    { "id": "v-bai-01-xin-loi", "vi": "Xin lỗi", "pl": "Przepraszam", "category": "phrase", "tags": ["greeting"] },
+    { "id": "v-bai-01-minh", "vi": "mình", "pl": "ja (neutralne, mniej formalne)", "category": "pronoun", "tags": ["pronoun"], "note": "Używane między rówieśnikami i znajomymi." },
+    { "id": "v-bai-01-toi", "vi": "tôi", "pl": "ja (neutralne, formalne)", "category": "pronoun", "tags": ["pronoun"] },
+    { "id": "v-bai-01-ong", "vi": "ông", "pl": "pan (do mężczyzny 60+)", "category": "pronoun", "tags": ["pronoun"] },
+    { "id": "v-bai-01-ba", "vi": "bà", "pl": "pani (do kobiety 60+)", "category": "pronoun", "tags": ["pronoun"] },
+    { "id": "v-bai-01-bac", "vi": "bác", "pl": "pan / pani (do obu płci w wieku 40–60)", "category": "pronoun", "tags": ["pronoun"] },
+    { "id": "v-bai-01-chu", "vi": "chú", "pl": "pan (do mężczyzny 30–40 lat)", "category": "pronoun", "tags": ["pronoun"] },
+    { "id": "v-bai-01-co", "vi": "cô", "pl": "pani (do kobiety 30–40 lat)", "category": "pronoun", "tags": ["pronoun"] },
+    { "id": "v-bai-01-anh", "vi": "anh", "pl": "ty (do mężczyzny trochę starszego od nas)", "category": "pronoun", "tags": ["pronoun"] },
+    { "id": "v-bai-01-chi", "vi": "chị", "pl": "ty (do kobiety trochę starszej od nas)", "category": "pronoun", "tags": ["pronoun"] },
+    { "id": "v-bai-01-ban", "vi": "bạn", "pl": "ty (do osób w naszym wieku)", "category": "pronoun", "tags": ["pronoun"] },
+    { "id": "v-bai-01-em", "vi": "em", "pl": "ty (do osób młodszych)", "category": "pronoun", "tags": ["pronoun"] }
+  ],
+  "grammar": [
+    {
+      "id": "g-bai-01-pronouns",
+      "title": "Zaimki osobowe zależne od wieku",
+      "pattern": "Rozmówca młodszy → em · rówieśnik → bạn · trochę starszy → anh / chị · 30–40 → chú / cô · 40–60 → bác · 60+ → ông / bà",
+      "explanation": "W wietnamskim nie ma jednego słowa „ty”. Zaimek zależy od wieku i płci rozmówcy względem nas. Ten sam zaimek działa też jako „on/ona” po dodaniu „ấy” (anh ấy, chị ấy – zob. Bài 3).\n\n„Ja” to mình (mniej formalnie, między rówieśnikami) albo tôi (formalnie). W dialogach z lekcji osoba młodsza mówi o sobie „em”, a starsza „anh/chị” – zaimek „ja” dopasowuje się do relacji.",
+      "examples": [
+        { "vi": "Chào em!", "pl": "Cześć! (do osoby młodszej)" },
+        { "vi": "Chào bác!", "pl": "Dzień dobry! (do osoby w wieku 40–60)" },
+        { "vi": "Chào ông!", "pl": "Dzień dobry panu! (60+)" }
+      ],
+      "keywords": ["zaimki", "anh", "chị", "em", "bạn", "tôi", "mình"],
+      "practice": ["e-bai-01-pronoun-gen", "e-bai-01-pronoun-match", "e-bai-01-pronoun-mcq"]
+    },
+    {
+      "id": "g-bai-01-greetings",
+      "title": "Przywitania i pożegnania",
+      "pattern": "Xin chào! · Chào + zaimek · Chào + imię",
+      "explanation": "„Xin chào” jest uniwersalne i uprzejme. Na co dzień mówi się „Chào” + zaimek dopasowany do rozmówcy (Chào anh!, Chào cô!) albo „Chào” + imię. Tej samej formy używa się przy pożegnaniu.",
+      "examples": [
+        { "vi": "Xin chào!", "pl": "Dzień dobry!" },
+        { "vi": "Chào chị!", "pl": "Dzień dobry! (do trochę starszej kobiety)" },
+        { "vi": "Chào Anna!", "pl": "Cześć, Anno!" }
+      ],
+      "keywords": ["chào", "powitanie", "pożegnanie"],
+      "practice": ["e-bai-01-greet-typed", "e-bai-01-diacritics"]
+    }
+  ],
+  "pronunciation": [
+    {
+      "id": "p-bai-01-north-south",
+      "title": "Północ a południe",
+      "body": "Materiał nauczycielki podaje wymowę północną (Hanoi) i południową (Sajgon). Najważniejsze różnice: „d” = północ „z” / południe „j”; „gi” = północ „zi” / południe „ji”; „r” = północ „z” / południe „r”; „s” = północ „s” / południe „sz”; „tr” = północ „ć” / południe „tr”. Pozostałe głoski brzmią tak samo w obu odmianach."
+    },
+    {
+      "id": "p-bai-01-tones",
+      "title": "Sześć tonów",
+      "body": "Ton zapisuje się znakiem nad lub pod samogłoską: a (ngang – równy, bez znaku), à (huyền – opadający), ả (hỏi – „pytający”), ã (ngã – łamany), á (sắc – wznoszący), ạ (nặng – ciężki, krótki). Zmiana tonu zmienia znaczenie słowa, dlatego znak tonu jest częścią pisowni, a nie ozdobą."
+    }
+  ],
+  "exercises": [
+    {
+      "id": "e-bai-01-pronoun-gen",
+      "type": "generator",
+      "generator": "pronoun",
+      "skill": "pronoun",
+      "source": "generated",
+      "status": "unverified",
+      "instruction": "Wybierz zaimek, którym zwrócisz się do opisanej osoby.",
+      "grammar": ["g-bai-01-pronouns"],
+      "count": 6,
+      "level": 1
+    },
+    {
+      "id": "e-bai-01-pronoun-match",
+      "type": "matching",
+      "skill": "pronoun",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Dopasuj zaimek do rozmówcy.",
+      "grammar": ["g-bai-01-pronouns"],
+      "pairs": [
+        { "left": "ông", "right": "mężczyzna 60+" },
+        { "left": "cô", "right": "kobieta 30–40 lat" },
+        { "left": "bạn", "right": "osoba w naszym wieku" },
+        { "left": "em", "right": "osoba młodsza" },
+        { "left": "chị", "right": "kobieta trochę starsza od nas" },
+        { "left": "bác", "right": "osoba w wieku 40–60" }
+      ],
+      "level": 1
+    },
+    {
+      "id": "e-bai-01-pronoun-mcq",
+      "type": "mcq",
+      "skill": "pronoun",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Rozmawiasz z mężczyzną o kilka lat starszym od siebie. Jak się do niego zwrócisz?",
+      "options": ["anh", "em", "ông", "chị"],
+      "answer": 0,
+      "explanation": "„anh” – do mężczyzny trochę starszego od nas; „chị” to odpowiednik dla kobiety.",
+      "grammar": ["g-bai-01-pronouns"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-01-greet-typed",
+      "type": "typed",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Napisz po wietnamsku: „Dziękuję”.",
+      "answerLang": "vi",
+      "answers": ["Cảm ơn"],
+      "vocab": ["v-bai-01-cam-on"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-01-sorry-typed",
+      "type": "typed",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Napisz po wietnamsku: „Przepraszam”.",
+      "answerLang": "vi",
+      "answers": ["Xin lỗi"],
+      "vocab": ["v-bai-01-xin-loi"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-01-diacritics",
+      "type": "diacritics",
+      "skill": "tone",
+      "source": "generated",
+      "status": "unverified",
+      "instruction": "Dopisz brakujące znaki i tony.",
+      "stripped": "Xin chao! Cam on. Xin loi.",
+      "answers": ["Xin chào! Cảm ơn. Xin lỗi."],
+      "translation": "Dzień dobry! Dziękuję. Przepraszam.",
+      "vocab": ["v-bai-01-xin-chao", "v-bai-01-cam-on", "v-bai-01-xin-loi"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-01-tone-identify",
+      "type": "generator",
+      "generator": "tone-identify",
+      "skill": "tone",
+      "source": "generated",
+      "status": "unverified",
+      "instruction": "Który ton ma zaznaczona sylaba?",
+      "count": 6,
+      "level": 1
+    },
+    {
+      "id": "e-bai-01-greet-older-woman",
+      "type": "typed",
+      "skill": "pronoun",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Przywitaj się z kobietą trochę starszą od ciebie (Chào + zaimek).",
+      "answerLang": "vi",
+      "answers": ["Chào chị!", "Chào chị"],
+      "grammar": ["g-bai-01-greetings", "g-bai-01-pronouns"],
+      "level": 2
+    }
+  ],
+  "checkpoint": ["e-bai-01-pronoun-gen", "e-bai-01-diacritics", "e-bai-01-greet-typed", "e-bai-01-greet-older-woman", "e-bai-01-tone-identify"],
+  "reviewLinks": [],
+  "original": [
+    { "kind": "heading", "text": "Głoski" },
+    { "kind": "table", "rows": [
+      ["Wietnamskie głoski", "Wymowa w północnym", "Wymowa w południowym"],
+      ["a", "polskie „a”", "polskie „a”"],
+      ["â", "æ", "æ"],
+      ["ă", "„a” przedłużające głoskę następującą", "„a” przedłużające głoskę następującą"],
+      ["b", "polskie „b”", "polskie „b”"],
+      ["c", "polskie „k”", "polskie „k”"],
+      ["ch", "polskie „ć”", "polskie „ć”"],
+      ["ch", "„k” tylko jeśli jest na końcu wyrazu", "„k” tylko jeśli jest na końcu wyrazu"],
+      ["d", "polskie „z”", "polskie „j”"],
+      ["đ", "polskie „d”", "polskie „d”"],
+      ["e", "polskie „e” (szeroko otwarte usta)", "polskie „e” (szeroko otwarte usta)"],
+      ["ê", "połączenie „e” i „y” (wąsko otwarte usta)", "połączenie „e” i „y” (wąsko otwarte usta)"],
+      ["g", "polskie „g”", "polskie „g”"],
+      ["gh", "„gh” z mocno podkreślonym „h”", "„gh” z mocno podkreślonym „h”"],
+      ["gi", "„zi” czytane osobno", "polskie „ji”"],
+      ["h", "polskie „h”", "polskie „h”"],
+      ["i", "polskie „i”", "polskie „i”"],
+      ["k", "polskie „k”", "polskie „k”"],
+      ["kh", "polskie „h”", "polskie „h”"],
+      ["l", "polskie „l”", "polskie „l”"],
+      ["m", "polskie „m”", "polskie „m”"],
+      ["n", "polskie „n”", "polskie „n”"],
+      ["ng", "„ng” z angielskiej końcówki „-ing”", "„ng” z angielskiej końcówki „-ing”"],
+      ["ngh", "„ng” + „i”", "„ng” + „i”"],
+      ["nh", "polskie „ń”", "polskie „ń”"],
+      ["o", "bardzo otwarte „o”, przypominające polskie „a”", "bardzo otwarte „o”, przypominające polskie „a”"],
+      ["ô", "„o” wymawiane przez „dziubek”", "„o” wymawiane przez „dziubek”"],
+      ["ơ", "połączenie polskiego „o” i „y”", "połączenie polskiego „o” i „y”"],
+      ["ph", "polskie „f”", "polskie „f”"],
+      ["qu", "polskie „kł”", "polskie „kł”"],
+      ["r", "polskie „z”", "polskie „r”"],
+      ["s", "polskie „s”", "polskie „sz”"],
+      ["t", "polskie „t”", "polskie „t”"],
+      ["th", "„t” z przydechem", "„t” z przydechem"],
+      ["tr", "polskie „ć”", "polskie „tr”"],
+      ["u", "polskie „u”", "polskie „u”"],
+      ["ư", "polskie „y”", "polskie „y”"],
+      ["v", "polskie „w”", "polskie „w”"],
+      ["x", "polskie „s”", "polskie „s”"],
+      ["y", "długie „i”", "długie „i”"]
+    ] },
+    { "kind": "heading", "text": "Tony" },
+    { "kind": "paragraph", "text": "(W oryginale tabela z vietnamesenotes.com: No Tone – dấu ngang; ` – dấu huyền; ̉ – dấu hỏi; ~ – dấu ngã; ´ – dấu sắc; . – dấu nặng.) Przykłady: a, à, ả, ã, á, ạ" },
+    { "kind": "heading", "text": "Przydatne zwroty" },
+    { "kind": "paragraph", "text": "Dzień dobry! - Xin chào!\nDziękuję - Cảm ơn\nPrzepraszam - Xin lỗi" },
+    { "kind": "heading", "text": "Zaimki" },
+    { "kind": "paragraph", "text": "1 os. l.poj. (Ja)\nMình - neutralne, mniej formalne\nTôi - neutralne, formalne\n2 os. l.poj. (Ty)" },
+    { "kind": "table", "rows": [
+      ["Ông (do mężczyzny 60+)", "Bà (do kobiety 60+)"],
+      ["Bác (do obu w wieku 40-60)", ""],
+      ["Chú (do mężczyzny, 30-40 lat)", "Cô (do kobiety, 30-40 lat)"],
+      ["Anh (do mężczyzny trochę starszego od nas)", "Chị (do kobiety trochę starszej od nas)"],
+      ["Bạn (do osób w naszym wieku)", ""],
+      ["Em (do osób młodszych)", ""]
+    ] },
+    { "kind": "heading", "text": "Przywitania i pożegnania" },
+    { "kind": "paragraph", "text": "Xin chào!\nChào + 2 os.\nChào + imię" }
+  ]
+}

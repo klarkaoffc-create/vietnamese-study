@@ -1,0 +1,33 @@
+{
+  "id": "exam-02",
+  "block": 2,
+  "title": "Egzamin 2 (Bài 6–10)",
+  "questionCount": 25,
+  "minProductionShare": 0.5,
+  "exercises": [
+    {
+      "id": "e-exam-02-typed-family",
+      "type": "typed",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Napisz: „Moja rodzina ma cztery osoby.” (gia đình của mình)",
+      "answerLang": "vi",
+      "answers": ["Gia đình của mình có bốn người.", "Gia đình của mình có bốn người", "Gia đình của mình có 4 người.", "Gia đình mình có bốn người."],
+      "grammar": ["g-bai-06-family-talk", "g-bai-08-classifiers"],
+      "level": 2
+    },
+    {
+      "id": "e-exam-02-error-lam",
+      "type": "error-correction",
+      "skill": "word-order",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Popraw miejsce słowa „lắm”.",
+      "wrong": "Chị ấy lắm đẹp.",
+      "answers": ["Chị ấy đẹp lắm.", "Chị ấy đẹp lắm"],
+      "grammar": ["g-bai-10-rat-qua-lam"],
+      "level": 2
+    }
+  ]
+}

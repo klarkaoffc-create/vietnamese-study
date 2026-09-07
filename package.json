@@ -1,0 +1,35 @@
+{
+  "name": "vietnamese-study",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Aplikacja do nauki wietnamskiego oparta na lekcjach Bài 1–11",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run validate-content && tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "validate-content": "tsx scripts/validate-content.ts",
+    "import-lesson": "tsx scripts/import-lesson.ts",
+    "check": "npm run validate-content && npm run typecheck && npm run test && vite build"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "fflate": "^0.8.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.8"
+  }
+}

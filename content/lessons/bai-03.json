@@ -1,0 +1,320 @@
+{
+  "id": "bai-03",
+  "number": 3,
+  "title": "Narodowość, liczby, wiek i numer telefonu",
+  "titleVi": "Bài 3",
+  "summary": "Pytanie o narodowość i nazwy krajów, liczby 0–1000, pytanie o wiek („bao nhiêu tuổi?”), numer telefonu i partykuła „của”.",
+  "icon": "🔢",
+  "sourceFile": "source-lessons/bái 3.docx",
+  "objectives": [
+    "zapytać o narodowość i powiedzieć, skąd jestem",
+    "liczyć od 0 do 1000 i czytać liczby na głos",
+    "zapytać o wiek i podać swój wiek",
+    "zapytać o numer telefonu i przeczytać numer cyfra po cyfrze",
+    "zapytać „a ty?” za pomocą „còn”"
+  ],
+  "vocabulary": [
+    { "id": "v-bai-03-nguoi", "vi": "người", "pl": "człowiek, ludzie; (przed nazwą kraju) osoba narodowości…", "category": "noun", "examples": [{ "vi": "Mình là người Việt Nam.", "pl": "Jestem Wietnamczykiem / Wietnamką." }] },
+    { "id": "v-bai-03-nuoc", "vi": "nước", "pl": "kraj", "category": "noun", "note": "W Bài 8 „nước” oznacza też „wodę”." },
+    { "id": "v-bai-03-nao", "vi": "nào", "pl": "jaki? który?", "category": "question-word", "examples": [{ "vi": "Bạn là người nước nào?", "pl": "Jakiej jesteś narodowości?" }] },
+    { "id": "v-bai-03-ba-lan", "vi": "Ba Lan", "pl": "Polska", "category": "proper-noun", "tags": ["country"] },
+    { "id": "v-bai-03-viet-nam", "vi": "Việt Nam", "pl": "Wietnam", "category": "proper-noun", "tags": ["country"] },
+    { "id": "v-bai-03-phap", "vi": "Pháp", "pl": "Francja", "category": "proper-noun", "tags": ["country"] },
+    { "id": "v-bai-03-my", "vi": "Mỹ", "pl": "Ameryka (USA)", "category": "proper-noun", "tags": ["country"] },
+    { "id": "v-bai-03-anh-kraj", "vi": "Anh", "pl": "Wielka Brytania / Anglia", "category": "proper-noun", "tags": ["country"], "note": "Uwaga: „anh” małą literą to zaimek (Bài 1)." },
+    { "id": "v-bai-03-trung-quoc", "vi": "Trung Quốc", "pl": "Chiny", "category": "proper-noun", "tags": ["country"] },
+    { "id": "v-bai-03-nhat-ban", "vi": "Nhật (Bản)", "pl": "Japonia", "category": "proper-noun", "tags": ["country"] },
+    { "id": "v-bai-03-khong-0", "vi": "không", "pl": "zero (0)", "category": "number", "tags": ["number"] },
+    { "id": "v-bai-03-mot", "vi": "một", "pl": "jeden (1)", "category": "number", "tags": ["number"] },
+    { "id": "v-bai-03-hai", "vi": "hai", "pl": "dwa (2)", "category": "number", "tags": ["number"] },
+    { "id": "v-bai-03-ba", "vi": "ba", "pl": "trzy (3)", "category": "number", "tags": ["number"] },
+    { "id": "v-bai-03-bon", "vi": "bốn", "pl": "cztery (4)", "category": "number", "tags": ["number"] },
+    { "id": "v-bai-03-nam", "vi": "năm", "pl": "pięć (5); „lăm” gdy jest cyfrą jedności w liczbach 10+", "category": "number", "tags": ["number"], "note": "15 = mười lăm, 25 = hai mươi lăm." },
+    { "id": "v-bai-03-sau", "vi": "sáu", "pl": "sześć (6)", "category": "number", "tags": ["number"] },
+    { "id": "v-bai-03-bay", "vi": "bảy", "pl": "siedem (7)", "category": "number", "tags": ["number"] },
+    { "id": "v-bai-03-tam", "vi": "tám", "pl": "osiem (8)", "category": "number", "tags": ["number"] },
+    { "id": "v-bai-03-chin", "vi": "chín", "pl": "dziewięć (9)", "category": "number", "tags": ["number"] },
+    { "id": "v-bai-03-muoi", "vi": "mười", "pl": "dziesięć (10); 11–19 = mười + cyfra", "category": "number", "tags": ["number"] },
+    { "id": "v-bai-03-muoi-dziesiatki", "vi": "mươi", "pl": "-dziesiąt (20–90 = cyfra + mươi)", "category": "number", "tags": ["number"], "note": "hai mươi = 20, ba mươi = 30." },
+    { "id": "v-bai-03-tram", "vi": "trăm", "pl": "sto (một trăm = 100)", "category": "number", "tags": ["number"] },
+    { "id": "v-bai-03-nghin", "vi": "nghìn", "pl": "tysiąc (một nghìn = 1000)", "category": "number", "tags": ["number"] },
+    { "id": "v-bai-03-bao-nhieu", "vi": "bao nhiêu", "pl": "ile?", "category": "question-word", "examples": [{ "vi": "Cô bao nhiêu tuổi?", "pl": "Ile pani ma lat?" }] },
+    { "id": "v-bai-03-tuoi", "vi": "tuổi", "pl": "lat (tylko przy mówieniu o czyimś wieku)", "category": "noun", "examples": [{ "vi": "Mình 36 tuổi.", "pl": "Mam 36 lat." }] },
+    { "id": "v-bai-03-so", "vi": "số", "pl": "numer", "category": "noun" },
+    { "id": "v-bai-03-dien-thoai", "vi": "điện thoại", "pl": "telefon", "category": "noun", "examples": [{ "vi": "Số điện thoại của anh là bao nhiêu?", "pl": "Jaki jest twój numer telefonu?" }] },
+    { "id": "v-bai-03-cua", "vi": "của", "pl": "partykuła posesywności („…của Ewa” = Ewy)", "category": "particle", "examples": [{ "vi": "Số điện thoại của mình là 523 911 487.", "pl": "Mój numer telefonu to 523 911 487." }] },
+    { "id": "v-bai-03-con", "vi": "còn", "pl": "a (ty)? – „Còn em?” = a ty?", "category": "particle", "examples": [{ "vi": "Anh là người Mỹ. Còn em?", "pl": "Jestem Amerykaninem. A ty?" }] },
+    { "id": "v-bai-03-co", "vi": "có", "pl": "mieć", "category": "verb", "examples": [{ "vi": "Bạn có Zalo không?", "pl": "Czy masz Zalo?" }, { "vi": "Mình không có Zalo, có Facebook.", "pl": "Nie mam Zalo, mam Facebooka." }] },
+    { "id": "v-bai-03-zalo", "vi": "Zalo", "pl": "Zalo (wietnamski komunikator)", "category": "proper-noun", "srs": false }
+  ],
+  "grammar": [
+    {
+      "id": "g-bai-03-nationality",
+      "title": "Pytanie o narodowość",
+      "pattern": "Zaimek + là người nước nào? → Zaimek + là người + nazwa kraju",
+      "explanation": "„người” + nazwa kraju = osoba tej narodowości. Przeczenie: „không phải là người…”. Pytanie rozstrzygające: dodaj „không?” na końcu (zob. Bài 2).",
+      "examples": [
+        { "vi": "Mình là người Việt Nam.", "pl": "Jestem Wietnamczykiem." },
+        { "vi": "Anh ấy không phải là người Mỹ.", "pl": "On nie jest Amerykaninem." },
+        { "vi": "Em là người Ba Lan không?", "pl": "Czy jesteś z Polski?", "status": "flagged", "note": "Zob. CONTENT_REVIEW: podręcznikowa forma „Em có phải là người Ba Lan không?”" }
+      ],
+      "keywords": ["người", "nước nào", "narodowość", "anh ấy"],
+      "practice": ["e-bai-03-typed-nationality", "e-bai-03-fill-country", "e-bai-03-open-nationality"]
+    },
+    {
+      "id": "g-bai-03-numbers",
+      "title": "Liczby 0–1000",
+      "pattern": "11–19: mười + cyfra · 20–90: cyfra + mươi · 21–99: cyfra + mươi + cyfra · 100: một trăm · 1000: một nghìn",
+      "explanation": "Cyfra 5 w pozycji jedności w liczbach od 15 wzwyż brzmi „lăm” (mười lăm, hai mươi lăm). Dziesiątki od 20 tworzy się przez „mươi” (bez tonu): hai mươi, ba mươi. W materiale nauczycielki 21 = „hai mươi một” (zob. CONTENT_REVIEW: w standardzie także „hai mươi mốt”).",
+      "examples": [
+        { "vi": "mười một", "pl": "11" },
+        { "vi": "hai mươi", "pl": "20" },
+        { "vi": "ba mươi bảy", "pl": "37" },
+        { "vi": "năm mươi tám", "pl": "58" },
+        { "vi": "một trăm", "pl": "100" },
+        { "vi": "một nghìn", "pl": "1000" }
+      ],
+      "keywords": ["liczby", "mười", "mươi", "lăm", "trăm", "nghìn"],
+      "practice": ["e-bai-03-number-gen", "e-bai-03-number-mcq"]
+    },
+    {
+      "id": "g-bai-03-age",
+      "title": "Pytanie o wiek",
+      "pattern": "Zaimek + bao nhiêu tuổi? → Zaimek + liczba + tuổi.",
+      "explanation": "„bao nhiêu” = ile; „tuổi” = lat (używane tylko dla wieku). Nie ma tu czasownika „mieć”.",
+      "examples": [
+        { "vi": "Cô bao nhiêu tuổi?", "pl": "Ile pani ma lat?" },
+        { "vi": "Mình 36 tuổi.", "pl": "Mam 36 lat." }
+      ],
+      "keywords": ["wiek", "tuổi", "bao nhiêu"],
+      "practice": ["e-bai-03-age-gen", "e-bai-03-open-age"]
+    },
+    {
+      "id": "g-bai-03-phone",
+      "title": "Numer telefonu i partykuła của",
+      "pattern": "Số điện thoại + của + zaimek + là bao nhiêu? → Số điện thoại của mình là …",
+      "explanation": "„của” wyraża posiadanie: „số điện thoại của anh” = twój numer telefonu. Numer czyta się cyfra po cyfrze (0 = không).",
+      "examples": [
+        { "vi": "Số điện thoại của anh là bao nhiêu?", "pl": "Jaki jest twój numer telefonu?" },
+        { "vi": "Số điện thoại của anh là 523 911 487 – năm hai ba chín một một bốn tám bảy.", "pl": "Mój numer to 523 911 487." }
+      ],
+      "keywords": ["của", "telefon", "số điện thoại"],
+      "practice": ["e-bai-03-phone-gen", "e-bai-03-order-phone"]
+    },
+    {
+      "id": "g-bai-03-con-co",
+      "title": "„Còn em?” i czasownik có",
+      "pattern": "Zdanie. Còn + zaimek? · Zaimek + có + rzeczownik + không?",
+      "explanation": "„Còn + zaimek?” = „a ty?” – odbija pytanie na rozmówcę. „có” = mieć; pytanie „Bạn có Zalo không?”, odpowiedź przecząca „Mình không có Zalo”.",
+      "examples": [
+        { "vi": "Anh là người Mỹ. Còn em?", "pl": "Jestem Amerykaninem. A ty?" },
+        { "vi": "Bạn có Zalo không?", "pl": "Masz Zalo?" },
+        { "vi": "Mình không có Zalo, có Facebook.", "pl": "Nie mam Zalo, mam Facebooka." }
+      ],
+      "keywords": ["còn", "có", "mieć"],
+      "practice": ["e-bai-03-dialogue-2", "e-bai-03-fill-con"]
+    }
+  ],
+  "dialogues": [
+    {
+      "id": "d-bai-03-intro",
+      "title": "Skąd jesteś? Ile masz lat?",
+      "situation": "Starszy mężczyzna (anh) rozmawia z młodszą osobą (em).",
+      "lines": [
+        { "speaker": "A", "vi": "Chào em! Em khỏe không?", "pl": "Cześć! Jak się masz?" },
+        { "speaker": "B", "vi": "Chào anh! Em khỏe, cảm ơn. Anh là người nước nào?", "pl": "Cześć! Dobrze, dziękuję. Skąd jesteś?" },
+        { "speaker": "A", "vi": "Anh là người Mỹ. Còn em?", "pl": "Jestem Amerykaninem. A ty?" },
+        { "speaker": "B", "vi": "Em là người Việt Nam.", "pl": "Jestem z Wietnamu." },
+        { "speaker": "A", "vi": "Em bao nhiêu tuổi?", "pl": "Ile masz lat?" },
+        { "speaker": "B", "vi": "Em 20 tuổi. Còn anh?", "pl": "Mam 20 lat. A ty?" },
+        { "speaker": "A", "vi": "Anh 22 tuổi. Số điện thoại của em là bao nhiêu?", "pl": "Mam 22 lata. Jaki jest twój numer telefonu?" },
+        { "speaker": "B", "vi": "Số điện thoại của em là 489 003 625 – bốn tám chín không không ba sáu hai năm.", "pl": "Mój numer to 489 003 625." },
+        { "speaker": "A", "vi": "Cảm ơn, chào em!", "pl": "Dziękuję, cześć!" }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "e-bai-03-number-gen",
+      "type": "generator",
+      "generator": "number",
+      "skill": "numbers",
+      "source": "generated",
+      "status": "unverified",
+      "instruction": "Napisz liczbę słowami po wietnamsku.",
+      "params": { "max": 99 },
+      "grammar": ["g-bai-03-numbers"],
+      "count": 6,
+      "level": 2
+    },
+    {
+      "id": "e-bai-03-number-mcq",
+      "type": "mcq",
+      "skill": "numbers",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Które słowa oznaczają 25?",
+      "options": ["hai mươi lăm", "hai mươi năm", "hai mười lăm", "mười hai lăm"],
+      "answer": 0,
+      "explanation": "5 w pozycji jedności od 15 wzwyż brzmi „lăm”, a dziesiątki od 20 tworzy „mươi”.",
+      "grammar": ["g-bai-03-numbers"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-03-age-gen",
+      "type": "generator",
+      "generator": "age",
+      "skill": "numbers",
+      "source": "generated",
+      "status": "unverified",
+      "instruction": "Powiedz, ile lat ma dana osoba.",
+      "grammar": ["g-bai-03-age"],
+      "count": 4,
+      "level": 2
+    },
+    {
+      "id": "e-bai-03-phone-gen",
+      "type": "generator",
+      "generator": "phone",
+      "skill": "numbers",
+      "source": "generated",
+      "status": "unverified",
+      "instruction": "Przeczytaj numer telefonu cyfra po cyfrze.",
+      "grammar": ["g-bai-03-phone"],
+      "count": 3,
+      "level": 2
+    },
+    {
+      "id": "e-bai-03-typed-nationality",
+      "type": "typed",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Zapytaj rówieśnika: „Jakiej jesteś narodowości?”",
+      "answerLang": "vi",
+      "answers": ["Bạn là người nước nào?", "Bạn là người nước nào"],
+      "grammar": ["g-bai-03-nationality"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-03-fill-country",
+      "type": "fill-blank",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "sentence": "Mình là người ___. (Polska)",
+      "answers": ["Ba Lan"],
+      "translation": "Jestem z Polski.",
+      "vocab": ["v-bai-03-ba-lan"],
+      "grammar": ["g-bai-03-nationality"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-03-country-match",
+      "type": "matching",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Dopasuj kraje.",
+      "pairs": [
+        { "left": "Pháp", "right": "Francja" },
+        { "left": "Mỹ", "right": "Ameryka" },
+        { "left": "Trung Quốc", "right": "Chiny" },
+        { "left": "Nhật Bản", "right": "Japonia" },
+        { "left": "Anh", "right": "Anglia" }
+      ],
+      "vocab": ["v-bai-03-phap", "v-bai-03-my", "v-bai-03-trung-quoc", "v-bai-03-nhat-ban", "v-bai-03-anh-kraj"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-03-order-phone",
+      "type": "ordering",
+      "skill": "word-order",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Ułóż pytanie: „Jaki jest twój (anh) numer telefonu?”",
+      "tokens": ["Số", "điện thoại", "của", "anh", "là", "bao nhiêu?"],
+      "translation": "Jaki jest twój numer telefonu?",
+      "grammar": ["g-bai-03-phone"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-03-fill-con",
+      "type": "fill-blank",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "sentence": "Anh là người Mỹ. ___ em?",
+      "answers": ["Còn"],
+      "bank": ["Còn", "Có", "Của", "Nào"],
+      "translation": "Jestem Amerykaninem. A ty?",
+      "grammar": ["g-bai-03-con-co"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-03-dialogue-2",
+      "type": "dialogue-completion",
+      "skill": "dialogue",
+      "source": "teacher",
+      "dialogueId": "d-bai-03-intro",
+      "lineIndex": 3,
+      "distractors": ["Em 20 tuổi.", "Em không có Zalo."],
+      "grammar": ["g-bai-03-nationality"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-03-open-nationality",
+      "type": "open-answer",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Bạn là người nước nào? – odpowiedz o sobie.",
+      "patterns": ["Mình là người {x}", "Tôi là người {x}", "Em là người {x}"],
+      "sample": "Mình là người Ba Lan.",
+      "grammar": ["g-bai-03-nationality"],
+      "level": 3
+    },
+    {
+      "id": "e-bai-03-open-age",
+      "type": "open-answer",
+      "skill": "numbers",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Bạn bao nhiêu tuổi? – odpowiedz pełnym zdaniem (liczbę zapisz słowami).",
+      "patterns": ["Mình {x} tuổi", "Tôi {x} tuổi", "Em {x} tuổi"],
+      "sample": "Mình hai mươi tuổi.",
+      "grammar": ["g-bai-03-age"],
+      "level": 3
+    },
+    {
+      "id": "e-bai-03-diacritics",
+      "type": "diacritics",
+      "skill": "tone",
+      "source": "generated",
+      "status": "unverified",
+      "stripped": "So dien thoai cua em la bao nhieu?",
+      "answers": ["Số điện thoại của em là bao nhiêu?"],
+      "translation": "Jaki jest twój numer telefonu?",
+      "grammar": ["g-bai-03-phone"],
+      "level": 2
+    }
+  ],
+  "checkpoint": ["e-bai-03-number-gen", "e-bai-03-age-gen", "e-bai-03-typed-nationality", "e-bai-03-order-phone", "e-bai-03-dialogue-2", "e-bai-03-open-nationality"],
+  "reviewLinks": ["g-bai-02-khong-question", "g-bai-01-pronouns"],
+  "original": [
+    { "kind": "heading", "text": "Pytanie o narodowość" },
+    { "kind": "paragraph", "text": "Zaimek + là người nước nào?\n→ Mình là người + nazwa kraju\nngười - człowiek, ludzie\nnước - kraj\nnào - jaki? który?" },
+    { "kind": "heading", "text": "Nazwy krajów" },
+    { "kind": "paragraph", "text": "Ba Lan - Polska\nViệt Nam - Wietnam\nPháp - Francja\nMỹ - Ameryka\nAnh - Wielka Brytania/ Anglia\nTrung Quốc - Chiny\nNhật (Bản) - Japonia" },
+    { "kind": "paragraph", "text": "Przykłady:\nMình là người Việt Nam\nAnh ấy không phải là người Mỹ\nEm là người Ba Lan không?" },
+    { "kind": "heading", "text": "4. Liczby" },
+    { "kind": "paragraph", "text": "0 không · 1 một · 2 hai · 3 ba · 4 bốn · 5 năm, lăm gdy jest cyfrą jedności w liczbach 10+ · 6 sáu · 7 bảy · 8 tám · 9 chín · 10 mười\n11-19 → mười + cyfra jedności: 11 mười một, 12 mười hai itd.\n20-90 → cyfra dziesiątek + mươi: 20 hai mươi, 30 ba mươi, 40 bốn mươi itd.\n21-99 → cyfra dziesiątek + mươi + cyfra jedności: 21 hai mươi một, 37 ba mươi bảy, 58 năm mươi tám\n100 một trăm\n1000 một nghìn" },
+    { "kind": "heading", "text": "5. Pytanie o wiek" },
+    { "kind": "paragraph", "text": "zaimek + bao nhiêu tuổi?\n→ Mình + liczba + tuổi.\nbao nhiêu? - ile?\ntuổi - lat (tylko przy mówieniu o czyimś wieku)\nPrzykłady:\nCô bao nhiêu tuổi?\nMình 36 tuổi." },
+    { "kind": "heading", "text": "6. Pytanie o numer telefonu" },
+    { "kind": "paragraph", "text": "Số điện thoại + của + zaimek + là bao nhiêu?\n→ Số điện thoại + của + mình + là…\nsố - numer\nđiện thoại - telefon\ncủa - partykuła posesywności, …. của Ewa\nPrzykłady:\nSố điện thoại của anh là bao nhiêu?\nSố điện thoại của anh là 523 911 487\nnăm hai ba chín một một bốn tám bảy" },
+    { "kind": "heading", "text": "Dialog" },
+    { "kind": "paragraph", "text": "A: Chào em! Em khỏe không?\nB: Chào anh! Em khỏe, cảm ơn. Anh là người nước nào?\nA: Anh là người Mỹ. Còn em?\nB: Em là người Việt Nam.\nA: Em bao nhiêu tuổi?\nB: Em 20 tuổi. Còn Anh?\nA: Anh 22 tuổi. Số điện thoại của em là bao nhiêu?\nB: Số điện thoại của em là 489 003 625. bốn tám chín không không ba sáu hai năm\nA: Cảm ơn, chào em!" },
+    { "kind": "paragraph", "text": "Bạn có Zalo không?\ncó - mieć\nMình không có Zalo, có Facebook." }
+  ]
+}

@@ -1,0 +1,280 @@
+{
+  "id": "bai-04",
+  "number": 4,
+  "title": "Daty: dni tygodnia, miesiące, rok",
+  "titleVi": "Bài 4",
+  "summary": "Dni tygodnia, miesiące, określanie daty (ngày – tháng – năm), słowa „dzisiaj / jutro / wczoraj”, „mấy” a „bao nhiêu”, pytanie o urodziny.",
+  "icon": "📅",
+  "sourceFile": "source-lessons/Bái 4.docx",
+  "objectives": [
+    "nazwać dni tygodnia i miesiące",
+    "podać datę w kolejności: dzień tygodnia, dzień, miesiąc, rok",
+    "zapytać, jaki jest dziś dzień i jaka jest data",
+    "powiedzieć, kiedy mam urodziny",
+    "rozróżnić „mấy” (małe liczby) od „bao nhiêu” (wszystkie liczby)"
+  ],
+  "vocabulary": [
+    { "id": "v-bai-04-thu-hai", "vi": "thứ Hai", "pl": "poniedziałek", "category": "time", "tags": ["weekday"] },
+    { "id": "v-bai-04-thu-ba", "vi": "thứ Ba", "pl": "wtorek", "category": "time", "tags": ["weekday"] },
+    { "id": "v-bai-04-thu-tu", "vi": "thứ Tư", "pl": "środa", "category": "time", "tags": ["weekday"], "note": "Uwaga: „tư”, nie „bốn”." },
+    { "id": "v-bai-04-thu-nam", "vi": "thứ Năm", "pl": "czwartek", "category": "time", "tags": ["weekday"] },
+    { "id": "v-bai-04-thu-sau", "vi": "thứ Sáu", "pl": "piątek", "category": "time", "tags": ["weekday"] },
+    { "id": "v-bai-04-thu-bay", "vi": "thứ Bảy", "pl": "sobota", "category": "time", "tags": ["weekday"] },
+    { "id": "v-bai-04-chu-nhat", "vi": "Chủ Nhật", "pl": "niedziela", "category": "time", "tags": ["weekday"] },
+    { "id": "v-bai-04-thang", "vi": "tháng", "pl": "miesiąc", "category": "time" },
+    { "id": "v-bai-04-thang-mot", "vi": "tháng Một / tháng Giêng", "pl": "styczeń", "category": "time", "tags": ["month"] },
+    { "id": "v-bai-04-thang-hai", "vi": "tháng Hai", "pl": "luty", "category": "time", "tags": ["month"] },
+    { "id": "v-bai-04-thang-ba", "vi": "tháng Ba", "pl": "marzec", "category": "time", "tags": ["month"] },
+    { "id": "v-bai-04-thang-tu", "vi": "tháng Tư", "pl": "kwiecień", "category": "time", "tags": ["month"], "note": "Uwaga: „tư”, nie „bốn”." },
+    { "id": "v-bai-04-thang-nam", "vi": "tháng Năm", "pl": "maj", "category": "time", "tags": ["month"] },
+    { "id": "v-bai-04-thang-sau", "vi": "tháng Sáu", "pl": "czerwiec", "category": "time", "tags": ["month"] },
+    { "id": "v-bai-04-thang-bay", "vi": "tháng Bảy", "pl": "lipiec", "category": "time", "tags": ["month"] },
+    { "id": "v-bai-04-thang-tam", "vi": "tháng Tám", "pl": "sierpień", "category": "time", "tags": ["month"] },
+    { "id": "v-bai-04-thang-chin", "vi": "tháng Chín", "pl": "wrzesień", "category": "time", "tags": ["month"] },
+    { "id": "v-bai-04-thang-muoi", "vi": "tháng Mười", "pl": "październik", "category": "time", "tags": ["month"] },
+    { "id": "v-bai-04-thang-muoi-mot", "vi": "tháng Mười Một", "pl": "listopad", "category": "time", "tags": ["month"] },
+    { "id": "v-bai-04-thang-muoi-hai", "vi": "tháng Mười Hai", "pl": "grudzień", "category": "time", "tags": ["month"] },
+    { "id": "v-bai-04-ngay", "vi": "ngày", "pl": "dzień", "category": "time" },
+    { "id": "v-bai-04-nam-rok", "vi": "năm", "pl": "rok", "category": "time", "note": "To samo słowo co liczba 5." },
+    { "id": "v-bai-04-tuan", "vi": "tuần", "pl": "tydzień", "category": "time" },
+    { "id": "v-bai-04-hom-nay", "vi": "hôm nay", "pl": "dzisiaj", "category": "time" },
+    { "id": "v-bai-04-ngay-mai", "vi": "ngày mai", "pl": "jutro", "category": "time" },
+    { "id": "v-bai-04-ngay-mot", "vi": "ngày mốt", "pl": "pojutrze", "category": "time" },
+    { "id": "v-bai-04-hom-qua", "vi": "hôm qua", "pl": "wczoraj", "category": "time" },
+    { "id": "v-bai-04-hom-kia", "vi": "hôm kia", "pl": "przedwczoraj", "category": "time" },
+    { "id": "v-bai-04-nay", "vi": "(tuần / tháng / năm) này", "pl": "w tym (tygodniu / miesiącu / roku)", "category": "time" },
+    { "id": "v-bai-04-sau", "vi": "(tuần / tháng / năm) sau", "pl": "za (tydzień / miesiąc / rok); następny", "category": "time" },
+    { "id": "v-bai-04-truoc", "vi": "(tuần / tháng / năm) trước", "pl": "w zeszłym (tygodniu / miesiącu / roku)", "category": "time" },
+    { "id": "v-bai-04-moi", "vi": "mỗi (ngày / tuần / tháng / năm)", "pl": "każdego (dnia / tygodnia / miesiąca / roku)", "category": "adverb" },
+    { "id": "v-bai-04-may", "vi": "mấy?", "pl": "ile? (do małych liczb)", "category": "question-word", "examples": [{ "vi": "Hôm nay là thứ mấy?", "pl": "Jaki jest dzisiaj dzień tygodnia?" }] },
+    { "id": "v-bai-04-bao-nhieu", "vi": "bao nhiêu?", "pl": "ile? (do wszystkich liczb)", "category": "question-word" },
+    { "id": "v-bai-04-sinh-nhat", "vi": "sinh nhật", "pl": "urodziny", "category": "noun", "examples": [{ "vi": "Sinh nhật của bạn là ngày mấy?", "pl": "Kiedy masz urodziny?" }] }
+  ],
+  "grammar": [
+    {
+      "id": "g-bai-04-weekdays-months",
+      "title": "Dni tygodnia i miesiące",
+      "pattern": "thứ + liczba (od 2) · tháng + liczba",
+      "explanation": "Dni tygodnia liczy się od niedzieli: poniedziałek to „dzień drugi” (thứ Hai), wtorek „trzeci” (thứ Ba) … sobota „siódmy” (thứ Bảy). Niedziela ma osobną nazwę: Chủ Nhật. Środa to „thứ Tư” (nie „bốn”).\n\nMiesiące to „tháng” + liczba: tháng Một (styczeń) … tháng Mười Hai (grudzień). Kwiecień: tháng Tư. Styczeń bywa też nazywany „tháng Giêng”.",
+      "examples": [
+        { "vi": "thứ Hai", "pl": "poniedziałek" },
+        { "vi": "Chủ Nhật", "pl": "niedziela" },
+        { "vi": "tháng Tư", "pl": "kwiecień" }
+      ],
+      "keywords": ["thứ", "tháng", "dni tygodnia", "miesiące"],
+      "practice": ["e-bai-04-weekday-gen", "e-bai-04-month-gen", "e-bai-04-weekday-match"]
+    },
+    {
+      "id": "g-bai-04-date",
+      "title": "Określanie daty",
+      "pattern": "(dzień tygodnia) + ngày + liczba, tháng + liczba, năm + liczba",
+      "explanation": "Kolejność jest od jednostki najmniejszej do największej: dzień, miesiąc, rok. Rok czyta się jako liczbę: 2026 = „hai nghìn không (trăm) hai mươi sáu” albo cyframi „hai không hai sáu”.",
+      "examples": [
+        { "vi": "Thứ Ba, ngày 10, tháng 12, năm 2026", "pl": "wtorek, 10 grudnia 2026" },
+        { "vi": "Hôm nay là ngày mấy?", "pl": "Jaka jest dzisiejsza data?" },
+        { "vi": "Hôm nay là ngày… tháng… năm…", "pl": "Dzisiaj jest…" },
+        { "vi": "Sinh nhật của mình là ngày… tháng…", "pl": "Moje urodziny są…" }
+      ],
+      "keywords": ["data", "ngày", "tháng", "năm", "sinh nhật"],
+      "practice": ["e-bai-04-date-gen", "e-bai-04-year-gen", "e-bai-04-open-birthday"]
+    },
+    {
+      "id": "g-bai-04-may-bao-nhieu",
+      "title": "mấy a bao nhiêu",
+      "pattern": "mấy? – małe liczby (dzień tygodnia, dzień miesiąca) · bao nhiêu? – wszystkie liczby",
+      "explanation": "„mấy” pyta o małe liczby: „thứ mấy?” (który dzień tygodnia), „ngày mấy?” (który dzień miesiąca). „bao nhiêu” pyta o dowolne liczby (wiek, numer telefonu, rok).",
+      "examples": [
+        { "vi": "Hôm nay là thứ mấy?", "pl": "Jaki jest dzisiaj dzień tygodnia?" },
+        { "vi": "Hôm nay là ngày mấy?", "pl": "Który dziś jest?" },
+        { "vi": "Bạn bao nhiêu tuổi?", "pl": "Ile masz lat?" }
+      ],
+      "keywords": ["mấy", "bao nhiêu", "ile"],
+      "practice": ["e-bai-04-mcq-may", "e-bai-04-fill-may"]
+    },
+    {
+      "id": "g-bai-04-time-words",
+      "title": "Dzisiaj, jutro, w zeszłym tygodniu…",
+      "pattern": "hôm nay · ngày mai · ngày mốt · hôm qua · hôm kia · X này / X sau / X trước · mỗi X",
+      "explanation": "„này” (ten), „sau” (następny) i „trước” (poprzedni) stoją po rzeczowniku: tuần này (w tym tygodniu), tháng sau (w przyszłym miesiącu), năm trước (w zeszłym roku). „mỗi” (każdy) stoi przed rzeczownikiem: mỗi ngày.",
+      "examples": [
+        { "vi": "tuần này", "pl": "w tym tygodniu" },
+        { "vi": "tháng sau", "pl": "w przyszłym miesiącu" },
+        { "vi": "năm trước", "pl": "w zeszłym roku" },
+        { "vi": "mỗi ngày", "pl": "każdego dnia" }
+      ],
+      "keywords": ["này", "sau", "trước", "mỗi", "hôm nay", "ngày mai", "hôm qua"],
+      "practice": ["e-bai-04-time-match", "e-bai-04-typed-tomorrow"]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "e-bai-04-weekday-gen",
+      "type": "generator",
+      "generator": "weekday",
+      "skill": "dates",
+      "source": "generated",
+      "status": "unverified",
+      "instruction": "Napisz dzień tygodnia po wietnamsku.",
+      "grammar": ["g-bai-04-weekdays-months"],
+      "count": 4,
+      "level": 2
+    },
+    {
+      "id": "e-bai-04-month-gen",
+      "type": "generator",
+      "generator": "month",
+      "skill": "dates",
+      "source": "generated",
+      "status": "unverified",
+      "instruction": "Napisz miesiąc po wietnamsku.",
+      "grammar": ["g-bai-04-weekdays-months"],
+      "count": 4,
+      "level": 2
+    },
+    {
+      "id": "e-bai-04-date-gen",
+      "type": "generator",
+      "generator": "date",
+      "skill": "dates",
+      "source": "generated",
+      "status": "unverified",
+      "instruction": "Zapisz datę po wietnamsku (ngày … tháng … năm …).",
+      "grammar": ["g-bai-04-date"],
+      "count": 3,
+      "level": 3
+    },
+    {
+      "id": "e-bai-04-year-gen",
+      "type": "generator",
+      "generator": "year",
+      "skill": "numbers",
+      "source": "generated",
+      "status": "unverified",
+      "instruction": "Przeczytaj rok słowami.",
+      "grammar": ["g-bai-04-date", "g-bai-03-numbers"],
+      "count": 3,
+      "level": 3
+    },
+    {
+      "id": "e-bai-04-weekday-match",
+      "type": "matching",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Dopasuj dni tygodnia.",
+      "pairs": [
+        { "left": "thứ Hai", "right": "poniedziałek" },
+        { "left": "thứ Tư", "right": "środa" },
+        { "left": "thứ Sáu", "right": "piątek" },
+        { "left": "thứ Bảy", "right": "sobota" },
+        { "left": "Chủ Nhật", "right": "niedziela" }
+      ],
+      "level": 1
+    },
+    {
+      "id": "e-bai-04-mcq-may",
+      "type": "mcq",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Które pytanie znaczy „Jaki jest dzisiaj dzień tygodnia?”",
+      "options": ["Hôm nay là thứ mấy?", "Hôm nay là ngày mấy?", "Hôm nay là bao nhiêu?", "Hôm nay là tháng mấy?"],
+      "answer": 0,
+      "explanation": "„thứ mấy?” pyta o dzień tygodnia; „ngày mấy?” o dzień miesiąca (datę).",
+      "grammar": ["g-bai-04-may-bao-nhieu"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-04-fill-may",
+      "type": "fill-blank",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "sentence": "Sinh nhật của bạn là ngày ___?",
+      "answers": ["mấy"],
+      "bank": ["mấy", "bao nhiêu", "gì", "nào"],
+      "translation": "Kiedy masz urodziny? (którego dnia)",
+      "grammar": ["g-bai-04-may-bao-nhieu"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-04-time-match",
+      "type": "matching",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Dopasuj określenia czasu.",
+      "pairs": [
+        { "left": "hôm nay", "right": "dzisiaj" },
+        { "left": "ngày mai", "right": "jutro" },
+        { "left": "hôm qua", "right": "wczoraj" },
+        { "left": "tuần sau", "right": "za tydzień" },
+        { "left": "năm trước", "right": "w zeszłym roku" },
+        { "left": "mỗi ngày", "right": "każdego dnia" }
+      ],
+      "grammar": ["g-bai-04-time-words"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-04-typed-tomorrow",
+      "type": "typed",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Napisz po wietnamsku: „pojutrze”.",
+      "answerLang": "vi",
+      "answers": ["ngày mốt"],
+      "vocab": ["v-bai-04-ngay-mot"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-04-typed-today-q",
+      "type": "typed",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Zapytaj: „Jaka jest dzisiejsza data?”",
+      "answerLang": "vi",
+      "answers": ["Hôm nay là ngày mấy?", "Hôm nay là ngày mấy"],
+      "grammar": ["g-bai-04-date", "g-bai-04-may-bao-nhieu"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-04-open-birthday",
+      "type": "open-answer",
+      "skill": "dates",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Sinh nhật của bạn là ngày mấy? – odpowiedz o sobie (ngày … tháng …).",
+      "patterns": ["Sinh nhật của mình là ngày {x} tháng {x}", "Sinh nhật của tôi là ngày {x} tháng {x}", "Sinh nhật của mình là ngày {x}, tháng {x}"],
+      "sample": "Sinh nhật của mình là ngày hai mươi bảy tháng Ba.",
+      "grammar": ["g-bai-04-date"],
+      "level": 3
+    },
+    {
+      "id": "e-bai-04-diacritics",
+      "type": "diacritics",
+      "skill": "tone",
+      "source": "generated",
+      "status": "unverified",
+      "stripped": "Hom nay la thu Bay.",
+      "answers": ["Hôm nay là thứ Bảy."],
+      "translation": "Dzisiaj jest sobota.",
+      "level": 2
+    }
+  ],
+  "checkpoint": ["e-bai-04-weekday-gen", "e-bai-04-month-gen", "e-bai-04-date-gen", "e-bai-04-mcq-may", "e-bai-04-typed-today-q", "e-bai-04-open-birthday"],
+  "reviewLinks": ["g-bai-03-numbers", "g-bai-03-phone"],
+  "original": [
+    { "kind": "heading", "text": "Daty: Dni tygodnia" },
+    { "kind": "table", "rows": [["Poniedziałek", "Thứ Hai"], ["Wtorek", "Thứ Ba"], ["Środa", "Thứ Tư"], ["Czwartek", "Thứ Năm"], ["Piątek", "Thứ Sáu"], ["Sobota", "Thứ Bảy"], ["Niedziela", "Chủ Nhật"]] },
+    { "kind": "heading", "text": "Miesiące (tháng - miesiąc)" },
+    { "kind": "table", "rows": [["Styczeń", "Tháng Một/Giêng"], ["Luty", "Tháng Hai"], ["Marzec", "Tháng Ba"], ["Kwiecień", "Tháng Tư"], ["Maj", "Tháng Năm"], ["Czerwiec", "Tháng Sáu"], ["Lipiec", "Tháng Bảy"], ["Sierpień", "Tháng Tám"], ["Wrzeń", "Tháng Chín"], ["Październik", "Tháng Mười"], ["Listopad", "Tháng Mười Một"], ["Grudzień", "Tháng Mười Hai"]] },
+    { "kind": "heading", "text": "Określanie daty" },
+    { "kind": "paragraph", "text": "(DZIEŃ TYGODNIA) + DZIEŃ + MIESIĄC + ROK\nNGÀY + THÁNG + NĂM\nNp.: Thứ ba, ngày 10, tháng 12, năm 2026\nmột trăm - 100\nmột nghìn - 1000\n2026 hai nghìn không (trăm) hai mươi sáu, hai không hai sáu" },
+    { "kind": "heading", "text": "Słówka" },
+    { "kind": "table", "rows": [["Dzień", "Ngày"], ["Miesiąc", "Tháng"], ["Rok", "Năm"], ["Tydzień", "Tuần"], ["Dzisiaj", "Hôm nay"], ["Jutro", "Ngày mai"], ["Pojutrze", "Ngày mốt"], ["Wczoraj", "Hôm qua"], ["Przedwczoraj", "Hôm kia"], ["W tym (tygodniu/miesiącu/roku)", "(tuần/tháng/năm) này"], ["Za (tydzień/miesiąc/rok)", "(tuần/tháng/năm) sau"], ["W zeszłym (tygodniu/miesiącu/roku)", "(tuần/tháng/năm) trước"], ["Każdego (dnia/tygodnia/miesiąca/roku)", "mỗi (ngày/tuần/tháng/năm)"], ["Ile? (do małych liczb)", "mấy?"], ["Ile? (do wszystkich liczb)", "bao nhiêu?"], ["urodziny", "sinh nhật"]] },
+    { "kind": "heading", "text": "Przydatne frazy" },
+    { "kind": "paragraph", "text": "Hôm nay là thứ mấy? – Jaki jest dzisiaj dzień tygodnia?\nHôm nay là… – Dzisiaj jest… (dzień tygodnia).\nHôm nay là ngày mấy? – Jaka jest dzisiejsza data?\nHôm nay là ngày… tháng…. năm…. – Dzisiaj jest….\nSinh nhật của bạn là ngày mấy? – Kiedy masz urodziny?\nSinh nhật của mình là ngày…tháng… – Moje urodziny są…." }
+  ]
+}

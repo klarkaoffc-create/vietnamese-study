@@ -1,0 +1,324 @@
+{
+  "id": "bai-09",
+  "number": 9,
+  "title": "Która godzina? Mój tydzień",
+  "titleVi": "Bài 9",
+  "summary": "Godziny i pory dnia, pytanie „mấy giờ?”, dwa szyki pytania „khi nào?”, czytanka o codziennej rutynie i słownictwo dnia codziennego.",
+  "icon": "🕐",
+  "sourceFile": "source-lessons/bái 9.docx",
+  "objectives": [
+    "zapytać o godzinę i podać godzinę z minutami i porą dnia",
+    "zapytać „kiedy?” o przyszłość (khi nào na początku) i o przeszłość (khi nào na końcu)",
+    "opisać swój dzień: wstawanie, śniadanie, praca, powrót, sen",
+    "zrozumieć czytankę „Một tuần của tôi”"
+  ],
+  "vocabulary": [
+    { "id": "v-bai-09-bay-gio", "vi": "bây giờ", "pl": "teraz", "category": "time" },
+    { "id": "v-bai-09-thoi-gian", "vi": "thời gian", "pl": "czas", "category": "noun" },
+    { "id": "v-bai-09-gio", "vi": "giờ", "pl": "godzina", "category": "time" },
+    { "id": "v-bai-09-phut", "vi": "phút", "pl": "minuta", "category": "time" },
+    { "id": "v-bai-09-sang", "vi": "sáng", "pl": "rano", "category": "time", "tags": ["daypart"] },
+    { "id": "v-bai-09-trua", "vi": "trưa", "pl": "wczesnym popołudniem (w południe)", "category": "time", "tags": ["daypart"], "note": "CONTENT_REVIEW: „trưa” to pora południowa (ok. 11–13)." },
+    { "id": "v-bai-09-chieu", "vi": "chiều", "pl": "po południu", "category": "time", "tags": ["daypart"] },
+    { "id": "v-bai-09-toi", "vi": "tối", "pl": "wieczorem", "category": "time", "tags": ["daypart"] },
+    { "id": "v-bai-09-dem", "vi": "đêm", "pl": "w nocy", "category": "time", "tags": ["daypart"] },
+    { "id": "v-bai-09-khoang", "vi": "khoảng", "pl": "około", "category": "adverb" },
+    { "id": "v-bai-09-truoc", "vi": "trước", "pl": "przed", "category": "preposition" },
+    { "id": "v-bai-09-dau-tien", "vi": "đầu tiên", "pl": "najpierw", "category": "adverb" },
+    { "id": "v-bai-09-sau-do", "vi": "sau (đó)", "pl": "potem", "category": "adverb" },
+    { "id": "v-bai-09-khi", "vi": "khi", "pl": "gdy, podczas", "category": "other" },
+    { "id": "v-bai-09-khi-nao", "vi": "khi nào?", "pl": "kiedy?", "category": "question-word" },
+    { "id": "v-bai-09-thuc-day", "vi": "thức dậy", "pl": "budzić się, wstawać", "category": "verb", "tags": ["routine"] },
+    { "id": "v-bai-09-an-sang", "vi": "ăn sáng", "pl": "śniadanie; jeść śniadanie", "category": "verb", "tags": ["routine"] },
+    { "id": "v-bai-09-thuong", "vi": "thường (thường)", "pl": "często, zwykle", "category": "adverb", "note": "CONTENT_REVIEW: „thường” = zwykle; „często” = thường xuyên." },
+    { "id": "v-bai-09-banh-mi", "vi": "bánh mì", "pl": "kanapka wietnamska (bagietka z warzywami i mięsem)", "category": "noun", "tags": ["food"] },
+    { "id": "v-bai-09-ve", "vi": "về", "pl": "wrócić; về nhà – wrócić do domu", "category": "verb", "tags": ["routine"] },
+    { "id": "v-bai-09-an-toi", "vi": "ăn tối", "pl": "kolacja; jeść kolację", "category": "verb", "tags": ["routine"] },
+    { "id": "v-bai-09-choi-game", "vi": "chơi game", "pl": "grać w gry", "category": "verb" },
+    { "id": "v-bai-09-di-choi", "vi": "đi chơi", "pl": "spędzać z kimś czas, wyjść (hang out)", "category": "verb" },
+    { "id": "v-bai-09-hoac", "vi": "hoặc", "pl": "albo", "category": "other" },
+    { "id": "v-bai-09-ngu", "vi": "ngủ", "pl": "spać; đi ngủ – iść spać", "category": "verb", "tags": ["routine"] },
+    { "id": "v-bai-09-tap-the-thao", "vi": "tập thể thao", "pl": "uprawiać sport", "category": "verb" },
+    { "id": "v-bai-09-tap", "vi": "tập", "pl": "ćwiczyć", "category": "verb" },
+    { "id": "v-bai-09-the-thao", "vi": "thể thao", "pl": "sport", "category": "noun" },
+    { "id": "v-bai-09-chay", "vi": "chạy", "pl": "biegać", "category": "verb" }
+  ],
+  "grammar": [
+    {
+      "id": "g-bai-09-time",
+      "title": "Która godzina?",
+      "pattern": "Bây giờ là mấy giờ? → Bây giờ là + liczba + giờ (+ liczba + phút) (+ pora dnia)",
+      "explanation": "Godzinę podaje się w systemie 12-godzinnym, a porę dnia doprecyzowuje słowo po godzinie: „5 giờ sáng” (5 rano), „5 giờ chiều” (17:00). Minuty: „giờ … phút”: „5 giờ 20 phút”. „khoảng” = około.\n\nUwaga: lekcja nie wprowadza słowa „lúc” (o godzinie…), które w standardowym języku poprzedza godzinę w zdaniu („Tôi thức dậy lúc 7 giờ”). Zob. CONTENT_REVIEW.",
+      "examples": [
+        { "vi": "Bây giờ là mấy giờ?", "pl": "Która jest teraz godzina?" },
+        { "vi": "Bây giờ là 5 giờ 20 phút.", "pl": "Teraz jest 5:20 / 17:20." },
+        { "vi": "Bây giờ là 5 giờ sáng.", "pl": "Teraz jest 5 rano." },
+        { "vi": "Bây giờ là 5 giờ chiều.", "pl": "Teraz jest 17:00." }
+      ],
+      "keywords": ["giờ", "phút", "mấy giờ", "godzina", "sáng", "chiều", "tối"],
+      "practice": ["e-bai-09-time-gen", "e-bai-09-clock-image", "e-bai-09-mcq-daypart"]
+    },
+    {
+      "id": "g-bai-09-khi-nao",
+      "title": "Kiedy? – khi nào na początku lub na końcu",
+      "pattern": "Khi nào + zdanie? (przyszłość, czynności regularne) · Zdanie + khi nào? (przeszłość)",
+      "explanation": "„Khi nào” na początku zdania pyta o przyszłość i o czynności regularne: „Khi nào bạn đi làm việc?” – kiedy pójdziesz / chodzisz do pracy? „Khi nào” na końcu pyta o przeszłość: „Bạn đi làm việc khi nào?” – kiedy poszedłeś do pracy?",
+      "examples": [
+        { "vi": "Khi nào bạn đi làm việc?", "pl": "Kiedy pójdziesz / chodzisz do pracy?" },
+        { "vi": "Khi nào mẹ đọc sách?", "pl": "Kiedy mama będzie czytać książkę?" },
+        { "vi": "Bạn đi làm việc khi nào?", "pl": "Kiedy poszedłeś do pracy?" },
+        { "vi": "Mẹ đọc sách khi nào?", "pl": "Kiedy mama czytała książkę?" }
+      ],
+      "keywords": ["khi nào", "kiedy"],
+      "practice": ["e-bai-09-mcq-khi-nao", "e-bai-09-order-khi-nao-past", "e-bai-09-typed-khi-nao"]
+    },
+    {
+      "id": "g-bai-09-routine",
+      "title": "Opis dnia: najpierw, potem, gdy",
+      "pattern": "Mỗi ngày + godzina + zaimek + czynność · Sau đó, … · Khi + zdanie, + zdanie · … hoặc …",
+      "explanation": "Czytanka pokazuje, jak łączyć czynności w kolejności: „Mỗi ngày 7 giờ sáng, tôi thức dậy” (codziennie o 7 rano wstaję), „Sau đó, tôi chơi game” (potem gram), „Khi tôi ăn sáng, tôi cũng uống cà phê sữa” (gdy jem śniadanie, piję też kawę z mlekiem), „đọc sách hoặc xem phim” (czytam albo oglądam film).",
+      "examples": [
+        { "vi": "Mỗi ngày 7 giờ sáng, tôi thức dậy.", "pl": "Codziennie o 7 rano wstaję." },
+        { "vi": "Khoảng 10 giờ tối, tôi đi ngủ.", "pl": "Około 22 idę spać." },
+        { "vi": "Sau đó, tôi chơi game, đọc sách hoặc xem phim.", "pl": "Potem gram w gry, czytam albo oglądam film." }
+      ],
+      "keywords": ["rutyna", "sau đó", "khi", "hoặc", "mỗi ngày"],
+      "practice": ["e-bai-09-routine-order", "e-bai-09-read-1", "e-bai-09-read-2", "e-bai-09-open-wake"]
+    }
+  ],
+  "readings": [
+    {
+      "id": "r-bai-09-mot-tuan",
+      "title": "Một tuần của tôi",
+      "paragraphs": [
+        "Mỗi ngày 7 giờ sáng, tôi thức dậy. Tôi ăn sáng khoảng 8 giờ. Thường cho ăn sáng tôi ăn bánh mì. Khi tôi ăn sáng, tôi cũng uống cà phê sữa. Sau ăn sáng, tôi đi làm việc. 5 giờ 30 phút chiều tôi về nhà. Tôi 7 giờ tối thường ăn tối với gia đình. Sau đó, tôi chơi game, đọc sách hoặc xem phim. Khoảng 10 giờ tối, tôi đi ngủ.",
+        "Thứ bảy và chủ nhật tôi không làm việc, thế thì tôi có thời gian cho gia đình và bạn. Mỗi tuần tôi với bạn tôi đi chơi: chúng tôi đi quán ăn hoặc quán cà phê. Chủ nhật sáng, tôi với anh tôi tập thể thao."
+      ],
+      "translation": [
+        "Codziennie o 7 rano wstaję. Jem śniadanie około 8. Zwykle na śniadanie jem bánh mì. Gdy jem śniadanie, piję też kawę z mlekiem. Po śniadaniu idę do pracy. O 17:30 wracam do domu. O 19 zwykle jem kolację z rodziną. Potem gram w gry, czytam książkę albo oglądam film. Około 22 idę spać.",
+        "W sobotę i niedzielę nie pracuję, więc mam czas dla rodziny i przyjaciół. Co tydzień wychodzę z przyjaciółmi: idziemy do restauracji albo kawiarni. W niedzielę rano uprawiam sport z moim starszym bratem."
+      ],
+      "glossary": ["v-bai-09-thuc-day", "v-bai-09-an-sang", "v-bai-09-banh-mi", "v-bai-09-ve", "v-bai-09-an-toi", "v-bai-09-ngu", "v-bai-09-tap-the-thao"],
+      "note": "Kilka zdań czytanki („Thường cho ăn sáng…”, „Sau ăn sáng”, „Tôi 7 giờ tối thường…”) jest oznaczonych w CONTENT_REVIEW jako formy do weryfikacji.",
+      "status": "flagged"
+    }
+  ],
+  "images": [
+    { "src": "images/lessons/bai-09/clocks.png", "alt": "Dziewięć zegarów wskazujących różne godziny", "caption": "Ćwiczenie z lekcji: Bây giờ là mấy giờ?", "source": "source-lessons/bái 9.docx" }
+  ],
+  "exercises": [
+    {
+      "id": "e-bai-09-time-gen",
+      "type": "generator",
+      "generator": "time",
+      "skill": "time",
+      "source": "generated",
+      "status": "unverified",
+      "instruction": "Podaj godzinę po wietnamsku (… giờ … phút + pora dnia).",
+      "grammar": ["g-bai-09-time"],
+      "count": 5,
+      "level": 2
+    },
+    {
+      "id": "e-bai-09-clock-image",
+      "type": "typed",
+      "skill": "time",
+      "source": "teacher",
+      "status": "unverified",
+      "prompt": "Ćwiczenie z lekcji: pierwszy zegar w drugim rzędzie (mała wskazówka między 4 a 5, duża na 4). Bây giờ là mấy giờ? Odpowiedz „… giờ … phút” lub cyframi (np. 4:20). Klucz opracowany do nauki.",
+      "answerLang": "vi",
+      "answers": ["bốn giờ hai mươi phút", "Bây giờ là bốn giờ hai mươi phút.", "4 giờ 20 phút", "Bây giờ là 4 giờ 20 phút.", "4:20"],
+      "image": { "src": "images/lessons/bai-09/clocks.png", "alt": "Dziewięć zegarów", "source": "source-lessons/bái 9.docx" },
+      "grammar": ["g-bai-09-time"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-09-clock-image-2",
+      "type": "typed",
+      "skill": "time",
+      "source": "teacher",
+      "status": "unverified",
+      "prompt": "Ćwiczenie z lekcji: pierwszy zegar w pierwszym rzędzie (obie wskazówki na 12). Bây giờ là mấy giờ? Klucz opracowany do nauki.",
+      "answerLang": "vi",
+      "answers": ["mười hai giờ", "Bây giờ là mười hai giờ.", "12 giờ", "Bây giờ là 12 giờ.", "12:00"],
+      "image": { "src": "images/lessons/bai-09/clocks.png", "alt": "Dziewięć zegarów", "source": "source-lessons/bái 9.docx" },
+      "grammar": ["g-bai-09-time"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-09-mcq-daypart",
+      "type": "mcq",
+      "skill": "time",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Jak powiedzieć „17:00”?",
+      "options": ["5 giờ chiều", "5 giờ sáng", "17 giờ sáng", "5 giờ đêm"],
+      "answer": 0,
+      "explanation": "System 12-godzinny + pora dnia: 17:00 = 5 giờ chiều (po południu).",
+      "grammar": ["g-bai-09-time"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-09-mcq-khi-nao",
+      "type": "mcq",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Które pytanie dotyczy przeszłości („Kiedy poszedłeś do pracy?”)?",
+      "options": ["Bạn đi làm việc khi nào?", "Khi nào bạn đi làm việc?", "Bạn khi nào đi làm việc?", "Khi nào đi làm việc bạn?"],
+      "answer": 0,
+      "explanation": "„khi nào” na końcu = przeszłość; na początku = przyszłość / czynności regularne.",
+      "grammar": ["g-bai-09-khi-nao"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-09-order-khi-nao-past",
+      "type": "ordering",
+      "skill": "word-order",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Ułóż pytanie o przeszłość: „Kiedy mama czytała książkę?”",
+      "tokens": ["Mẹ", "đọc", "sách", "khi nào?"],
+      "translation": "Kiedy mama czytała książkę?",
+      "grammar": ["g-bai-09-khi-nao"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-09-typed-khi-nao",
+      "type": "typed",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Zapytaj o przyszłość: „Kiedy pójdziesz (bạn) do pracy?”",
+      "answerLang": "vi",
+      "answers": ["Khi nào bạn đi làm việc?", "Khi nào bạn đi làm việc"],
+      "grammar": ["g-bai-09-khi-nao"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-09-routine-order",
+      "type": "ordering",
+      "skill": "reading",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Ułóż czynności z czytanki w kolejności dnia (od rana).",
+      "tokens": ["thức dậy", "ăn sáng", "đi làm việc", "về nhà", "ăn tối", "đi ngủ"],
+      "translation": "wstać → zjeść śniadanie → iść do pracy → wrócić do domu → zjeść kolację → iść spać",
+      "grammar": ["g-bai-09-routine"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-09-read-1",
+      "type": "reading-question",
+      "skill": "reading",
+      "source": "generated",
+      "status": "unverified",
+      "readingId": "r-bai-09-mot-tuan",
+      "prompt": "Mấy giờ tôi về nhà?",
+      "options": ["5 giờ 30 phút chiều", "7 giờ sáng", "10 giờ tối", "8 giờ sáng"],
+      "answer": 0,
+      "level": 1
+    },
+    {
+      "id": "e-bai-09-read-2",
+      "type": "reading-question",
+      "skill": "reading",
+      "source": "generated",
+      "status": "unverified",
+      "readingId": "r-bai-09-mot-tuan",
+      "prompt": "Chủ nhật sáng tôi làm gì? (po wietnamsku)",
+      "answers": ["Tôi tập thể thao.", "Tôi tập thể thao", "tập thể thao", "Tôi với anh tôi tập thể thao.", "Tôi tập thể thao với anh tôi."],
+      "answerLang": "vi",
+      "level": 2
+    },
+    {
+      "id": "e-bai-09-read-3",
+      "type": "reading-question",
+      "skill": "reading",
+      "source": "generated",
+      "status": "unverified",
+      "readingId": "r-bai-09-mot-tuan",
+      "prompt": "Co autor zwykle je na śniadanie?",
+      "options": ["bánh mì", "phở", "cơm", "nem rán"],
+      "answer": 0,
+      "level": 1
+    },
+    {
+      "id": "e-bai-09-routine-match",
+      "type": "matching",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Dopasuj czynności.",
+      "pairs": [
+        { "left": "thức dậy", "right": "wstawać" },
+        { "left": "ăn sáng", "right": "jeść śniadanie" },
+        { "left": "về nhà", "right": "wracać do domu" },
+        { "left": "đi ngủ", "right": "iść spać" },
+        { "left": "tập thể thao", "right": "uprawiać sport" },
+        { "left": "đi chơi", "right": "wychodzić ze znajomymi" }
+      ],
+      "level": 1
+    },
+    {
+      "id": "e-bai-09-open-wake",
+      "type": "open-answer",
+      "skill": "time",
+      "source": "teacher",
+      "prompt": "Ćwiczenie z lekcji: Bạn hôm nay thức dậy mấy giờ? (odpowiedz o sobie: … giờ … phút)",
+      "patterns": ["Hôm nay tôi thức dậy {x} giờ", "Hôm nay mình thức dậy {x} giờ", "Tôi thức dậy {x} giờ", "Mình thức dậy {x} giờ", "Hôm nay tôi thức dậy lúc {x} giờ", "Mình thức dậy lúc {x} giờ"],
+      "sample": "Hôm nay tôi thức dậy 7 giờ 15 phút.",
+      "grammar": ["g-bai-09-time"],
+      "level": 3
+    },
+    {
+      "id": "e-bai-09-open-sleep",
+      "type": "open-answer",
+      "skill": "time",
+      "source": "teacher",
+      "prompt": "Ćwiczenie z lekcji: Bạn thường đi ngủ mấy giờ?",
+      "patterns": ["Tôi đi ngủ {x} giờ", "Mình đi ngủ {x} giờ", "Tôi thường đi ngủ {x} giờ", "Mình thường đi ngủ {x} giờ", "Tôi thường đi ngủ lúc {x} giờ", "Mình thường đi ngủ lúc {x} giờ"],
+      "sample": "Tôi thường đi ngủ 10 giờ tối.",
+      "grammar": ["g-bai-09-time"],
+      "level": 3
+    },
+    {
+      "id": "e-bai-09-open-hangout",
+      "type": "open-answer",
+      "skill": "grammar",
+      "source": "teacher",
+      "prompt": "Ćwiczenie z lekcji: Bạn thường đi chơi ở đâu?",
+      "patterns": ["Tôi đi chơi ở {x}", "Mình đi chơi ở {x}", "Tôi thường đi chơi ở {x}", "Mình thường đi chơi ở {x}"],
+      "sample": "Tôi thường đi chơi ở quán cà phê.",
+      "grammar": ["g-bai-07-place"],
+      "level": 3
+    },
+    {
+      "id": "e-bai-09-diacritics",
+      "type": "diacritics",
+      "skill": "tone",
+      "source": "generated",
+      "status": "unverified",
+      "stripped": "Bay gio la may gio?",
+      "answers": ["Bây giờ là mấy giờ?"],
+      "translation": "Która jest teraz godzina?",
+      "level": 2
+    }
+  ],
+  "checkpoint": ["e-bai-09-time-gen", "e-bai-09-mcq-khi-nao", "e-bai-09-typed-khi-nao", "e-bai-09-routine-order", "e-bai-09-read-2", "e-bai-09-open-wake"],
+  "reviewLinks": ["g-bai-04-time-words", "g-bai-03-numbers", "g-bai-06-tense"],
+  "original": [
+    { "kind": "table", "rows": [["Bây giờ", "teraz"], ["Thời gian", "czas"], ["Giờ", "godzina"], ["Phút", "minuta"], ["Sáng", "rano"], ["Trưa", "wczesnym popołudniem"], ["Chiều", "po południu"], ["Tối", "wieczorem"], ["Đêm", "w nocy"], ["Khoảng", "około"], ["Rồi", "już (coś zostało zrobione)"], ["Chưa", "jeszcze nie"], ["Trước", "przed"], ["Đầu tiên", "najpierw"], ["Sau (đó)", "potem"], ["Khi", "gdy, podczas"], ["Khi nào?", "kiedy?"]] },
+    { "kind": "heading", "text": "Pytanie o czas" },
+    { "kind": "paragraph", "text": "Bây giờ là mấy giờ? - Która jest teraz godzina?\nBây giờ là …. giờ….phút. - Teraz jest godzina ….. i ….. minut\nBây giờ là 5 giờ 20 phút - Teraz jest 17:20 / 5:20\nBây giờ là …. giờ + pora dnia - Teraz jest godzina….\nBây giờ là 5 giờ sáng - Teraz jest 5 rano\nBây giờ là 5 giờ chiều - Teraz jest 17:00" },
+    { "kind": "heading", "text": "Pytanie „kiedy?”" },
+    { "kind": "paragraph", "text": "Khi nào + reszta zdania? – Kiedy (o przyszłości i czynnościach regularnych!)\nKhi nào bạn đi làm việc? - Kiedy pójdziesz/chodzisz do pracy?\nKhi nào mẹ đọc sách? - Kiedy mama będzie czytać książkę?\nreszta zdania + khi nào? – Kiedy (o przeszłości)?\nBạn đi làm việc khi nào? - Kiedy poszedłeś do pracy?\nMẹ đọc sách khi nào? - Kiedy mama czytała książkę?" },
+    { "kind": "heading", "text": "Ćwiczenie: Bây giờ là mấy giờ?" },
+    { "kind": "image", "image": { "src": "images/lessons/bai-09/clocks.png", "alt": "Dziewięć zegarów wskazujących różne godziny", "source": "source-lessons/bái 9.docx" } },
+    { "kind": "heading", "text": "Một tuần của tôi" },
+    { "kind": "paragraph", "text": "Mỗi ngày 7 giờ sáng, tôi thức dậy. Tôi ăn sáng khoảng 8 giờ. Thường cho ăn sáng tôi ăn bánh mì. Khi tôi ăn sáng, tôi cũng uống cà phê sữa. Sau ăn sáng, tôi đi làm việc. 5 giờ 30 phút chiều tôi về nhà. Tôi 7 giờ tối thường ăn tối với gia đình. Sau đó, tôi chơi game, đọc sách hoặc xem phim. Khoảng 10 giờ tối, tôi đi ngủ.\nThứ bảy và chủ nhật tôi không làm việc, thế thì tôi có thời gian cho gia đình và bạn. Mỗi tuần tôi với bạn tôi đi chơi: chúng tôi đi quán ăn hoặc quán cà phê. Chủ nhật sáng, tôi với anh tôi tập thể thao." },
+    { "kind": "table", "rows": [["thức dậy", "budzić się"], ["ăn sáng", "śniadanie, jeść śniadanie"], ["thường (thường)", "często"], ["bánh mì", "kanapka wietnamska (bagietka z warzywami i mięsem)"], ["về", "wrócić"], ["ăn tối", "kolacja"], ["chơi game", "grać w gry"], ["đi chơi", "spędzać z kimś czas, hang out"], ["hoặc", "albo"], ["ngủ", "spać"], ["tập thể thao", "uprawiać sport"], ["tập", "ćwiczyć"], ["thể thao", "sport"]] },
+    { "kind": "heading", "text": "Ćwiczenie: Odpowiedz na pytania" },
+    { "kind": "paragraph", "text": "Bạn hôm nay thức dậy mấy giờ? – hôm nay tôi thức dậy 7 giờ mười lăm phút.\nBạn thường đi ngủ mấy giờ? – Tôi đi ngủ mười giờ.\nKhi nào bạn ăn sáng? – Tôi ăn sáng 7 giờ 30 phút.\nBạn thường tập thể thao không? – Văng, tôi mỗi ngày chạy.\nBạn thường đi chơi ở đâu? – Tôi đi chơi ở quán rượu." }
+  ]
+}

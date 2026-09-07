@@ -1,0 +1,310 @@
+{
+  "id": "bai-10",
+  "number": 10,
+  "title": "Przymiotniki, „bardzo” i porównania",
+  "titleVi": "Bài 10",
+  "summary": "Przymiotniki opisujące ludzi i rzeczy, pytanie „thế nào?”, zdania rzeczownik + przymiotnik, przeczenie, rất / quá / lắm oraz stopniowanie bằng / như / hơn / nhất.",
+  "icon": "✨",
+  "sourceFile": "source-lessons/bái 10.docx",
+  "objectives": [
+    "zapytać „jaki jest…?” i opisać osobę lub rzecz przymiotnikiem",
+    "zaprzeczyć przymiotnikowi („nie jest duży”)",
+    "użyć rất / quá / lắm w odpowiednim miejscu w zdaniu",
+    "porównywać: tak samo jak, bardziej niż, najbardziej"
+  ],
+  "vocabulary": [
+    { "id": "v-bai-10-the-nao", "vi": "thế nào?", "pl": "jaki? jaka? jakie?", "category": "question-word", "examples": [{ "vi": "Chị ấy thế nào?", "pl": "Jaka ona jest?" }] },
+    { "id": "v-bai-10-to", "vi": "to", "pl": "duży", "category": "adjective" },
+    { "id": "v-bai-10-nho", "vi": "nhỏ", "pl": "mały", "category": "adjective" },
+    { "id": "v-bai-10-dep", "vi": "(xinh) đẹp", "pl": "piękny, ładny", "category": "adjective" },
+    { "id": "v-bai-10-dep-trai", "vi": "đẹp trai", "pl": "przystojny", "category": "adjective" },
+    { "id": "v-bai-10-cu", "vi": "cũ", "pl": "stary (o rzeczach)", "category": "adjective" },
+    { "id": "v-bai-10-gia", "vi": "già", "pl": "stary (o ludziach)", "category": "adjective" },
+    { "id": "v-bai-10-tre", "vi": "trẻ", "pl": "młody", "category": "adjective" },
+    { "id": "v-bai-10-moi", "vi": "mới", "pl": "nowy", "category": "adjective" },
+    { "id": "v-bai-10-xau", "vi": "xấu", "pl": "brzydki, zły", "category": "adjective" },
+    { "id": "v-bai-10-cao", "vi": "cao", "pl": "wysoki", "category": "adjective" },
+    { "id": "v-bai-10-ngan", "vi": "ngắn", "pl": "niski (wg lekcji); krótki", "category": "adjective", "status": "flagged", "note": "CONTENT_REVIEW: „ngắn” = krótki (o długości); niski (o wzroście) = thấp / lùn." },
+    { "id": "v-bai-10-hay", "vi": "hay", "pl": "ciekawy, interesujący, fajny", "category": "adjective" },
+    { "id": "v-bai-10-thong-minh", "vi": "thông minh", "pl": "mądry, inteligentny", "category": "adjective" },
+    { "id": "v-bai-10-ngu", "vi": "ngu", "pl": "głupi", "category": "adjective" },
+    { "id": "v-bai-10-nhanh", "vi": "nhanh", "pl": "szybki", "category": "adjective" },
+    { "id": "v-bai-10-lau", "vi": "lâu", "pl": "długo (o czasie)", "category": "adjective" },
+    { "id": "v-bai-10-kho", "vi": "khó", "pl": "trudny", "category": "adjective" },
+    { "id": "v-bai-10-de", "vi": "dễ", "pl": "łatwy", "category": "adjective" },
+    { "id": "v-bai-10-vui", "vi": "vui", "pl": "szczęśliwy, wesoły", "category": "adjective" },
+    { "id": "v-bai-10-beo", "vi": "béo", "pl": "gruby", "category": "adjective", "note": "W oryginale „beo” bez tonu – CONFIRMED TYPO." },
+    { "id": "v-bai-10-gay", "vi": "gầy", "pl": "chudy", "category": "adjective", "note": "W oryginale „gấy” – CONFIRMED TYPO." },
+    { "id": "v-bai-10-dat", "vi": "đắt", "pl": "drogi", "category": "adjective" },
+    { "id": "v-bai-10-qua", "vi": "quá", "pl": "bardzo; zbyt; ale…! (po przymiotniku)", "category": "adverb" },
+    { "id": "v-bai-10-lam", "vi": "lắm", "pl": "bardzo (po przymiotniku)", "category": "adverb" },
+    { "id": "v-bai-10-bang", "vi": "bằng", "pl": "równy, tak samo jak (przy porównaniu)", "category": "particle" },
+    { "id": "v-bai-10-nhu", "vi": "như", "pl": "tak jak", "category": "particle" },
+    { "id": "v-bai-10-hon", "vi": "hơn", "pl": "bardziej (niż)", "category": "particle" },
+    { "id": "v-bai-10-nhat", "vi": "nhất", "pl": "najbardziej", "category": "particle" },
+    { "id": "v-bai-10-tre-em", "vi": "trẻ em", "pl": "dzieci", "category": "noun" },
+    { "id": "v-bai-10-de-thuong", "vi": "dễ thương", "pl": "uroczy", "category": "adjective" },
+    { "id": "v-bai-10-cu-te", "vi": "cư tê", "pl": "cute (slang gen Z)", "category": "adjective", "status": "flagged", "note": "CONTENT_REVIEW: pisownia slangowa do weryfikacji.", "srs": false },
+    { "id": "v-bai-10-thuong", "vi": "thương", "pl": "kochać (w sposób przyjacielski, czule)", "category": "verb" },
+    { "id": "v-bai-10-quyen", "vi": "quyển", "pl": "(kl.) klasyfikator książek", "category": "classifier", "examples": [{ "vi": "Quyển sách mới.", "pl": "Książka jest nowa." }] }
+  ],
+  "grammar": [
+    {
+      "id": "g-bai-10-the-nao",
+      "title": "Pytanie „jaki?” – thế nào?",
+      "pattern": "rzeczownik + thế nào?",
+      "explanation": "„thế nào” stoi na końcu, po rzeczowniku, o który pytamy.",
+      "examples": [
+        { "vi": "Con chó thế nào?", "pl": "Jaki jest ten pies?" },
+        { "vi": "Cái nhà này thế nào?", "pl": "Jaki jest ten dom?" },
+        { "vi": "Chị ấy thế nào?", "pl": "Jaka ona jest?" }
+      ],
+      "keywords": ["thế nào", "jaki"],
+      "practice": ["e-bai-10-typed-the-nao"]
+    },
+    {
+      "id": "g-bai-10-adj-sentence",
+      "title": "Rzeczownik + przymiotnik i przeczenie",
+      "pattern": "rzeczownik + przymiotnik · rzeczownik + không + przymiotnik",
+      "explanation": "Przymiotnik pełni rolę orzeczenia – nie potrzeba „là”: „Nhà cao” = dom jest wysoki. Przeczenie: „không” przed przymiotnikiem. Wskazanie „này” (ten) / „kia” (tamten) stoi po rzeczowniku: „Ly bia này” – ta szklanka piwa.",
+      "examples": [
+        { "vi": "Nhà cao.", "pl": "Dom jest wysoki." },
+        { "vi": "Cô ấy vui.", "pl": "Ona jest szczęśliwa." },
+        { "vi": "Quyển sách mới.", "pl": "Książka jest nowa." },
+        { "vi": "Ly bia này không to.", "pl": "Ta szklanka piwa nie jest duża." },
+        { "vi": "Con mèo kia không nhỏ.", "pl": "Tamten kot nie jest mały." },
+        { "vi": "Phim này không hay.", "pl": "Ten film nie jest ciekawy." }
+      ],
+      "keywords": ["przymiotnik", "không", "này", "kia"],
+      "practice": ["e-bai-10-typed-neg", "e-bai-10-error-la", "e-bai-10-adj-match"]
+    },
+    {
+      "id": "g-bai-10-rat-qua-lam",
+      "title": "Bardzo: rất, quá, lắm",
+      "pattern": "rất + przymiotnik / czasownik · przymiotnik + quá / lắm · không + przymiotnik + lắm / quá (niezbyt)",
+      "explanation": "„rất” stoi PRZED przymiotnikiem lub czasownikiem: „rất nhiều”, „rất thích”. „quá” i „lắm” stoją PO przymiotniku: „đẹp quá”, „cao lắm”. Przy negatywnych przymiotnikach „quá / lắm” mogą oznaczać „zbyt” albo zawołanie: „đắt quá!” – ale drogie! „không + przymiotnik + lắm” = niezbyt: „không đẹp lắm”. Lekcja podaje też „không đẹp quá” (CONTENT_REVIEW).",
+      "examples": [
+        { "vi": "Ở đây có rất nhiều người.", "pl": "Tu jest bardzo dużo ludzi." },
+        { "vi": "Tôi rất thích ăn bánh mì.", "pl": "Bardzo lubię jeść bánh mì." },
+        { "vi": "Chị ấy đẹp quá.", "pl": "Ona jest bardzo ładna." },
+        { "vi": "Anh ấy cao lắm.", "pl": "On jest bardzo wysoki." },
+        { "vi": "Cái này đắt quá!", "pl": "Ale drogie! / Zbyt drogie!" },
+        { "vi": "Không đẹp lắm.", "pl": "Niezbyt ładny." }
+      ],
+      "keywords": ["rất", "quá", "lắm", "bardzo", "zbyt", "niezbyt"],
+      "practice": ["e-bai-10-mcq-rat", "e-bai-10-fill-lam", "e-bai-10-error-rat"]
+    },
+    {
+      "id": "g-bai-10-comparison",
+      "title": "Stopniowanie: bằng, như, hơn, nhất",
+      "pattern": "A + przymiotnik + bằng + B · A + czasownik + przymiotnik + như + B · A + przymiotnik + hơn + B · rzeczownik + przymiotnik + nhất",
+      "explanation": "„bằng” = tak samo (równy): „Tôi cao bằng anh”. „như” (lub potocznie „kiểu”) = tak jak: „Chị ấy nói nhanh như anh”. „hơn” = bardziej niż: „Tiếng Việt khó hơn tiếng Ba Lan”. „nhất” = najbardziej: „Cái nhà này to nhất”. Z czasownikiem „thích” „nhất” może stać na końcu albo przed dopełnieniem: „Mình thích sách này nhất” / „Mình thích nhất sách này”.",
+      "examples": [
+        { "vi": "Tôi cao bằng anh.", "pl": "Jestem tak samo wysoki jak ty." },
+        { "vi": "Chị ấy nói nhanh như anh.", "pl": "Ona mówi tak szybko jak ty." },
+        { "vi": "Tiếng Việt khó hơn tiếng Ba Lan.", "pl": "Wietnamski jest trudniejszy niż polski." },
+        { "vi": "Cái nhà này to nhất.", "pl": "Ten dom jest największy." },
+        { "vi": "Mình thích sách này nhất.", "pl": "Najbardziej lubię tę książkę." }
+      ],
+      "keywords": ["bằng", "như", "hơn", "nhất", "porównanie", "stopniowanie"],
+      "practice": ["e-bai-10-comparison-gen", "e-bai-10-order-hon", "e-bai-10-typed-nhat"]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "e-bai-10-adj-match",
+      "type": "matching",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Dopasuj przymiotniki.",
+      "pairs": [
+        { "left": "to", "right": "duży" },
+        { "left": "nhỏ", "right": "mały" },
+        { "left": "mới", "right": "nowy" },
+        { "left": "cũ", "right": "stary (o rzeczach)" },
+        { "left": "khó", "right": "trudny" },
+        { "left": "dễ", "right": "łatwy" },
+        { "left": "đắt", "right": "drogi" }
+      ],
+      "level": 1
+    },
+    {
+      "id": "e-bai-10-adj-match-2",
+      "type": "matching",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Dopasuj przymiotniki opisujące ludzi.",
+      "pairs": [
+        { "left": "già", "right": "stary (o ludziach)" },
+        { "left": "trẻ", "right": "młody" },
+        { "left": "đẹp trai", "right": "przystojny" },
+        { "left": "thông minh", "right": "mądry" },
+        { "left": "vui", "right": "wesoły" },
+        { "left": "béo", "right": "gruby" }
+      ],
+      "level": 1
+    },
+    {
+      "id": "e-bai-10-typed-the-nao",
+      "type": "typed",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Zapytaj: „Jaki jest ten dom?” (cái nhà này)",
+      "answerLang": "vi",
+      "answers": ["Cái nhà này thế nào?", "Cái nhà này thế nào"],
+      "grammar": ["g-bai-10-the-nao"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-10-typed-neg",
+      "type": "typed",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Napisz: „Ten film nie jest ciekawy.”",
+      "answerLang": "vi",
+      "answers": ["Phim này không hay.", "Phim này không hay"],
+      "grammar": ["g-bai-10-adj-sentence"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-10-error-la",
+      "type": "error-correction",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Popraw zdanie: przed przymiotnikiem nie używa się „là”.",
+      "wrong": "Nhà là cao.",
+      "answers": ["Nhà cao.", "Nhà cao"],
+      "explanation": "Przymiotnik sam pełni rolę orzeczenia: „Nhà cao.”",
+      "grammar": ["g-bai-10-adj-sentence"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-10-mcq-rat",
+      "type": "mcq",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Które zdanie jest poprawne?",
+      "options": ["Anh ấy cao lắm.", "Anh ấy lắm cao.", "Anh ấy cao rất.", "Rất anh ấy cao."],
+      "answer": 0,
+      "explanation": "„lắm” i „quá” stoją po przymiotniku; „rất” przed przymiotnikiem (Anh ấy rất cao).",
+      "grammar": ["g-bai-10-rat-qua-lam"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-10-fill-lam",
+      "type": "fill-blank",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "sentence": "Cái này không đẹp ___. (niezbyt ładne)",
+      "answers": ["lắm"],
+      "bank": ["lắm", "rất", "nhất", "hơn"],
+      "translation": "To nie jest zbyt ładne.",
+      "grammar": ["g-bai-10-rat-qua-lam"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-10-error-rat",
+      "type": "error-correction",
+      "skill": "word-order",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Popraw miejsce słowa „rất”.",
+      "wrong": "Tôi thích rất ăn bánh mì.",
+      "answers": ["Tôi rất thích ăn bánh mì.", "Tôi rất thích ăn bánh mì"],
+      "explanation": "„rất” stoi przed czasownikiem lub przymiotnikiem.",
+      "grammar": ["g-bai-10-rat-qua-lam"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-10-comparison-gen",
+      "type": "generator",
+      "generator": "comparison",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "instruction": "Zbuduj porównanie z bằng / hơn / nhất.",
+      "grammar": ["g-bai-10-comparison"],
+      "count": 5,
+      "level": 2
+    },
+    {
+      "id": "e-bai-10-order-hon",
+      "type": "ordering",
+      "skill": "word-order",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Ułóż zdanie: „Wietnamski jest trudniejszy niż polski.”",
+      "tokens": ["Tiếng Việt", "khó", "hơn", "tiếng Ba Lan."],
+      "translation": "Wietnamski jest trudniejszy niż polski.",
+      "grammar": ["g-bai-10-comparison"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-10-typed-nhat",
+      "type": "typed",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Napisz: „Ten dom jest największy.” (cái nhà này)",
+      "answerLang": "vi",
+      "answers": ["Cái nhà này to nhất.", "Cái nhà này to nhất"],
+      "grammar": ["g-bai-10-comparison"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-10-typed-adj",
+      "type": "typed",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Napisz po wietnamsku: „stary (o ludziach)”.",
+      "answerLang": "vi",
+      "answers": ["già"],
+      "vocab": ["v-bai-10-gia"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-10-open-describe",
+      "type": "open-answer",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Tiếng Việt thế nào? – odpowiedz własnym zdaniem (rzeczownik + przymiotnik, możesz dodać rất / lắm / quá).",
+      "patterns": ["Tiếng Việt {x}", "Tiếng Việt rất {x}"],
+      "sample": "Tiếng Việt khó lắm, nhưng rất hay.",
+      "grammar": ["g-bai-10-adj-sentence", "g-bai-10-rat-qua-lam"],
+      "level": 3
+    },
+    {
+      "id": "e-bai-10-diacritics",
+      "type": "diacritics",
+      "skill": "tone",
+      "source": "generated",
+      "status": "unverified",
+      "stripped": "Chi ay dep qua.",
+      "answers": ["Chị ấy đẹp quá."],
+      "translation": "Ona jest bardzo ładna.",
+      "level": 2
+    }
+  ],
+  "checkpoint": ["e-bai-10-adj-match", "e-bai-10-typed-neg", "e-bai-10-mcq-rat", "e-bai-10-error-rat", "e-bai-10-comparison-gen", "e-bai-10-typed-nhat"],
+  "reviewLinks": ["g-bai-08-classifiers", "g-bai-05-verb-question", "g-bai-07-place"],
+  "original": [
+    { "kind": "table", "rows": [["thế nào?", "jaki? jaka? jakie?"], ["to", "duży"], ["nhỏ", "mały"], ["(xinh) đẹp", "piękny, ładny"], ["đẹp trai", "przystojny"], ["cũ", "stary (o rzeczach)"], ["già", "stary (o ludziach)"], ["trẻ", "młody"], ["mới", "nowy"], ["xấu", "brzydki, zły"], ["cao", "wysoki"], ["ngắn", "niski"], ["hay", "ciekawy, interesujący, fajny"], ["thông minh", "mądry"], ["ngu", "głupi"], ["nhanh", "szybki"], ["lâu", "długo"], ["khó", "trudny"], ["dễ", "łatwy"], ["vui", "szczęśliwy, wesoły"], ["beo", "gruby"], ["gấy", "chudy"], ["đắt", "drogi"]] },
+    { "kind": "heading", "text": "Pytanie: jaki? jaka? jakie?" },
+    { "kind": "paragraph", "text": "rzeczownik + thế nào?\nCon chó thế nào? - Jaki jest ten pies?\nCái nhà này thế nào? - Jaki jest ten dom?\nChị ấy thế nào? - Jaka ona jest?" },
+    { "kind": "heading", "text": "Frazy z przymiotnikami" },
+    { "kind": "paragraph", "text": "rzeczownik + przymiotnik\nNhà cao. - Dom jest wysoki\nCô ấy vui. - Ona jest szczęśliwa\nQuyển sách mới. - Książka jest nowa\nNegacja: rzeczownik + không + przymiotnik\nLy bia này không to. - Ta szklanka nie jest duża\nCon mèo kia không nhỏ. - Tamten kot nie jest mały\nPhim này không hay. - Ten film nie jest ciekawy" },
+    { "kind": "heading", "text": "Rất, quá, lắm - bardzo" },
+    { "kind": "paragraph", "text": "rất: rất + przymiotnik/czasownik\nỞ đây có rất nhiều người. - Tu jest bardzo dużo ludzi.\nTôi rất thích ăn bánh mì. - Bardzo lubię jeść banh mi.\nRất tốt! - Bardzo dobrze.\nquá i lắm: przymiotnik + quá/lắm\nChị ấy đẹp quá. - Ona jest bardzo ładna.\nAnh ấy cao lắm. - On jest bardzo wysoki.\n*przy negatywnych przymiotnikach quá i lắm mogą oznaczać „zbyt” lub zawołanie:\ncái này đắt quá! - ale drogie! zbyt drogie!\nxấu quá! - ale brzydkie!\nkhông + przymiotnik +quá/lắm - niezbyt\nkhông đẹp lắm - niezbyt ładny\nkhông đẹp quá - niezbyt ładny" },
+    { "kind": "heading", "text": "Stopniowanie" },
+    { "kind": "paragraph", "text": "bằng - jest równy…. Tôi cao bằng anh.\nnhư, kiểu - tak jak. Chị ấy nói nhanh như anh.\nhơn - bardziej. Tiếng Việt khó hơn tiếng Ba Lan.\nnhất - najbardziej. Cái nhà này to nhất.\nMình thích sách này nhất - najbardziej lubię tą książkę\nMình thích nhất sách này - najbardziej lubię tą książkę\ntrẻ em - dzieci\ndễ thương - uroczy\ncư tê - cute (gen z slang)\nthương - kochać (in a friendly way np.)" }
+  ]
+}

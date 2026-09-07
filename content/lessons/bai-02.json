@@ -1,0 +1,197 @@
+{
+  "id": "bai-02",
+  "number": 2,
+  "title": "Jak masz na imię? Zdanie i pytanie",
+  "titleVi": "Bài 2",
+  "summary": "Budowa zdania twierdzącego, przedstawianie się z „tên là”, pytanie „gì?” oraz pytanie rozstrzygające z „không?”.",
+  "icon": "💬",
+  "sourceFile": "source-lessons/bái 2.docx",
+  "objectives": [
+    "powiedzieć, jak mam na imię, i zapytać o imię",
+    "zbudować proste zdanie: podmiot + orzeczenie + dopełnienie",
+    "zadać pytanie rozstrzygające („czy…?”) dodając „không?”",
+    "odpowiedzieć „vâng” albo „không phải” i zapytać „jak się masz?”"
+  ],
+  "vocabulary": [
+    { "id": "v-bai-02-ten", "vi": "tên", "pl": "imię", "category": "noun" },
+    { "id": "v-bai-02-la", "vi": "là", "pl": "być", "category": "verb", "examples": [{ "vi": "Mình tên là Anna.", "pl": "Mam na imię Anna." }] },
+    { "id": "v-bai-02-gi", "vi": "gì", "pl": "co", "category": "question-word", "examples": [{ "vi": "Bạn tên là gì?", "pl": "Jak masz na imię?" }] },
+    { "id": "v-bai-02-khoe", "vi": "khỏe", "pl": "zdrowy, zdrowie", "category": "adjective", "examples": [{ "vi": "Bạn khỏe không?", "pl": "Jak się masz? (dosł. czy jesteś zdrowy?)" }] },
+    { "id": "v-bai-02-khong", "vi": "không", "pl": "partykuła pytająca „czy” (na końcu zdania); nie", "category": "particle", "examples": [{ "vi": "Bạn tên là Anna không?", "pl": "Czy masz na imię Anna?" }] },
+    { "id": "v-bai-02-vang", "vi": "vâng", "pl": "tak", "category": "particle" },
+    { "id": "v-bai-02-khong-phai", "vi": "không phải", "pl": "nie (dosł. nieprawda)", "category": "phrase" },
+    { "id": "v-bai-02-minh-moj", "vi": "mình", "pl": "ja, mój, swój", "category": "pronoun", "note": "W Bài 2 „mình” pojawia się także w znaczeniu „mój / swój”." }
+  ],
+  "grammar": [
+    {
+      "id": "g-bai-02-sentence",
+      "title": "Zdanie twierdzące",
+      "pattern": "Podmiot + orzeczenie + dopełnienie",
+      "explanation": "Wietnamskie zdanie ma stały szyk: najpierw podmiot, potem czasownik, potem dopełnienie. Czasownik się nie odmienia.",
+      "examples": [{ "vi": "Mình tên là Anna.", "pl": "Mam na imię Anna. (dosł. moje imię jest Anna)" }],
+      "keywords": ["szyk zdania", "zdanie twierdzące"],
+      "practice": ["e-bai-02-order-name"]
+    },
+    {
+      "id": "g-bai-02-la",
+      "title": "Przedstawianie się: tên là",
+      "pattern": "Zaimek + tên là + imię",
+      "explanation": "„là” znaczy „być” i łączy podmiot z rzeczownikiem. „Mình tên là …” = „mam na imię …”.",
+      "examples": [{ "vi": "Mình tên là Hoa.", "pl": "Mam na imię Hoa." }],
+      "keywords": ["là", "tên"],
+      "practice": ["e-bai-02-fill-ten", "e-bai-02-open-name"]
+    },
+    {
+      "id": "g-bai-02-gi",
+      "title": "Pytanie o imię: gì?",
+      "pattern": "Zaimek + tên là gì?",
+      "explanation": "Słowo pytające „gì” („co”) stoi na końcu zdania, w miejscu odpowiedzi. Nie zmienia się szyk zdania.",
+      "examples": [{ "vi": "Bạn tên là gì?", "pl": "Jak masz na imię?" }],
+      "keywords": ["gì", "pytanie"],
+      "practice": ["e-bai-02-typed-question"]
+    },
+    {
+      "id": "g-bai-02-khong-question",
+      "title": "Pytanie rozstrzygające (czy…?)",
+      "pattern": "Zdanie twierdzące + không?",
+      "explanation": "Aby zapytać „czy…?”, dodaje się „không?” na końcu zdania twierdzącego. Odpowiedź twierdząca: „vâng”, przecząca: „không phải” (dosł. nieprawda).\n\n„Bạn khỏe không?” to częste, uprzejme pytanie po przywitaniu – odpowiednik polskiego „jak się masz?”. Odpowiedź: „Mình khỏe, cảm ơn.”",
+      "examples": [
+        { "vi": "Bạn tên là Anna.", "pl": "Ty masz na imię Anna." },
+        { "vi": "Bạn tên là Anna không?", "pl": "Czy ty masz na imię Anna?", "status": "flagged", "note": "Zob. CONTENT_REVIEW: bardziej naturalne „…phải không?”" },
+        { "vi": "Bạn khỏe không?", "pl": "Czy jesteś zdrowy? / Jak się masz?" },
+        { "vi": "Vâng.", "pl": "Tak." },
+        { "vi": "Không phải.", "pl": "Nie." }
+      ],
+      "keywords": ["không", "pytanie rozstrzygające", "vâng", "không phải"],
+      "practice": ["e-bai-02-mcq-answer", "e-bai-02-dialogue-1", "e-bai-02-typed-how"]
+    }
+  ],
+  "dialogues": [
+    {
+      "id": "d-bai-02-greeting",
+      "title": "Poznanie się",
+      "situation": "Dwie rówieśniczki poznają się i pytają o imię.",
+      "lines": [
+        { "speaker": "A", "vi": "Chào bạn! Bạn khỏe không?", "pl": "Cześć! Jak się masz?" },
+        { "speaker": "B", "vi": "Chào bạn! Mình khỏe, cảm ơn.", "pl": "Cześć! Mam się dobrze, dziękuję." },
+        { "speaker": "A", "vi": "Bạn tên là gì?", "pl": "Jak masz na imię?" },
+        { "speaker": "B", "vi": "Mình tên là Anna. Bạn tên là Hoa không?", "pl": "Mam na imię Anna. Czy ty masz na imię Hoa?", "status": "flagged", "note": "Zob. CONTENT_REVIEW: „…phải không?”" },
+        { "speaker": "A", "vi": "Vâng, mình tên là Hoa. Chào Anna!", "pl": "Tak, mam na imię Hoa. Cześć, Anno!" }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "e-bai-02-fill-ten",
+      "type": "fill-blank",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "sentence": "Mình ___ là Anna.",
+      "answers": ["tên"],
+      "bank": ["tên", "gì", "khỏe", "không"],
+      "translation": "Mam na imię Anna.",
+      "grammar": ["g-bai-02-la"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-02-order-name",
+      "type": "ordering",
+      "skill": "word-order",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Ułóż zdanie: „Jak masz na imię?”",
+      "tokens": ["Bạn", "tên", "là", "gì?"],
+      "translation": "Jak masz na imię?",
+      "grammar": ["g-bai-02-gi", "g-bai-02-sentence"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-02-typed-question",
+      "type": "typed",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Zapytaj rówieśnika: „Jak masz na imię?”",
+      "answerLang": "vi",
+      "answers": ["Bạn tên là gì?", "Bạn tên là gì"],
+      "grammar": ["g-bai-02-gi"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-02-typed-how",
+      "type": "typed",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Zapytaj rówieśnika: „Jak się masz?” (dosł. czy jesteś zdrowy)",
+      "answerLang": "vi",
+      "answers": ["Bạn khỏe không?", "Bạn khỏe không"],
+      "grammar": ["g-bai-02-khong-question"],
+      "vocab": ["v-bai-02-khoe"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-02-mcq-answer",
+      "type": "mcq",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Ktoś pyta: „Bạn tên là Hoa không?”. Nie masz na imię Hoa. Co odpowiesz?",
+      "options": ["Không phải.", "Vâng.", "Gì?", "Cảm ơn."],
+      "answer": 0,
+      "explanation": "„Không phải” = nie (dosł. nieprawda). „Vâng” = tak.",
+      "grammar": ["g-bai-02-khong-question"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-02-dialogue-1",
+      "type": "dialogue-completion",
+      "skill": "dialogue",
+      "source": "teacher",
+      "dialogueId": "d-bai-02-greeting",
+      "lineIndex": 1,
+      "distractors": ["Bạn tên là gì?", "Không phải, mình tên là Hoa."],
+      "grammar": ["g-bai-02-khong-question"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-02-open-name",
+      "type": "open-answer",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Bạn tên là gì? – odpowiedz pełnym zdaniem o sobie.",
+      "patterns": ["Mình tên là {x}", "Tôi tên là {x}", "Em tên là {x}"],
+      "sample": "Mình tên là Anna.",
+      "grammar": ["g-bai-02-la"],
+      "level": 3
+    },
+    {
+      "id": "e-bai-02-diacritics",
+      "type": "diacritics",
+      "skill": "tone",
+      "source": "generated",
+      "status": "unverified",
+      "stripped": "Ban khoe khong?",
+      "answers": ["Bạn khỏe không?"],
+      "translation": "Jak się masz?",
+      "vocab": ["v-bai-02-khoe"],
+      "level": 2
+    }
+  ],
+  "checkpoint": ["e-bai-02-order-name", "e-bai-02-typed-question", "e-bai-02-mcq-answer", "e-bai-02-dialogue-1", "e-bai-02-open-name"],
+  "reviewLinks": ["g-bai-01-pronouns", "g-bai-01-greetings"],
+  "original": [
+    { "kind": "heading", "text": "Zdanie twierdzące" },
+    { "kind": "paragraph", "text": "Podmiot + orzeczenie + dopełnienie\nMình tên là …. - Mam na imię\nMình - ja, mój, swój\ntên - imię\nlà - być" },
+    { "kind": "heading", "text": "Pytanie o imię" },
+    { "kind": "paragraph", "text": "Bạn tên là gì? - Jak masz na imię?\nbạn - ty\ntên - imię\nlà - być\ngì - co" },
+    { "kind": "heading", "text": "Pytanie o rozstrzygnięcie (czy….?)" },
+    { "kind": "paragraph", "text": "Zdanie twierdzące + không?\nBạn tên là Anna - ty masz na imię Anna.\nBạn tên là Anna không? - Czy ty masz na imię Anna?\nBạn khỏe không? - Czy jesteś zdrowy? (częste, uprzejme pytanie po przywitaniu, odpowiednik polskiego „jak się masz?”)\nkhỏe - zdrowy, zdrowie" },
+    { "kind": "heading", "text": "Odpowiedzi na pytania" },
+    { "kind": "paragraph", "text": "Vâng - tak\nkhông phải - nie (dos. nie prawda)" },
+    { "kind": "heading", "text": "Dialog" },
+    { "kind": "paragraph", "text": "A: Chào bạn! Bạn khỏe không?\nB: Chào bạn! Mình khỏe, cảm ơn.\nA: Bạn tên là gì?\nB: Mình tên là Anna. Bạn tên là Hoa không?\nA: Vâng, mình tên là Hoa. Chào Anna!" }
+  ]
+}

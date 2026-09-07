@@ -1,0 +1,289 @@
+{
+  "id": "bai-07",
+  "number": 7,
+  "title": "Tu, tam, gdzie? Plany na weekend",
+  "titleVi": "Bài 7",
+  "summary": "Zaimki miejsca đây / đó / kia, pytanie „ở đâu?”, słownictwo lokali (quán ăn, quán cà phê, quán rượu), dialog o planach oraz opisywanie obrazków.",
+  "icon": "📍",
+  "sourceFile": "source-lessons/bái 7.docx",
+  "objectives": [
+    "wskazać „tu / tam / tam daleko” i zapytać „gdzie?”",
+    "zaproponować wspólne wyjście do restauracji, kawiarni lub baru",
+    "opisać, co ktoś robi na obrazku, pełnym zdaniem",
+    "połączyć fragmenty zdań w sensowną całość"
+  ],
+  "vocabulary": [
+    { "id": "v-bai-07-day", "vi": "đây", "pl": "tutaj", "category": "adverb", "examples": [{ "vi": "Đây là thực đơn.", "pl": "To jest menu. (dosł. tutaj jest)" }] },
+    { "id": "v-bai-07-do", "vi": "đó", "pl": "tam", "category": "adverb" },
+    { "id": "v-bai-07-kia", "vi": "kia", "pl": "tam daleko", "category": "adverb", "examples": [{ "vi": "Ở kia có nhiều.", "pl": "Tam (dalej) jest dużo." }] },
+    { "id": "v-bai-07-dau", "vi": "đâu?", "pl": "gdzie? (dokąd?)", "category": "question-word", "examples": [{ "vi": "Tôi không biết đi đâu.", "pl": "Nie wiem, dokąd iść." }] },
+    { "id": "v-bai-07-o-dau", "vi": "ở đâu?", "pl": "gdzie (się coś znajduje)?", "category": "question-word", "examples": [{ "vi": "Bạn thường đi chơi ở đâu?", "pl": "Gdzie zwykle spędzasz czas?" }] },
+    { "id": "v-bai-07-the-thi", "vi": "thế thì", "pl": "a więc, więc, w takim razie", "category": "other" },
+    { "id": "v-bai-07-quan-ruou", "vi": "quán rượu", "pl": "bar, pub", "category": "noun", "tags": ["place"] },
+    { "id": "v-bai-07-ruou", "vi": "rượu", "pl": "alkohol", "category": "noun", "tags": ["food"] },
+    { "id": "v-bai-07-quan-an", "vi": "quán ăn", "pl": "restauracja, jadłodajnia", "category": "noun", "tags": ["place"] },
+    { "id": "v-bai-07-quan-ca-phe", "vi": "quán cà phê", "pl": "kawiarnia", "category": "noun", "tags": ["place"] },
+    { "id": "v-bai-07-ca-phe", "vi": "cà phê", "pl": "kawa", "category": "noun", "tags": ["food"] },
+    { "id": "v-bai-07-tot", "vi": "tốt", "pl": "dobry", "category": "adjective" },
+    { "id": "v-bai-07-sau", "vi": "sau", "pl": "po (czymś)", "category": "preposition", "note": "W Bài 11 także „za (czymś)”." },
+    { "id": "v-bai-07-chung-minh", "vi": "chúng mình", "pl": "my (nieformalnie, włącznie z rozmówcą)", "category": "pronoun" },
+    { "id": "v-bai-07-em-gai", "vi": "em gái", "pl": "młodsza siostra", "category": "noun", "tags": ["family"] },
+    { "id": "v-bai-07-ong-ay", "vi": "ông ấy", "pl": "on (o starszym mężczyźnie)", "category": "pronoun", "note": "Zaimek + ấy = on / ona: anh ấy, chị ấy, cô ấy, em ấy, ông ấy." }
+  ],
+  "grammar": [
+    {
+      "id": "g-bai-07-place",
+      "title": "đây / đó / kia i pytanie ở đâu?",
+      "pattern": "đây (tu) · đó (tam) · kia (tam daleko) · đâu? (gdzie? dokąd?) · ở đâu? (gdzie się znajduje?)",
+      "explanation": "„đây / đó / kia” wskazują odległość od mówiącego. „đâu” pyta o miejsce; z „ở” (w, znajdować się) pyta o położenie: „Con mèo ở đâu?”. Z czasownikami ruchu używa się samego „đâu”: „đi đâu?” – dokąd?\n\n„Ở kia có nhiều” – „tam jest dużo”: konstrukcja „miejsce + có + rzecz” znaczy „w miejscu X jest / są Y”.",
+      "examples": [
+        { "vi": "Ở kia có nhiều.", "pl": "Tam jest dużo." },
+        { "vi": "Tôi không biết đi đâu.", "pl": "Nie wiem, dokąd iść." },
+        { "vi": "Ở Mỹ có rất nhiều người Việt Nam.", "pl": "W Ameryce jest bardzo dużo Wietnamczyków." }
+      ],
+      "keywords": ["đây", "đó", "kia", "đâu", "ở đâu", "gdzie"],
+      "practice": ["e-bai-07-mcq-dau", "e-bai-07-fill-o-dau", "e-bai-07-typed-where"]
+    },
+    {
+      "id": "g-bai-07-plans",
+      "title": "Proponowanie planów",
+      "pattern": "Bạn muốn + czasownik + với mình không? · Thế thì, … · Mình chưa biết, còn bạn?",
+      "explanation": "Propozycję buduje się z „muốn … không?” (chcesz…?) i „với mình” (ze mną). „Thế thì” (w takim razie) otwiera reakcję na to, co powiedział rozmówca. „Mình chưa biết” = jeszcze nie wiem.",
+      "examples": [
+        { "vi": "Bạn muốn đi quán ăn với mình không?", "pl": "Chcesz iść ze mną do restauracji?" },
+        { "vi": "Thế thì, bạn muốn làm gì?", "pl": "W takim razie, co chcesz robić?" },
+        { "vi": "Mình chưa biết, còn bạn?", "pl": "Jeszcze nie wiem, a ty?" }
+      ],
+      "keywords": ["thế thì", "với", "plany", "propozycja"],
+      "practice": ["e-bai-07-dialogue-1", "e-bai-07-dialogue-2", "e-bai-07-order-invite"]
+    }
+  ],
+  "dialogues": [
+    {
+      "id": "d-bai-07-weekend",
+      "title": "Co robimy w sobotę?",
+      "situation": "Dwoje rówieśników planuje sobotę: phở, kawa czy piwo?",
+      "lines": [
+        { "speaker": "A", "vi": "Hôm nay bạn đi làm việc không?", "pl": "Idziesz dzisiaj do pracy?" },
+        { "speaker": "B", "vi": "Không phải, hôm nay là thứ Bảy, mình không đi làm việc.", "pl": "Nie, dzisiaj jest sobota, nie idę do pracy.", "status": "flagged", "note": "CONTENT_REVIEW: na pytanie o czynność naturalniej „Không”." },
+        { "speaker": "A", "vi": "Thế thì, bạn muốn làm gì?", "pl": "W takim razie, co chcesz robić?" },
+        { "speaker": "B", "vi": "Mình chưa biết, còn bạn?", "pl": "Jeszcze nie wiem, a ty?" },
+        { "speaker": "A", "vi": "Mình muốn ăn phở. Bạn muốn đi quán ăn với mình không?", "pl": "Chcę zjeść phở. Chcesz iść ze mną do restauracji?", "note": "W oryginale literówka „vời” – poprawiona na „với” (CONFIRMED TYPO)." },
+        { "speaker": "B", "vi": "Muốn, nhưng mình cũng muốn uống cà phê. Ăn sau, chúng mình sẽ đi quán cà phê không?", "pl": "Chcę, ale chcę też napić się kawy. Po jedzeniu pójdziemy do kawiarni?", "status": "flagged", "note": "CONTENT_REVIEW: „Ăn sau” prawdopodobnie „Sau khi ăn”." },
+        { "speaker": "A", "vi": "Mình không uống cà phê. Mình muốn uống bia.", "pl": "Nie piję kawy. Chcę napić się piwa." },
+        { "speaker": "B", "vi": "Thế thì, bạn biết quán rượu tốt không?", "pl": "W takim razie znasz jakiś dobry bar?" },
+        { "speaker": "A", "vi": "Ở kia có nhiều. Chúng mình đi xem.", "pl": "Tam jest dużo. Chodźmy zobaczyć." }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "e-bai-07-mcq-dau",
+      "type": "mcq",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Które słowo znaczy „tam daleko”?",
+      "options": ["kia", "đây", "đó", "đâu"],
+      "answer": 0,
+      "explanation": "đây = tutaj, đó = tam, kia = tam daleko, đâu = gdzie?",
+      "grammar": ["g-bai-07-place"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-07-fill-o-dau",
+      "type": "fill-blank",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "sentence": "Bạn thường đi chơi ___?",
+      "answers": ["ở đâu"],
+      "bank": ["ở đâu", "đây", "kia", "thế thì"],
+      "translation": "Gdzie zwykle spędzasz czas?",
+      "grammar": ["g-bai-07-place"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-07-typed-where",
+      "type": "typed",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Zapytaj: „Gdzie jest kot?” (con mèo)",
+      "answerLang": "vi",
+      "answers": ["Con mèo ở đâu?", "Con mèo ở đâu"],
+      "grammar": ["g-bai-07-place"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-07-place-match",
+      "type": "matching",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Dopasuj miejsca i napoje.",
+      "pairs": [
+        { "left": "quán rượu", "right": "bar, pub" },
+        { "left": "quán ăn", "right": "restauracja" },
+        { "left": "quán cà phê", "right": "kawiarnia" },
+        { "left": "rượu", "right": "alkohol" },
+        { "left": "tốt", "right": "dobry" }
+      ],
+      "level": 1
+    },
+    {
+      "id": "e-bai-07-order-invite",
+      "type": "ordering",
+      "skill": "word-order",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Ułóż propozycję: „Chcesz iść ze mną do restauracji?”",
+      "tokens": ["Bạn", "muốn", "đi", "quán ăn", "với mình", "không?"],
+      "translation": "Chcesz iść ze mną do restauracji?",
+      "grammar": ["g-bai-07-plans"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-07-dialogue-1",
+      "type": "dialogue-completion",
+      "skill": "dialogue",
+      "source": "teacher",
+      "dialogueId": "d-bai-07-weekend",
+      "lineIndex": 3,
+      "distractors": ["Mình muốn uống bia.", "Ở kia có nhiều."],
+      "grammar": ["g-bai-07-plans"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-07-dialogue-2",
+      "type": "dialogue-completion",
+      "skill": "dialogue",
+      "source": "teacher",
+      "dialogueId": "d-bai-07-weekend",
+      "lineIndex": 8,
+      "distractors": ["Mình chưa biết, còn bạn?", "Không phải, hôm nay là thứ Bảy."],
+      "grammar": ["g-bai-07-place"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-07-pic-1",
+      "type": "typed",
+      "skill": "vocabulary",
+      "source": "teacher",
+      "prompt": "Ćwiczenie z lekcji (obrazek: dziewczynka w słuchawkach). Em gái làm gì?",
+      "answerLang": "vi",
+      "answers": ["Em gái nghe nhạc.", "Em gái nghe nhạc", "Em ấy nghe nhạc."],
+      "explanation": "W oryginale odpowiedź „nghe ngạc” zawiera literówkę (CONFIRMED TYPO) – poprawna pisownia to „nhạc”.",
+      "vocab": ["v-bai-05-nghe", "v-bai-05-nhac"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-07-pic-2",
+      "type": "typed",
+      "skill": "vocabulary",
+      "source": "teacher",
+      "prompt": "Ćwiczenie z lekcji (obrazek: rodzina w podróży). Gia đình làm gì?",
+      "answerLang": "vi",
+      "answers": ["Gia đình đi du lịch.", "Gia đình đi du lịch"],
+      "vocab": ["v-bai-06-du-lich"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-07-pic-3",
+      "type": "typed",
+      "skill": "vocabulary",
+      "source": "teacher",
+      "prompt": "Ćwiczenie z lekcji (obrazek: mężczyzna gra w piłkę). Sở thích của anh ấy là gì?",
+      "answerLang": "vi",
+      "answers": ["Sở thích của anh ấy là đá bóng.", "Sở thích của anh ấy là đá bóng", "Đá bóng."],
+      "vocab": ["v-bai-06-so-thich", "v-bai-06-da-bong"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-07-pic-4",
+      "type": "typed",
+      "skill": "vocabulary",
+      "source": "teacher",
+      "prompt": "Ćwiczenie z lekcji (obrazek: rodzeństwo je phở). Anh chị em ăn gì?",
+      "answerLang": "vi",
+      "answers": ["Anh chị em ăn phở.", "Anh chị em ăn phở"],
+      "vocab": ["v-bai-05-pho"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-07-pic-5",
+      "type": "typed",
+      "skill": "vocabulary",
+      "source": "teacher",
+      "prompt": "Ćwiczenie z lekcji (obrazek: chłopiec uczy się angielskiego). Em trai học tiếng Pháp không?",
+      "answerLang": "vi",
+      "answers": ["Không, em học tiếng Anh.", "Không, em học tiếng Anh", "Không, em trai học tiếng Anh.", "Không, em ấy học tiếng Anh."],
+      "vocab": ["v-bai-05-tieng-anh"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-07-pic-6",
+      "type": "typed",
+      "skill": "vocabulary",
+      "source": "teacher",
+      "prompt": "Ćwiczenie z lekcji (obrazek: starszy pan czyta i pije). Ông ấy làm gì?",
+      "answerLang": "vi",
+      "answers": ["Ông ấy đọc sách và uống bia.", "Ông ấy đọc sách và uống bia"],
+      "vocab": ["v-bai-05-doc", "v-bai-05-uong"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-07-pic-7",
+      "type": "typed",
+      "skill": "vocabulary",
+      "source": "teacher",
+      "prompt": "Ćwiczenie z lekcji (obrazek: kobieta z psem). Chị ấy có con mèo không?",
+      "answerLang": "vi",
+      "answers": ["Chị ấy có con chó.", "Chị ấy có con chó", "Không, chị ấy có con chó."],
+      "vocab": ["v-bai-06-con-cho"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-07-teacher-match",
+      "type": "matching",
+      "skill": "reading",
+      "source": "teacher",
+      "status": "unverified",
+      "prompt": "Ćwiczenie z lekcji: połącz fragmenty zdań. (Klucz odpowiedzi opracowany do nauki – w oryginale brak klucza.)",
+      "pairs": [
+        { "left": "Đó là…", "right": "quán ăn rất tốt" },
+        { "left": "Hôm qua cô ấy…", "right": "đã xem phim Nhật" },
+        { "left": "Bố mẹ mỗi ngày…", "right": "ăn phở" },
+        { "left": "Tôi không biết…", "right": "đi đâu" },
+        { "left": "Anh ấy chỉ nói…", "right": "tiếng Anh" },
+        { "left": "Em trai không muốn…", "right": "đi học" },
+        { "left": "Ở Mỹ có…", "right": "rất nhiều người Việt Nam" }
+      ],
+      "grammar": ["g-bai-07-place", "g-bai-06-tense"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-07-open-weekend",
+      "type": "open-answer",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Thứ Bảy bạn muốn làm gì? – odpowiedz o sobie.",
+      "patterns": ["Thứ Bảy mình muốn {x}", "Mình muốn {x}", "Thứ Bảy tôi muốn {x}", "Tôi muốn {x}"],
+      "sample": "Thứ Bảy mình muốn đi quán cà phê với bạn.",
+      "grammar": ["g-bai-07-plans"],
+      "level": 3
+    }
+  ],
+  "checkpoint": ["e-bai-07-mcq-dau", "e-bai-07-typed-where", "e-bai-07-order-invite", "e-bai-07-dialogue-1", "e-bai-07-pic-1", "e-bai-07-teacher-match"],
+  "reviewLinks": ["g-bai-05-modal", "g-bai-06-roi-chua", "g-bai-04-weekdays-months"],
+  "original": [
+    { "kind": "heading", "text": "Ćwiczenie: Odpowiedz na pytania (do zdjęć)" },
+    { "kind": "paragraph", "text": "Em gái làm gì? – Em gái nghe ngạc.\nGia đình làm gì? – Gia đình đi du lịch.\nSở thích của anh ấy là gì? – Sở thích của anh ấy là đá bóng.\nAnh chị em ăn gì? – Anh chị em ăn phở.\nEm trai học tiếng Pháp không? – Không, em học tiếng Anh.\nÔng ấy làm gì? – Ông ấy đọc sách và uống bia.\nChị ấy có con mèo không? – Chị ấy có con chó.\n(Zdjęcia z dokumentu – duże pliki stockowe – nie zostały skopiowane do aplikacji.)" },
+    { "kind": "table", "rows": [["đây", "tutaj"], ["đó", "tam"], ["kia", "tam daleko"], ["đâu?", "gdzie?"], ["ở đâu?", "gdzie (się coś znajduje)?"], ["thế thì", "a więc, więc, dlatego"], ["quán rượu", "bar, pub"], ["rượu", "alkohol"], ["quán ăn", "restauracja"], ["quán cà phê", "kawiarnia"], ["cà phê", "kawa"], ["tốt", "dobry"], ["sau", "po (czyms)"]] },
+    { "kind": "heading", "text": "Dialog" },
+    { "kind": "paragraph", "text": "A: Hôm nay bạn đi làm việc không?\nB: Không phải, hôm nay là thứ bảy, mình không đi làm việc.\nA: Thế thì, bạn muốn làm gì?\nB: Mình chưa biết, còn bạn?\nA: Mình muốn ăn phở. Bạn muốn đi quán ăn vời mình không?\nB: Muốn, nhưng mình cũng muốn uống cà phê. Ăn sau, chúng mình sẽ đi quán cà phê không?\nA: Mình không uống cà phê. Mình muốn uống bia.\nB: Thế thì, bạn biết quán rượu tốt không?\nA: Ở kia có nhiều. Chúng mình đi xem." },
+    { "kind": "heading", "text": "Ćwiczenie: Połącz fragmenty zdań/fraz" },
+    { "kind": "paragraph", "text": "Đó là…. / Hôm qua cô ấy… / Bố mẹ mỗi ngày…. / Tôi không biết… / Anh ấy chỉ nói… / Em trai không muốn… / Ở Mỹ có….\na. đi học · b. rất nhiều người Việt Nam · c. ăn phở · d. quán ăn rất tốt · e. đã xem phim Nhật · f. tiếng Anh · g. đi đâu" }
+  ]
+}

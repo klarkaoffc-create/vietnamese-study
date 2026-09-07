@@ -1,0 +1,373 @@
+{
+  "id": "bai-06",
+  "number": 6,
+  "title": "Rodzina i czasy: đã / đang / sẽ, rồi / chưa",
+  "titleVi": "Bài 6",
+  "summary": "Słownictwo rodzinne, czytanka „Gia đình của tôi”, znaczniki czasu đã / đang / sẽ, „rồi” (już) i „chưa” (jeszcze nie), pytanie „…chưa?”.",
+  "icon": "👨‍👩‍👧",
+  "sourceFile": "source-lessons/bái 6.docx",
+  "objectives": [
+    "opowiedzieć o swojej rodzinie: kto, ile lat, czym się zajmuje",
+    "użyć đã / đang / sẽ, aby umieścić czynność w przeszłości, teraźniejszości lub przyszłości",
+    "powiedzieć „już” (rồi) i „jeszcze nie” (chưa) oraz zapytać „czy już…?”",
+    "zrozumieć krótką czytankę o rodzinie"
+  ],
+  "vocabulary": [
+    { "id": "v-bai-06-gia-dinh", "vi": "gia đình", "pl": "rodzina", "category": "noun", "tags": ["family"] },
+    { "id": "v-bai-06-bo", "vi": "bố / ba", "pl": "tata", "category": "noun", "tags": ["family"], "dialect": "północ: bố · południe: ba" },
+    { "id": "v-bai-06-me", "vi": "mẹ / má", "pl": "mama", "category": "noun", "tags": ["family"], "dialect": "północ: mẹ · południe: má" },
+    { "id": "v-bai-06-bo-me", "vi": "bố mẹ", "pl": "rodzice", "category": "noun", "tags": ["family"] },
+    { "id": "v-bai-06-song", "vi": "sống", "pl": "żyć, mieszkać", "category": "verb", "examples": [{ "vi": "Chúng tôi sống ở Sài Gòn.", "pl": "Mieszkamy w Sajgonie." }] },
+    { "id": "v-bai-06-nha", "vi": "nhà", "pl": "dom", "category": "noun", "classifier": "cái" },
+    { "id": "v-bai-06-con-meo", "vi": "con mèo", "pl": "kot", "category": "noun", "classifier": "con", "tags": ["animal"] },
+    { "id": "v-bai-06-con-cho", "vi": "con chó", "pl": "pies", "category": "noun", "classifier": "con", "tags": ["animal"] },
+    { "id": "v-bai-06-bac-si", "vi": "bác sĩ", "pl": "lekarz", "category": "noun", "tags": ["job"] },
+    { "id": "v-bai-06-chi", "vi": "chỉ", "pl": "tylko", "category": "adverb", "note": "Uwaga na ton: chỉ (tylko) ≠ chị (starsza siostra)." },
+    { "id": "v-bai-06-rat", "vi": "rất", "pl": "bardzo", "category": "adverb" },
+    { "id": "v-bai-06-nhieu", "vi": "nhiều", "pl": "dużo", "category": "adverb" },
+    { "id": "v-bai-06-du-lich", "vi": "du lịch", "pl": "wycieczka; đi du lịch – podróżować", "category": "noun" },
+    { "id": "v-bai-06-so-thich", "vi": "sở thích", "pl": "zainteresowania, hobby", "category": "noun" },
+    { "id": "v-bai-06-da-bong", "vi": "đá bóng", "pl": "grać w piłkę nożną", "category": "verb" },
+    { "id": "v-bai-06-yeu", "vi": "yêu", "pl": "kochać", "category": "verb" },
+    { "id": "v-bai-06-ban-przyjaciel", "vi": "bạn", "pl": "przyjaciel, kolega", "category": "noun", "note": "To samo słowo co zaimek „ty” (Bài 1)." },
+    { "id": "v-bai-06-trai", "vi": "trai", "pl": "chłopak (męski)", "category": "noun", "note": "em trai – młodszy brat, con trai – syn." },
+    { "id": "v-bai-06-ban-trai", "vi": "bạn trai", "pl": "chłopak (partner)", "category": "noun" },
+    { "id": "v-bai-06-gai", "vi": "gái", "pl": "dziewczyna (żeński)", "category": "noun", "note": "em gái – młodsza siostra." },
+    { "id": "v-bai-06-ban-gai", "vi": "bạn gái", "pl": "dziewczyna (partnerka)", "category": "noun" },
+    { "id": "v-bai-06-em-trai", "vi": "em trai", "pl": "młodszy brat", "category": "noun", "tags": ["family"] },
+    { "id": "v-bai-06-chung-toi", "vi": "chúng tôi", "pl": "my", "category": "pronoun" },
+    { "id": "v-bai-06-o", "vi": "ở", "pl": "w, mieszkać w; być (gdzieś)", "category": "preposition", "examples": [{ "vi": "Mẹ làm việc ở nhà.", "pl": "Mama pracuje w domu." }] },
+    { "id": "v-bai-06-voi", "vi": "với", "pl": "razem z", "category": "preposition" },
+    { "id": "v-bai-06-cung", "vi": "cũng", "pl": "też", "category": "adverb" },
+    { "id": "v-bai-06-vi-vay", "vi": "vì vậy", "pl": "dlatego", "category": "other" },
+    { "id": "v-bai-06-nhung", "vi": "nhưng", "pl": "ale", "category": "other" },
+    { "id": "v-bai-06-nam-nay", "vi": "năm nay", "pl": "w tym roku; (o wieku) obecnie", "category": "time" },
+    { "id": "v-bai-06-com", "vi": "cơm", "pl": "posiłek; gotowany ryż", "category": "noun", "tags": ["food"] },
+    { "id": "v-bai-06-da", "vi": "đã", "pl": "znacznik czasu przeszłego", "category": "particle" },
+    { "id": "v-bai-06-dang", "vi": "đang", "pl": "znacznik czasu teraźniejszego (właśnie teraz)", "category": "particle" },
+    { "id": "v-bai-06-se", "vi": "sẽ", "pl": "znacznik czasu przyszłego", "category": "particle" },
+    { "id": "v-bai-06-roi", "vi": "rồi", "pl": "już (coś zostało zrobione)", "category": "particle" },
+    { "id": "v-bai-06-chua", "vi": "chưa", "pl": "jeszcze nie; (na końcu) czy już…?", "category": "particle" }
+  ],
+  "grammar": [
+    {
+      "id": "g-bai-06-tense",
+      "title": "Czasy: đã / đang / sẽ",
+      "pattern": "đã + czasownik (przeszłość) · đang + czasownik (teraz) · sẽ + czasownik (przyszłość)",
+      "explanation": "Czasownik się nie odmienia; czas wskazuje osobne słówko przed czasownikiem. Gdy z kontekstu wiadomo, kiedy coś się dzieje (hôm qua, ngày mai), znacznik można pominąć.",
+      "examples": [
+        { "vi": "đã ăn", "pl": "zjadłam / zjadłem" },
+        { "vi": "đang ăn", "pl": "jem (teraz)" },
+        { "vi": "sẽ ăn", "pl": "zjem" },
+        { "vi": "Năm trước chị ấy đã đi Trung Quốc.", "pl": "W zeszłym roku pojechała do Chin." }
+      ],
+      "keywords": ["đã", "đang", "sẽ", "czas przeszły", "czas przyszły"],
+      "practice": ["e-bai-06-tense-gen", "e-bai-06-fill-tense", "e-bai-06-mcq-tense"]
+    },
+    {
+      "id": "g-bai-06-roi-chua",
+      "title": "rồi (już) i chưa (jeszcze nie)",
+      "pattern": "czasownik + rồi · chưa + czasownik · zdanie + chưa?",
+      "explanation": "„rồi” na końcu zdania = już (coś zostało zrobione): „Tôi ăn rồi” – już jadłam. „chưa” przed czasownikiem = jeszcze nie: „Tôi chưa ăn”. Pytanie „czy już…?” tworzy „chưa” na końcu: „Bạn ăn cơm chưa?”.\n\n„Bạn có bạn gái/trai chưa?” – czy masz już dziewczynę/chłopaka? Odpowiedź „chưa có” = jeszcze nie mam (ale może będę); „không có” = nie mam (i nie planuję).",
+      "examples": [
+        { "vi": "Tôi ăn rồi.", "pl": "Już jadłam." },
+        { "vi": "Tôi chưa ăn.", "pl": "Jeszcze nie jadłam." },
+        { "vi": "Bạn ăn cơm chưa?", "pl": "Jadłaś już?" },
+        { "vi": "Chưa có.", "pl": "Jeszcze nie mam." }
+      ],
+      "keywords": ["rồi", "chưa", "już", "jeszcze nie"],
+      "practice": ["e-bai-06-typed-roi", "e-bai-06-typed-chua", "e-bai-06-mcq-chua"]
+    },
+    {
+      "id": "g-bai-06-family-talk",
+      "title": "Opowiadanie o rodzinie",
+      "pattern": "Gia đình của tôi có + liczba + người: … · X tên là … · X năm nay + liczba + tuổi · X là + zawód",
+      "explanation": "Czytanka pokazuje schemat opisu rodziny: liczba osób („có 5 người”), imiona („Bố tên là Đức”), wiek („năm nay 65 tuổi”), zajęcie („Bố là bác sĩ”), miejsce zamieszkania („sống ở Sài Gòn”), zainteresowania („sở thích của Huy là đá bóng”).",
+      "examples": [
+        { "vi": "Gia đình của tôi có 5 người.", "pl": "Moja rodzina ma 5 osób." },
+        { "vi": "Bố là bác sĩ và mẹ làm việc ở nhà.", "pl": "Tata jest lekarzem, a mama pracuje w domu." },
+        { "vi": "Tôi rất yêu gia đình của tôi.", "pl": "Bardzo kocham moją rodzinę." }
+      ],
+      "keywords": ["rodzina", "gia đình", "opis"],
+      "practice": ["e-bai-06-read-1", "e-bai-06-read-2", "e-bai-06-open-family"]
+    }
+  ],
+  "readings": [
+    {
+      "id": "r-bai-06-gia-dinh",
+      "title": "Gia đình của tôi",
+      "paragraphs": [
+        "Gia đình của tôi có 5 người: bố, mẹ, 1 chị, 1 em trai và tôi. Chúng tôi sống ở Sài Gòn với 1 con mèo và 1 con chó. Bố tên là Đức, năm nay 65 tuổi. Mẹ tên là Mai, năm nay 60 tuổi. Bố là bác sĩ và mẹ làm việc ở nhà. Bố mẹ mỗi ngày xem phim với tôi. Chị của tôi tên là Linh. Chỉ thứ sáu và chủ nhật, chị ấy xem phim với chúng tôi, vì vậy làm việc rất nhiều. Linh cũng thích đi du lịch. Năm trước chị ấy đã đi Trung Quốc và Nhật Bản. Chị ấy muốn sống ở Tokio, vì bạn trai của Linh là người Nhật.",
+        "Em trai tên là Huy, năm nay 16 tuổi. Em ấy học rất nhiều, nhưng sở thích của Huy là đá bóng. Mỗi tuần em ấy đá bóng với bạn của em ấy. Huy học tiếng Anh, vì vậy Huy muốn đi Mỹ làm việc. Ở nhà em ấy với tôi nói tiếng Anh. Tôi rất yêu gia đình của tôi."
+      ],
+      "translation": [
+        "Moja rodzina ma 5 osób: tata, mama, starsza siostra, młodszy brat i ja. Mieszkamy w Sajgonie z kotem i psem. Tata ma na imię Đức, w tym roku ma 65 lat. Mama ma na imię Mai, ma 60 lat. Tata jest lekarzem, a mama pracuje w domu. Rodzice codziennie oglądają ze mną filmy. Moja siostra ma na imię Linh. Tylko w piątki i niedziele ogląda z nami filmy, bo (w oryginale: „vì vậy”, zob. CONTENT_REVIEW) bardzo dużo pracuje. Linh lubi też podróżować. W zeszłym roku pojechała do Chin i Japonii. Chce mieszkać w Tokio, bo jej chłopak jest Japończykiem.",
+        "Młodszy brat ma na imię Huy, ma 16 lat. Bardzo dużo się uczy, ale jego hobby to piłka nożna. Co tydzień gra w piłkę z kolegami. Huy uczy się angielskiego, dlatego chce jechać do Ameryki do pracy. W domu rozmawia ze mną po angielsku. Bardzo kocham moją rodzinę."
+      ],
+      "glossary": ["v-bai-06-gia-dinh", "v-bai-06-song", "v-bai-06-bac-si", "v-bai-06-chi", "v-bai-06-du-lich", "v-bai-06-so-thich", "v-bai-06-da-bong"],
+      "note": "Zdanie „vì vậy làm việc rất nhiều” jest oznaczone w CONTENT_REVIEW (prawdopodobnie „vì” – ponieważ)."
+    }
+  ],
+  "exercises": [
+    {
+      "id": "e-bai-06-teacher-fill-1",
+      "type": "fill-blank",
+      "skill": "vocabulary",
+      "source": "teacher",
+      "sentence": "Xin lỗi, tôi không ___ tiếng Việt.",
+      "answers": ["nói"],
+      "bank": ["ngày mai", "rất", "bao nhiêu", "ăn", "nói", "sở thích", "đã"],
+      "translation": "Przepraszam, nie mówię po wietnamsku.",
+      "vocab": ["v-bai-05-noi"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-06-teacher-fill-2",
+      "type": "fill-blank",
+      "skill": "tense",
+      "source": "teacher",
+      "sentence": "Hôm qua chị ấy ___ uống nhiều bia.",
+      "answers": ["đã"],
+      "bank": ["ngày mai", "rất", "bao nhiêu", "ăn", "nói", "sở thích", "đã"],
+      "translation": "Wczoraj wypiła dużo piwa.",
+      "grammar": ["g-bai-06-tense"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-06-teacher-fill-3",
+      "type": "fill-blank",
+      "skill": "vocabulary",
+      "source": "teacher",
+      "sentence": "Nghe nhạc là ___ của mình.",
+      "answers": ["sở thích"],
+      "bank": ["ngày mai", "rất", "bao nhiêu", "ăn", "nói", "sở thích", "đã"],
+      "translation": "Słuchanie muzyki to moje hobby.",
+      "vocab": ["v-bai-06-so-thich"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-06-teacher-fill-4",
+      "type": "fill-blank",
+      "skill": "vocabulary",
+      "source": "teacher",
+      "sentence": "___ mẹ sẽ làm việc.",
+      "answers": ["Ngày mai"],
+      "bank": ["ngày mai", "rất", "bao nhiêu", "ăn", "nói", "sở thích", "đã"],
+      "translation": "Jutro mama będzie pracować.",
+      "vocab": ["v-bai-04-ngay-mai"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-06-teacher-fill-5",
+      "type": "fill-blank",
+      "skill": "vocabulary",
+      "source": "teacher",
+      "sentence": "A: Bạn muốn ___ gì? B: Mình muốn ăn phở.",
+      "answers": ["ăn"],
+      "bank": ["ngày mai", "rất", "bao nhiêu", "ăn", "nói", "sở thích", "đã"],
+      "translation": "A: Co chcesz zjeść? B: Chcę zjeść phở.",
+      "vocab": ["v-bai-05-an"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-06-teacher-fill-6",
+      "type": "fill-blank",
+      "skill": "vocabulary",
+      "source": "teacher",
+      "sentence": "Mình muốn nói tiếng Việt, vì vậy mình học ___ nhiều.",
+      "answers": ["rất"],
+      "bank": ["ngày mai", "rất", "bao nhiêu", "ăn", "nói", "sở thích", "đã"],
+      "translation": "Chcę mówić po wietnamsku, dlatego uczę się bardzo dużo.",
+      "vocab": ["v-bai-06-rat"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-06-teacher-fill-7",
+      "type": "fill-blank",
+      "skill": "vocabulary",
+      "source": "teacher",
+      "sentence": "Số điện thoại của bạn là ___?",
+      "answers": ["bao nhiêu"],
+      "bank": ["ngày mai", "rất", "bao nhiêu", "ăn", "nói", "sở thích", "đã"],
+      "translation": "Jaki jest twój numer telefonu?",
+      "vocab": ["v-bai-03-bao-nhieu"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-06-tense-gen",
+      "type": "generator",
+      "generator": "tense",
+      "skill": "tense",
+      "source": "generated",
+      "status": "unverified",
+      "instruction": "Wstaw właściwy znacznik czasu.",
+      "grammar": ["g-bai-06-tense"],
+      "count": 5,
+      "level": 2
+    },
+    {
+      "id": "e-bai-06-fill-tense",
+      "type": "fill-blank",
+      "skill": "tense",
+      "source": "generated",
+      "status": "unverified",
+      "sentence": "Ngày mai mình ___ đi Hà Nội.",
+      "answers": ["sẽ"],
+      "bank": ["sẽ", "đã", "đang", "rồi"],
+      "translation": "Jutro pojadę do Hanoi.",
+      "grammar": ["g-bai-06-tense"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-06-mcq-tense",
+      "type": "mcq",
+      "skill": "tense",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Które zdanie znaczy „Teraz jem”?",
+      "options": ["Tôi đang ăn.", "Tôi đã ăn.", "Tôi sẽ ăn.", "Tôi ăn rồi."],
+      "answer": 0,
+      "explanation": "„đang” = właśnie teraz; „đã” = przeszłość; „sẽ” = przyszłość; „rồi” = już.",
+      "grammar": ["g-bai-06-tense"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-06-typed-roi",
+      "type": "typed",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Napisz: „Już jadłam/jadłem.” (tôi)",
+      "answerLang": "vi",
+      "answers": ["Tôi ăn rồi.", "Tôi ăn rồi", "Tôi đã ăn rồi.", "Tôi đã ăn rồi"],
+      "grammar": ["g-bai-06-roi-chua"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-06-typed-chua",
+      "type": "typed",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Napisz: „Jeszcze nie jadłam/jadłem.” (tôi)",
+      "answerLang": "vi",
+      "answers": ["Tôi chưa ăn.", "Tôi chưa ăn"],
+      "grammar": ["g-bai-06-roi-chua"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-06-mcq-chua",
+      "type": "mcq",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "„Bạn có bạn trai chưa?” – „Jeszcze nie mam (ale może będę)”. Która odpowiedź?",
+      "options": ["Chưa có.", "Không có.", "Có rồi.", "Không phải."],
+      "answer": 0,
+      "explanation": "„chưa có” = jeszcze nie mam; „không có” = nie mam (w ogóle).",
+      "grammar": ["g-bai-06-roi-chua"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-06-read-1",
+      "type": "reading-question",
+      "skill": "reading",
+      "source": "generated",
+      "status": "unverified",
+      "readingId": "r-bai-06-gia-dinh",
+      "prompt": "Gia đình có mấy người?",
+      "options": ["5 người", "4 người", "6 người", "3 người"],
+      "answer": 0,
+      "level": 1
+    },
+    {
+      "id": "e-bai-06-read-2",
+      "type": "reading-question",
+      "skill": "reading",
+      "source": "generated",
+      "status": "unverified",
+      "readingId": "r-bai-06-gia-dinh",
+      "prompt": "Bố làm gì? (odpowiedz po wietnamsku)",
+      "answers": ["Bố là bác sĩ.", "Bố là bác sĩ", "bác sĩ", "Bố làm bác sĩ."],
+      "answerLang": "vi",
+      "level": 2
+    },
+    {
+      "id": "e-bai-06-read-3",
+      "type": "reading-question",
+      "skill": "reading",
+      "source": "generated",
+      "status": "unverified",
+      "readingId": "r-bai-06-gia-dinh",
+      "prompt": "Huy học tiếng gì?",
+      "answers": ["Huy học tiếng Anh.", "Huy học tiếng Anh", "tiếng Anh", "Em ấy học tiếng Anh."],
+      "answerLang": "vi",
+      "level": 2
+    },
+    {
+      "id": "e-bai-06-read-4",
+      "type": "reading-question",
+      "skill": "reading",
+      "source": "generated",
+      "status": "unverified",
+      "readingId": "r-bai-06-gia-dinh",
+      "prompt": "Gdzie mieszka rodzina i jakie ma zwierzęta?",
+      "options": ["W Sajgonie, z kotem i psem", "W Hanoi, z dwoma psami", "W Tokio, z kotem", "W Sajgonie, bez zwierząt"],
+      "answer": 0,
+      "level": 1
+    },
+    {
+      "id": "e-bai-06-family-match",
+      "type": "matching",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Dopasuj słowa.",
+      "pairs": [
+        { "left": "bố mẹ", "right": "rodzice" },
+        { "left": "em trai", "right": "młodszy brat" },
+        { "left": "con mèo", "right": "kot" },
+        { "left": "bác sĩ", "right": "lekarz" },
+        { "left": "sở thích", "right": "hobby" },
+        { "left": "bạn gái", "right": "dziewczyna (partnerka)" }
+      ],
+      "level": 1
+    },
+    {
+      "id": "e-bai-06-open-family",
+      "type": "open-answer",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Gia đình của bạn có mấy người? – odpowiedz o sobie (Gia đình của mình có … người).",
+      "patterns": ["Gia đình của mình có {x} người", "Gia đình của tôi có {x} người", "Gia đình mình có {x} người", "Gia đình tôi có {x} người"],
+      "sample": "Gia đình của mình có bốn người.",
+      "grammar": ["g-bai-06-family-talk"],
+      "level": 3
+    },
+    {
+      "id": "e-bai-06-diacritics",
+      "type": "diacritics",
+      "skill": "tone",
+      "source": "generated",
+      "status": "unverified",
+      "stripped": "Toi rat yeu gia dinh cua toi.",
+      "answers": ["Tôi rất yêu gia đình của tôi."],
+      "translation": "Bardzo kocham moją rodzinę.",
+      "level": 2
+    }
+  ],
+  "checkpoint": ["e-bai-06-tense-gen", "e-bai-06-typed-roi", "e-bai-06-typed-chua", "e-bai-06-read-2", "e-bai-06-family-match", "e-bai-06-open-family"],
+  "reviewLinks": ["g-bai-05-verb-question", "g-bai-04-time-words", "g-bai-03-age"],
+  "original": [
+    { "kind": "heading", "text": "Słówka" },
+    { "kind": "table", "rows": [["gia đình", "rodzina"], ["bố (pł.) / ba (płd.)", "tata"], ["mẹ (płn.) / má (płd.)", "mama"], ["bố mẹ", "rodzice"], ["sống", "żyć"], ["nhà", "dom"], ["con mèo", "kot"], ["con chó", "pies"], ["bác sĩ", "lekarz"], ["chỉ", "tylko"], ["rất", "bardzo"], ["nhiều", "dużo"], ["du lịch", "wycieczka"], ["sở thích", "zainteresowania/hobby"], ["đá bóng", "grać w piłkę nożną"], ["yêu", "kochać"], ["bạn", "przyjaciel"], ["trai", "chłopak"], ["bạn trai", "chłopak typu boyfriend"], ["gái", "dziewczyna"], ["bạn gái", "dziewczyna typu girlfriend"]] },
+    { "kind": "heading", "text": "Czytanka" },
+    { "kind": "paragraph", "text": "Gia đình của tôi có 5 người: bố, mẹ, 1 chị, 1 em trai và tôi. Chúng tôi sống ở Sài Gòn với 1 con mèo và 1 con chó. Bố tên là Đức, năm nay 65 tuổi. Mẹ tên là Mai, năm nay 60 tuổi. Bố là bác sĩ và mẹ làm việc ở nhà. Bố mẹ mỗi ngày xem phim với tôi. Chị của tôi tên là Linh. Chỉ thứ sáu và chủ nhật, chị ấy xem phim với chúng tôi, vì vậy làm việc rất nhiều. Linh cũng thích đi du lịch. Năm trước chị ấy đã đi Trung Quốc và Nhật Bản. Chị ấy muốn sống ở Tokio, vì bạn trai của Linh là người Nhật.\nEm trai tên là Huy, năm nay 16 tuổi. Em ấy học rất nhiều, nhưng sở thích của Huy là đá bóng. Mỗi tuần em ấy đá bóng với bạn của em ấy. Huy học tiếng Anh, vì vậy Huy muốn đi Mỹ làm việc. Ở nhà em ấy với tôi nói tiếng Anh. Tôi rất yêu gia đình của tôi." },
+    { "kind": "heading", "text": "Uzupełnij zdania wyrazami" },
+    { "kind": "table", "rows": [["ngày mai", "rất", "bao nhiêu?", "ăn", "nói", "sở thích", "đã"]] },
+    { "kind": "paragraph", "text": "Xin lỗi, tôi không __nói_ tiếng Việt.\nHôm qua chị ấy _đã__ uống nhiều bia.\nNghe nhạc là _sở thích__ của mình.\n_Ngày mai___ mẹ sẽ làm việc.\nA: Bạn muốn _ăn__ gì? B: Mình muốn _ăn___ phở.\nMình muốn nói tiếng Việt, vì vậy mình học _rất__ nhiều.\nSố điện thoại của bạn là bao nhiêu_?" },
+    { "kind": "heading", "text": "Czasy" },
+    { "kind": "paragraph", "text": "przeszły đã · teraźniejszy đang · przyszły sẽ\nđã/đang/sẽ + czasownik\nđã ăn - zjadłam · đang ăn - jem · sẽ ăn - zjem\nrồi - już (cos zostało zrobione): czasownik + rồi · Tôi ăn rồi - już jadłam\nchưa - jeszcze nie: chưa + czasownik · tôi chưa ăn - jeszcze nie jadłam\nczy już…? zdanie + chưa · Bạn ăn cơm chưa? - jadłaś już?\ncơm - posiłek, gotowany ryż\nBạn có bạn gái/trai chưa? - Czy masz już chłopaka/dziewczyne?\nchưa có - jeszcze nie mam (ale może będę mieć)\nkhông có - nie mam i nigdy nie będę mieć (bo jestem gejem)" }
+  ]
+}

@@ -1,0 +1,269 @@
+{
+  "id": "bai-08",
+  "number": 8,
+  "title": "Klasyfikatory i w restauracji",
+  "titleVi": "Bài 8",
+  "summary": "Klasyfikatory cái / con / người oraz ly / cốc / chén, dialog w restauracji (zamawianie, napoje, rachunek) i słownictwo kulinarne.",
+  "icon": "🍜",
+  "sourceFile": "source-lessons/bái 8.docx",
+  "objectives": [
+    "policzyć rzeczy, zwierzęta i ludzi z właściwym klasyfikatorem",
+    "zamówić jedzenie i napoje w restauracji",
+    "zawołać kelnera i poprosić o rachunek",
+    "zrozumieć podstawowe nazwy wietnamskich potraw i kaw"
+  ],
+  "vocabulary": [
+    { "id": "v-bai-08-cai", "vi": "cái", "pl": "klasyfikator rzeczy (przedmiotów nieżywych)", "category": "classifier", "examples": [{ "vi": "ba cái nhà", "pl": "trzy domy" }] },
+    { "id": "v-bai-08-con", "vi": "con", "pl": "klasyfikator zwierząt i innych istot żywych (oprócz ludzi)", "category": "classifier", "examples": [{ "vi": "năm con chó", "pl": "pięć psów" }, { "vi": "hai con mèo", "pl": "dwa koty" }] },
+    { "id": "v-bai-08-nguoi-kl", "vi": "người", "pl": "klasyfikator ludzi", "category": "classifier", "examples": [{ "vi": "chín người bác sĩ", "pl": "dziewięciu lekarzy" }, { "vi": "bốn người anh chị em", "pl": "czworo rodzeństwa" }] },
+    { "id": "v-bai-08-nguoi-phuc-vu", "vi": "người phục vụ", "pl": "kelner / kelnerka", "category": "noun", "tags": ["restaurant"] },
+    { "id": "v-bai-08-thuc-don", "vi": "thực đơn", "pl": "menu", "category": "noun", "tags": ["restaurant"] },
+    { "id": "v-bai-08-cho", "vi": "cho", "pl": "dla; (w zamówieniu) proszę o…", "category": "preposition", "examples": [{ "vi": "Cho anh năm cái nem rán.", "pl": "Poproszę pięć sajgonek." }] },
+    { "id": "v-bai-08-nem-ran", "vi": "nem rán", "pl": "sajgonki", "category": "noun", "classifier": "cái", "tags": ["food"] },
+    { "id": "v-bai-08-chen", "vi": "chén", "pl": "(kl.) mała miska", "category": "classifier", "dialect": "południe; na północy częściej „bát”" },
+    { "id": "v-bai-08-com", "vi": "cơm", "pl": "ryż (ugotowany)", "category": "noun", "tags": ["food"] },
+    { "id": "v-bai-08-banh-xeo", "vi": "bánh xèo", "pl": "naleśnik z mąki ryżowej z farszem (dosł. smażone ciasto)", "category": "noun", "classifier": "cái", "tags": ["food"] },
+    { "id": "v-bai-08-do-uong", "vi": "đồ uống", "pl": "picie, napoje", "category": "noun", "tags": ["food"] },
+    { "id": "v-bai-08-do-an", "vi": "đồ ăn", "pl": "jedzenie", "category": "noun", "tags": ["food"] },
+    { "id": "v-bai-08-ca-phe-muoi", "vi": "cà phê muối", "pl": "solona kawa", "category": "noun", "classifier": "ly", "tags": ["food"] },
+    { "id": "v-bai-08-muoi", "vi": "muối", "pl": "sól, słony", "category": "noun", "tags": ["food"] },
+    { "id": "v-bai-08-ca-phe-trung", "vi": "cà phê trứng", "pl": "kawa jajeczna", "category": "noun", "classifier": "ly", "tags": ["food"] },
+    { "id": "v-bai-08-trung", "vi": "trứng", "pl": "jajko", "category": "noun", "tags": ["food"] },
+    { "id": "v-bai-08-ca-phe-sua-da", "vi": "cà phê sữa đá", "pl": "mrożona kawa z mlekiem", "category": "noun", "classifier": "ly", "tags": ["food"] },
+    { "id": "v-bai-08-sua", "vi": "sữa", "pl": "mleko, nabiał", "category": "noun", "tags": ["food"] },
+    { "id": "v-bai-08-da", "vi": "đá", "pl": "lód", "category": "noun", "tags": ["food"], "note": "To samo słowo co w „đá bóng” (kopać)." },
+    { "id": "v-bai-08-tra-xanh", "vi": "trà xanh", "pl": "zielona herbata", "category": "noun", "tags": ["food"] },
+    { "id": "v-bai-08-tra-sua", "vi": "trà sữa", "pl": "herbata z mlekiem (bubble tea)", "category": "noun", "tags": ["food"] },
+    { "id": "v-bai-08-nuoc", "vi": "nước", "pl": "woda", "category": "noun", "tags": ["food"], "note": "W Bài 3 „nước” = kraj." },
+    { "id": "v-bai-08-ly", "vi": "ly", "pl": "(kl.) szklanka", "category": "classifier", "examples": [{ "vi": "một ly cà phê trứng", "pl": "jedna (szklanka) kawa jajeczna" }] },
+    { "id": "v-bai-08-coc", "vi": "cốc", "pl": "(kl.) kubek", "category": "classifier" },
+    { "id": "v-bai-08-oi", "vi": "zaimek + ơi!", "pl": "zawołanie („Em ơi!” – proszę pana/pani, hej!)", "category": "particle", "examples": [{ "vi": "Em ơi! Tính tiền!", "pl": "Przepraszam! Rachunek!" }] },
+    { "id": "v-bai-08-bac-xiu", "vi": "bạc xỉu", "pl": "„wietnamska” kawa – czarna z mlekiem skondensowanym", "category": "noun", "tags": ["food"] },
+    { "id": "v-bai-08-tinh-tien", "vi": "tính tiền", "pl": "rachunek; zapłacić (dosł. policzyć pieniądze)", "category": "phrase", "tags": ["restaurant"] },
+    { "id": "v-bai-08-tien-mat", "vi": "mắt tiền", "pl": "gotówka", "category": "noun", "status": "flagged", "note": "CONTENT_REVIEW: w oryginale „mắt tiền”; standardowo „tiền mặt”.", "srs": false },
+    { "id": "v-bai-08-tien", "vi": "tiền", "pl": "pieniądze", "category": "noun" },
+    { "id": "v-bai-08-dong", "vi": "đồng", "pl": "dong (waluta Wietnamu)", "category": "noun" }
+  ],
+  "grammar": [
+    {
+      "id": "g-bai-08-classifiers",
+      "title": "Klasyfikatory",
+      "pattern": "liczebnik + klasyfikator + rzeczownik",
+      "explanation": "Klasyfikatory to słowa stojące przed rzeczownikiem, które grupują rzeczowniki według podobnych cech. Używa się ich przy określaniu ilości i położenia rzeczownika.\n\nNajbardziej uniwersalne: „cái” – rzeczy nieżywe (ba cái nhà), „con” – zwierzęta i istoty żywe oprócz ludzi (năm con chó), „người” – ludzie (chín người bác sĩ). Naczynia też działają jak klasyfikatory: „ly” (szklanka), „cốc” (kubek), „chén” (miseczka): một ly cà phê, một chén cơm.",
+      "examples": [
+        { "vi": "ba cái nhà", "pl": "trzy domy" },
+        { "vi": "hai con mèo", "pl": "dwa koty" },
+        { "vi": "chín người bác sĩ", "pl": "dziewięciu lekarzy" },
+        { "vi": "một chén cơm", "pl": "miseczka ryżu" },
+        { "vi": "hai ly cà phê", "pl": "dwie kawy" }
+      ],
+      "keywords": ["klasyfikator", "cái", "con", "người", "ly", "cốc", "chén"],
+      "practice": ["e-bai-08-classifier-gen", "e-bai-08-mcq-classifier", "e-bai-08-fill-classifier"]
+    },
+    {
+      "id": "g-bai-08-ordering",
+      "title": "Zamawianie: cho + zaimek + ilość",
+      "pattern": "Cho + zaimek (ja) + liczebnik + klasyfikator + potrawa · Zaimek + ơi! · Tính tiền!",
+      "explanation": "Zamówienie zaczyna się od „cho” + zaimek, którym mówimy o sobie (anh / chị / em …): „Cho anh một ly cà phê” = poproszę jedną kawę. Kelnera woła się przez zaimek + „ơi!”. Rachunek: „Tính tiền!”. Kelner pyta „Anh muốn uống gì?” (co chce pan pić?), a gość może zapytać „Có đồ uống gì?” (jakie są napoje?).",
+      "examples": [
+        { "vi": "Cho anh năm cái nem rán, một chén cơm và hai cái bánh xèo.", "pl": "Poproszę pięć sajgonek, miseczkę ryżu i dwa bánh xèo." },
+        { "vi": "Có đồ uống gì?", "pl": "Jakie są napoje?" },
+        { "vi": "Em ơi! Tính tiền!", "pl": "Przepraszam! Rachunek!" }
+      ],
+      "keywords": ["cho", "ơi", "tính tiền", "zamawianie", "restauracja"],
+      "practice": ["e-bai-08-order-coffee", "e-bai-08-typed-bill", "e-bai-08-dialogue-1", "e-bai-08-dialogue-2"]
+    }
+  ],
+  "dialogues": [
+    {
+      "id": "d-bai-08-restaurant",
+      "title": "Ở quán ăn",
+      "situation": "Phi zamawia w restauracji; kelner (người phục vụ, NPV) jest młodszy, więc mówi „em” o sobie i „anh” do gościa.",
+      "lines": [
+        { "speaker": "Người phục vụ", "vi": "Em chào anh! Đây là thực đơn cho anh xem.", "pl": "Dzień dobry! Oto menu do obejrzenia." },
+        { "speaker": "Phi", "vi": "Chào em, cảm ơn. Cho anh năm cái nem rán, một chén cơm và hai cái bánh xèo.", "pl": "Dzień dobry, dziękuję. Poproszę pięć sajgonek, miseczkę ryżu i dwa bánh xèo." },
+        { "speaker": "Người phục vụ", "vi": "Anh muốn uống gì?", "pl": "Co chce pan pić?" },
+        { "speaker": "Phi", "vi": "Có đồ uống gì?", "pl": "Jakie są napoje?" },
+        { "speaker": "Người phục vụ", "vi": "Có cà phê muối, cà phê trứng, cà phê sữa đá, trà xanh, trà sữa và nước.", "pl": "Jest kawa solona, kawa jajeczna, mrożona kawa z mlekiem, zielona herbata, herbata z mlekiem i woda." },
+        { "speaker": "Phi", "vi": "Thế thì cho anh một ly cà phê trứng. Cảm ơn em.", "pl": "W takim razie poproszę jedną kawę jajeczną. Dziękuję." },
+        { "speaker": "Người phục vụ", "vi": "Đồ ăn cho anh và một ly cà phê.", "pl": "Jedzenie dla pana i jedna kawa." },
+        { "speaker": "Phi", "vi": "Em ơi! Tính tiền!", "pl": "(po jedzeniu) Przepraszam! Rachunek!" },
+        { "speaker": "Người phục vụ", "vi": "Vâng, 150 000 đồng.", "pl": "Tak, 150 000 dongów.", "note": "W oryginale „Văng” – CONFIRMED TYPO, poprawiono na „Vâng”." },
+        { "speaker": "Phi", "vi": "Mắt tiền cho em.", "pl": "Gotówka dla ciebie (płacę gotówką).", "status": "flagged", "note": "CONTENT_REVIEW: standardowo „tiền mặt”." },
+        { "speaker": "Người phục vụ", "vi": "Cảm ơn anh, chào anh!", "pl": "Dziękuję, do widzenia!" }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "e-bai-08-classifier-gen",
+      "type": "generator",
+      "generator": "classifier",
+      "skill": "classifier",
+      "source": "generated",
+      "status": "unverified",
+      "instruction": "Wybierz klasyfikator i zapisz wyrażenie liczebnik + klasyfikator + rzeczownik.",
+      "grammar": ["g-bai-08-classifiers"],
+      "count": 6,
+      "level": 2
+    },
+    {
+      "id": "e-bai-08-mcq-classifier",
+      "type": "mcq",
+      "skill": "classifier",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Który klasyfikator pasuje do „bác sĩ” (lekarz)?",
+      "options": ["người", "con", "cái", "ly"],
+      "answer": 0,
+      "explanation": "„người” to klasyfikator ludzi: chín người bác sĩ.",
+      "grammar": ["g-bai-08-classifiers"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-08-fill-classifier",
+      "type": "fill-blank",
+      "skill": "classifier",
+      "source": "generated",
+      "status": "unverified",
+      "sentence": "Mình có hai ___ mèo.",
+      "answers": ["con"],
+      "bank": ["con", "cái", "người", "ly"],
+      "translation": "Mam dwa koty.",
+      "grammar": ["g-bai-08-classifiers"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-08-order-coffee",
+      "type": "ordering",
+      "skill": "word-order",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Ułóż zamówienie: „Poproszę (anh) jedną kawę jajeczną.”",
+      "tokens": ["Cho", "anh", "một", "ly", "cà phê trứng."],
+      "translation": "Poproszę jedną kawę jajeczną.",
+      "grammar": ["g-bai-08-ordering", "g-bai-08-classifiers"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-08-typed-bill",
+      "type": "typed",
+      "skill": "dialogue",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Zawołaj młodszego kelnera i poproś o rachunek.",
+      "answerLang": "vi",
+      "answers": ["Em ơi! Tính tiền!", "Em ơi, tính tiền!", "Em ơi! Tính tiền", "Em ơi tính tiền"],
+      "grammar": ["g-bai-08-ordering"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-08-dialogue-1",
+      "type": "dialogue-completion",
+      "skill": "dialogue",
+      "source": "teacher",
+      "dialogueId": "d-bai-08-restaurant",
+      "lineIndex": 2,
+      "distractors": ["Có đồ uống gì?", "Em ơi! Tính tiền!"],
+      "grammar": ["g-bai-08-ordering"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-08-dialogue-2",
+      "type": "dialogue-completion",
+      "skill": "dialogue",
+      "source": "teacher",
+      "dialogueId": "d-bai-08-restaurant",
+      "lineIndex": 5,
+      "distractors": ["Đồ ăn cho anh và một ly cà phê.", "Anh muốn uống gì?"],
+      "grammar": ["g-bai-08-ordering"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-08-food-match",
+      "type": "matching",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Dopasuj potrawy i napoje.",
+      "pairs": [
+        { "left": "nem rán", "right": "sajgonki" },
+        { "left": "cà phê trứng", "right": "kawa jajeczna" },
+        { "left": "trà xanh", "right": "zielona herbata" },
+        { "left": "nước", "right": "woda" },
+        { "left": "sữa", "right": "mleko" },
+        { "left": "thực đơn", "right": "menu" }
+      ],
+      "level": 1
+    },
+    {
+      "id": "e-bai-08-typed-classifier-people",
+      "type": "typed",
+      "skill": "classifier",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Napisz po wietnamsku: „czworo rodzeństwa” (liczebnik + klasyfikator + rzeczownik).",
+      "answerLang": "vi",
+      "answers": ["bốn người anh chị em"],
+      "grammar": ["g-bai-08-classifiers"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-08-teacher-make-sentences",
+      "type": "open-answer",
+      "skill": "classifier",
+      "source": "teacher",
+      "prompt": "Ćwiczenie z lekcji: utwórz zdanie z klasyfikatorem „con” (np. liczebnik + con + zwierzę).",
+      "patterns": ["{x} con {x}"],
+      "sample": "Mình có hai con mèo.",
+      "grammar": ["g-bai-08-classifiers"],
+      "level": 3
+    },
+    {
+      "id": "e-bai-08-teacher-make-sentences-ly",
+      "type": "open-answer",
+      "skill": "classifier",
+      "source": "teacher",
+      "prompt": "Ćwiczenie z lekcji: utwórz zdanie z klasyfikatorem „ly”.",
+      "patterns": ["{x} ly {x}"],
+      "sample": "Cho em một ly trà sữa.",
+      "grammar": ["g-bai-08-classifiers"],
+      "level": 3
+    },
+    {
+      "id": "e-bai-08-open-order",
+      "type": "open-answer",
+      "skill": "dialogue",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Jesteś w restauracji. Zamów coś do jedzenia (Cho + zaimek + liczebnik + klasyfikator + potrawa).",
+      "patterns": ["Cho anh {x}", "Cho chị {x}", "Cho em {x}", "Cho mình {x}", "Cho tôi {x}"],
+      "sample": "Cho em hai cái bánh xèo và một ly trà xanh.",
+      "grammar": ["g-bai-08-ordering"],
+      "level": 3
+    },
+    {
+      "id": "e-bai-08-diacritics",
+      "type": "diacritics",
+      "skill": "tone",
+      "source": "generated",
+      "status": "unverified",
+      "stripped": "Cho anh mot ly ca phe sua da.",
+      "answers": ["Cho anh một ly cà phê sữa đá."],
+      "translation": "Poproszę jedną mrożoną kawę z mlekiem.",
+      "level": 2
+    }
+  ],
+  "checkpoint": ["e-bai-08-classifier-gen", "e-bai-08-order-coffee", "e-bai-08-typed-bill", "e-bai-08-dialogue-1", "e-bai-08-food-match", "e-bai-08-open-order"],
+  "reviewLinks": ["g-bai-03-numbers", "g-bai-05-lam-gi", "g-bai-07-plans"],
+  "original": [
+    { "kind": "heading", "text": "Klasyfikatory" },
+    { "kind": "paragraph", "text": "Klasyfikatory to słowa poprzedzające rzeczowniki, które klasyfikują je pod względem podobnych cech lub funkcji.\nKiedy je stosujemy?: przy określeniu ilości danego rzeczownika; przy określaniu położenia danego rzeczownika\nUkład frazy z klasyfikatorem: liczebnik + klasyfikator + rzeczownik\nNajbardziej uniwersalne klasyfikatory:\ncái (do rzeczowników nieżywych - przedmiotów): ba cái nhà\ncon (do zwierząt lub innych żywych rzeczowników oprócz ludzi): năm con chó, hai con mèo, một con đì (jedna (1) dziwka)\nngười (do rzeczowników oznaczających ludzi): chín người bác sĩ, bốn người anh chị em" },
+    { "kind": "heading", "text": "Ở quán ăn" },
+    { "kind": "paragraph", "text": "Người phục vụ: Em chào anh! Đây là thực đơn cho anh xem.\nPhi: Chào em, cảm ơn. Cho anh năm cái nem rán, một chén cơm và hai cái bánh xèo.\nNPV: Anh muốn uống gì?\nPhi: Có đồ uống gì?\nNPV: Có cà phê muối, cà phê trứng, cà phê sữa đá, trà xanh, trà sữa và nước.\nPhi: Thế thì cho anh một ly cà phê trứng. Cảm ơn em.\nNPV: Đồ ăn cho anh và một ly cà phê.\n*ăn sau*\nPhi: Em ơi! Tính tiền!\nNPV: Văng, 150 000 đồng.\nPhi: Mắt tiền cho em.\nNPV: Cảm ơn anh, chào anh!" },
+    { "kind": "heading", "text": "Słówka" },
+    { "kind": "table", "rows": [["người phục vụ", "kelner/kelnerka"], ["thực đơn", "menu"], ["cho", "dla"], ["nem rán", "sajgonki"], ["chén", "(kl.) mała miska"], ["cơm", "ryż (ugotowany)"], ["bánh xèo", "naleśnik z mąki ryżowej z farszem (dosł. smażone ciasto)"], ["đồ uống", "picie, napoje"], ["đồ ăn", "jedzenie"], ["cà phê muối", "solona kawa"], ["muối", "sól, słony"], ["cà phê trứng", "kawa jajeczna"], ["trứng", "jajko"], ["cà phê sữa đá", "mrożona kawa z mlekiem"], ["sữa", "mleko/nabiał"], ["đá", "lód"], ["trà xanh", "zielona herbata"], ["trà sữa", "herbata z mlekiem (bubble tea)"], ["nước", "woda"], ["ly", "(kl.) szklanka"], ["cốc", "(kl.) kubek"], ["zaimek + ơi!", "zawołanie"], ["bạc xỉu", "„wietnamska” kawa, czarna z mlekiem skondensowanym"], ["tính tiền", "opłata, rachunek, zapłacić"], ["mắt tiền", "gotówka"], ["tiền", "pieniądze"]] },
+    { "kind": "heading", "text": "Ćwiczenie: Utwórz zdania z podanymi klasyfikatorami" },
+    { "kind": "paragraph", "text": "Người · Ly · Con · Cái · Chén" }
+  ]
+}
