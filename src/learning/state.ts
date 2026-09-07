@@ -8,7 +8,7 @@ import type { MistakeCategory, Outcome } from './grading';
 import type { GeneratorKind } from '../data/schema';
 
 export const STORAGE_KEY = 'vietnamese-study:v1';
-export const STATE_VERSION = 1;
+export const STATE_VERSION = 2;
 
 export interface Mistake {
   id: string;
@@ -195,15 +195,44 @@ export function reducer(state: AppState, action: Action): AppState {
 }
 
 /** Validate/migrate a persisted or imported object into a usable state. */
+/**
+ * Version 1 scheduled flashcard directions (`vocab-vi-pl` / `vocab-pl-vi`).
+ * Version 2 schedules abilities instead. The mapping is the honest one:
+ * recognising Vietnamese → Polish was a passive check, producing Vietnamese
+ * from Polish was active use. Existing intervals and success counts are kept,
+ * and every migrated item starts at automaticity level 1 or 2 depending on
+ * whether it had ever been produced.
+ */
+function migrateSrsV1toV2(srs: Record<string, SrsItem>): Record<string, SrsItem> {
+  const out: Record<string, SrsItem> = {};
+  const remap: Record<string, SrsKind> = { 'vocab-vi-pl': 'vocab-passive', 'vocab-pl-vi': 'vocab-active' };
+  for (const item of Object.values(srs)) {
+    const kind = (remap[item.kind as string] ?? item.kind) as SrsKind;
+    const migrated: SrsItem = {
+      ...item,
+      kind,
+      id: makeSrsId(kind, item.ref),
+      // Production history earns level 2; recognition-only history stays at 1.
+      level: item.level ?? (kind === 'vocab-active' && item.successes > 0 ? 2 : 1),
+    };
+    // If both directions existed for one word they now collapse onto two
+    // separate abilities; keep whichever record is further along.
+    const prev = out[migrated.id];
+    out[migrated.id] = !prev || migrated.interval > prev.interval ? migrated : prev;
+  }
+  return out;
+}
+
 export function migrate(raw: unknown): AppState {
   const base = initialState();
   if (!raw || typeof raw !== 'object') return base;
   const r = raw as Partial<AppState>;
   if (typeof r.version !== 'number' || r.version > STATE_VERSION) throw new Error('Nieznana wersja pliku postępu.');
+  const rawSrs = r.srs && typeof r.srs === 'object' ? (r.srs as Record<string, SrsItem>) : {};
   return {
     ...base,
     createdAt: typeof r.createdAt === 'number' ? r.createdAt : base.createdAt,
-    srs: r.srs && typeof r.srs === 'object' ? r.srs : {},
+    srs: r.version < 2 ? migrateSrsV1toV2(rawSrs) : rawSrs,
     lessons: r.lessons && typeof r.lessons === 'object' ? r.lessons : {},
     mistakes: Array.isArray(r.mistakes) ? r.mistakes : [],
     exams: Array.isArray(r.exams) ? r.exams : [],

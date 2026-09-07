@@ -38,7 +38,7 @@ export function LessonsPage() {
             </div>
             <div className="grid">
               {ls.map((l) => {
-                const vocabItems = l.vocabulary.filter((v) => v.srs).map((v) => state.srs[makeSrsId('vocab-vi-pl', v.id)]).filter(Boolean);
+                const vocabItems = l.vocabulary.filter((v) => v.srs).map((v) => state.srs[makeSrsId('vocab-active', v.id)]).filter(Boolean);
                 const avg = vocabItems.length ? Math.round(vocabItems.reduce((a, i) => a + mastery(i), 0) / l.vocabulary.length) : 0;
                 const lp = state.lessons[l.id];
                 const lastCp = lp?.checkpoints?.[lp.checkpoints.length - 1];

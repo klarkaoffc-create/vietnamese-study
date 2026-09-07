@@ -1,18 +1,23 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { allDialogues, allExercises, dialogueById, lessonLabel } from '../data/content';
+import { allDialogues, dialogueById, lessonById, lessonLabel, scenariosForLessons } from '../data/content';
 import type { Exercise } from '../data/schema';
 import type { SessionItem } from '../learning/session';
+import { dialogueTask, scenarioTask } from '../learning/tasks';
+import { makeSrsId, type AutomaticityLevel } from '../learning/srs';
+import { useStore } from '../learning/store';
 import { ExerciseRunner, RunnerSummaryView, type RunnerSummary } from '../exercises/ExerciseRunner';
-import { DialogueView, type DialogueMode } from '../components/DialogueView';
-import { Callout, Card, PageHeader, Pill } from '../components/ui';
-import { sample } from '../utilities/random';
+import { DialogueView } from '../components/DialogueView';
+import { Callout, Card, PageHeader, Pill, Vi } from '../components/ui';
 
 export function DialoguesPage() {
   return (
     <div className="container">
-      <PageHeader eyebrow="Dialogi" title="Trener dialogów">
-        <p>Wszystkie dialogi z lekcji. Czytaj, ukrywaj jedną stronę rozmowy, przypominaj sobie linie i uzupełniaj brakujące wypowiedzi.</p>
+      <PageHeader eyebrow="Dialogi" title="Trener rozmowy">
+        <p>
+          Każdy dialog przechodzi przez pięć poziomów — od czytania z tłumaczeniem aż po odgrywanie sytuacji, w której musisz sam(a) sformułować
+          wypowiedź. To jest najbliższa symulacja prawdziwej rozmowy, jaką da się zrobić bez rozmówcy.
+        </p>
       </PageHeader>
       <div className="grid">
         {allDialogues.map((d) => (
@@ -31,49 +36,49 @@ export function DialoguesPage() {
   );
 }
 
+/** The five progressive stages of working with one conversation. */
+const LEVELS = [
+  { n: 1, label: 'Czytaj', hint: 'Wietnamski z podporą polską.' },
+  { n: 2, label: 'Rozumiej', hint: 'Tylko wietnamski, bez tłumaczenia.' },
+  { n: 3, label: 'Uzupełnij', hint: 'Ukryte wypowiedzi jednej strony — odsłaniasz po przypomnieniu.' },
+  { n: 4, label: 'Odpowiadaj', hint: 'Widzisz tylko replikę rozmówcy i piszesz odpowiedź.' },
+  { n: 5, label: 'Odegraj', hint: 'Dostajesz samą sytuację — całą wypowiedź formułujesz sam(a).' },
+] as const;
+
 export function DialogueTrainerPage() {
   const { id } = useParams();
+  const { state } = useStore();
   const d = id ? dialogueById.get(id) : undefined;
-  const [mode, setMode] = useState<DialogueMode>('read');
-  const [showPl, setShowPl] = useState(true);
+  const [level, setLevel] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [session, setSession] = useState<SessionItem[] | null>(null);
   const [summary, setSummary] = useState<RunnerSummary | null>(null);
 
-  // /dialogi/:id stays mounted when navigating between dialogues in place;
-  // drop any in-progress session from the previous dialogue so the runner
-  // never shows lines from a different dialogue than the one now shown.
   useEffect(() => {
     setSession(null);
     setSummary(null);
-    setMode('read');
+    setLevel(1);
   }, [id]);
 
-  const completionItems = useMemo(() => {
+  /** Levels 4–5 are practised as graded tasks, not as reading modes. */
+  const practiceItems = useMemo(() => {
     if (!d) return [];
-    const existing = allExercises.filter((e) => e.exercise.type === 'dialogue-completion' && (e.exercise as { dialogueId: string }).dialogueId === d.id);
-    const items: SessionItem[] = existing.map((e) => ({ kind: 'exercise', exercise: e.exercise, lesson: e.ownerId }));
-    // Generate completion tasks for the remaining lines (distractors = other lines of the dialogue)
-    const covered = new Set(existing.map((e) => (e.exercise as { lineIndex: number }).lineIndex));
+    const items: SessionItem[] = [];
+    if (level === 5) {
+      // Roleplay: situations from the same lesson, no target sentence given.
+      const lessonNumber = lessonById.get(d.lessonId)?.number ?? 1;
+      for (const s of scenariosForLessons([lessonNumber])) {
+        items.push({ kind: 'task', task: scenarioTask(s, 5, 'conversation') });
+      }
+    }
+    // Respond to each answerable line at the chosen amount of scaffolding.
     d.lines.forEach((line, i) => {
-      if (covered.has(i) || line.status === 'flagged') return;
-      const distractors = sample(d.lines.filter((_, j) => j !== i).map((l) => l.vi), 2);
-      const ex: Exercise = {
-        id: `e-${d.lessonId}-gen-dialog-${i}`,
-        type: 'dialogue-completion',
-        skill: 'dialogue',
-        source: 'generated',
-        status: 'unverified',
-        dialogueId: d.id,
-        lineIndex: i,
-        distractors,
-        grammar: [],
-        vocab: [],
-        level: 2,
-      };
-      items.push({ kind: 'exercise', exercise: ex, lesson: d.lessonId });
+      if (i === 0 || line.status === 'flagged') return;
+      const lvl = (level >= 4 ? 4 : Math.max(1, level)) as AutomaticityLevel;
+      const t = dialogueTask(d, i, lvl, 'conversation');
+      if (t) items.push({ kind: 'task', task: t });
     });
     return items;
-  }, [d]);
+  }, [d, level]);
 
   if (!d) {
     return (
@@ -87,7 +92,7 @@ export function DialogueTrainerPage() {
   if (session && !summary) {
     return (
       <div className="container">
-        <ExerciseRunner items={session} title={`💬 ${d.title}`} sessionKind="dialogue" onExit={() => setSession(null)} onFinish={setSummary} />
+        <ExerciseRunner items={session} title={`💬 ${d.title}`} sessionKind={`dialogue:L${level}`} onExit={() => setSession(null)} onFinish={setSummary} />
       </div>
     );
   }
@@ -99,37 +104,72 @@ export function DialogueTrainerPage() {
     );
   }
 
+  const info = LEVELS.find((l) => l.n === level)!;
+  const practised = d.lines.filter((_, i) => i > 0 && state.srs[makeSrsId('dialogue', `${d.id}#${i}`)]).length;
+
   return (
     <div className="container narrow">
       <PageHeader eyebrow={`Dialog · ${lessonLabel(d.lessonNumber)}`} title={d.title}>
         <p>{d.situation}</p>
+        {practised > 0 && <Pill tone="ok">{practised} z {d.lines.length - 1} replik już ćwiczonych</Pill>}
       </PageHeader>
+
       <div className="card">
-        <div className="row between mb">
-          <div className="chips">
-            {(['read', 'hide-a', 'hide-b', 'recall'] as DialogueMode[]).map((m) => (
-              <button key={m} type="button" className={`chip ${mode === m ? 'on' : ''}`} onClick={() => setMode(m)}>
-                {m === 'read' ? 'Czytaj' : m === 'hide-a' ? 'Ukryj pierwszą osobę' : m === 'hide-b' ? 'Ukryj drugą osobę' : 'Przypomnij sobie każdą linię'}
+        <div className="chips mb">
+          {LEVELS.map((l) => (
+            <button key={l.n} type="button" className={`chip ${level === l.n ? 'on' : ''}`} onClick={() => setLevel(l.n)}>
+              {l.n}. {l.label}
+            </button>
+          ))}
+        </div>
+        <Callout>{info.hint}</Callout>
+
+        {level <= 3 ? (
+          <div style={{ marginTop: '0.9rem' }}>
+            <DialogueView
+              key={level}
+              dialogue={d}
+              mode={level === 3 ? 'hide-b' : 'read'}
+              showTranslation={level === 1}
+            />
+            {level === 3 && <p className="muted tiny mt">Kliknij ukrytą linię, aby ją odsłonić po przypomnieniu sobie treści.</p>}
+            <div className="ex-actions">
+              <button type="button" className="btn primary" onClick={() => setLevel((l) => (l < 5 ? ((l + 1) as typeof l) : l))}>
+                Dalej: poziom {Math.min(5, level + 1)} →
               </button>
-            ))}
+            </div>
           </div>
-          <label className="row small">
-            <input type="checkbox" checked={showPl} onChange={(e) => setShowPl(e.target.checked)} /> tłumaczenie
-          </label>
-        </div>
-        <DialogueView key={mode} dialogue={d} mode={mode} showTranslation={showPl} />
-        <p className="muted tiny mt">W trybach z ukrywaniem kliknij linię, aby ją odsłonić po przypomnieniu sobie treści.</p>
+        ) : (
+          <div style={{ marginTop: '0.9rem' }}>
+            <p className="muted small">
+              {level === 4
+                ? 'Zobaczysz wyłącznie wypowiedź rozmówcy. Twoja odpowiedź jest oceniana i wpływa na terminy powtórek.'
+                : 'Same sytuacje — bez gotowych zdań. Formułujesz całą wypowiedź od zera.'}
+            </p>
+            <div className="row">
+              <Pill tone="primary">{practiceItems.length} zadań</Pill>
+              <button type="button" className="btn primary" onClick={() => setSession(practiceItems)} disabled={practiceItems.length === 0}>
+                Zacznij poziom {level}
+              </button>
+            </div>
+            {practiceItems.length === 0 && <Callout tone="warn">Brak zadań na tym poziomie dla tego dialogu.</Callout>}
+          </div>
+        )}
       </div>
+
       <div className="card">
-        <div className="row between">
-          <div>
-            <h3 style={{ margin: 0 }}>Uzupełnianie dialogu</h3>
-            <p className="muted small" style={{ margin: 0 }}>{completionItems.length} zadań: wybierz albo wpisz brakującą linię.</p>
-          </div>
-          <button type="button" className="btn primary" onClick={() => setSession(completionItems)} disabled={completionItems.length === 0}>Ćwicz</button>
+        <h3>Słowa kluczowe tej rozmowy</h3>
+        <div className="chips">
+          {[...new Set(d.lines.flatMap((l) => l.vi.split(/[\s,.!?]+/).filter((w) => w.length > 2)))].slice(0, 14).map((w, i) => (
+            <span key={`${w}-${i}`} className="pill"><Vi>{w}</Vi></span>
+          ))}
         </div>
       </div>
+
       <Link to={`/lekcje/${d.lessonId}`} className="btn mt">← {lessonLabel(d.lessonNumber)}</Link>
     </div>
   );
 }
+
+/** Kept for compatibility with authored dialogue-completion exercises. */
+export type { Exercise };

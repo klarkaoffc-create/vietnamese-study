@@ -187,6 +187,11 @@ export function gradeExercise(ex: Exercise, answer: UserAnswer): GradeResult {
     }
     case 'generator':
       return { outcome: 'wrong', score: 0, feedback: 'Ćwiczenie generowane – użyj gradeGenerated.', expected: '', category: ex.skill, ...meta };
+    case 'speaking':
+      // Speaking is never auto-graded: the browser cannot judge pronunciation
+      // reliably, so the learner rates themselves after comparing with the
+      // model (see SpeakingTask). The runner handles this before grading.
+      return { outcome: 'correct', score: 1, feedback: 'Ocena własna po porównaniu ze wzorem.', expected: ex.target, category: ex.skill, ...meta };
   }
 }
 
@@ -205,6 +210,7 @@ export function isProduction(ex: Exercise | GeneratedInstance): boolean {
     case 'reading-question':
       return !e.options;
     case 'generator':
+    case 'speaking':
       return true;
     default:
       return true;

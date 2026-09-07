@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { exerciseById, exercisesForGrammar, exercisesForVocab, grammarById, lessonById, vocabById, allExercises } from '../data/content';
-import { expandExercise, type SessionItem } from '../learning/session';
-import { makeSrsId } from '../learning/srs';
+import { exerciseById, exercisesForVocab, grammarById, lessonById, vocabById, allExercises } from '../data/content';
+import { buildLessonSession, buildVocabSession, expandExercise, grammarPracticeItems, type SessionItem } from '../learning/session';
 import { useStore } from '../learning/store';
 import { ExerciseRunner, RunnerSummaryView, type RunnerSummary } from '../exercises/ExerciseRunner';
 import { Callout } from '../components/ui';
@@ -13,7 +12,7 @@ import { Callout } from '../components/ui';
 export function PracticePage() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
-  const { dispatch } = useStore();
+  const { state, dispatch } = useStore();
   const [summary, setSummary] = useState<RunnerSummary | null>(null);
   const [round, setRound] = useState(0);
   const [retryItems, setRetryItems] = useState<SessionItem[] | null>(null);
@@ -32,20 +31,17 @@ export function PracticePage() {
     if (vocabId) {
       const v = vocabById.get(vocabId);
       if (v) {
-        title = `Słówko: ${v.vi}`;
+        title = `W użyciu: ${v.vi}`;
         back = `/lekcje/${v.lessonId}`;
-        items = [
-          { kind: 'vocab', direction: 'vi-pl', vocab: v, srsId: makeSrsId('vocab-vi-pl', v.id) },
-          { kind: 'vocab', direction: 'pl-vi', vocab: v, srsId: makeSrsId('vocab-pl-vi', v.id) },
-          ...exercisesForVocab(v.id).flatMap((e) => expandExercise(e, 1)),
-        ];
+        // The same word met in changing contexts, always as production.
+        items = [...buildVocabSession(state, v.id), ...exercisesForVocab(v.id).flatMap((e) => expandExercise(e, 1))];
       }
     } else if (grammarId) {
       const g = grammarById.get(grammarId);
       if (g) {
         title = `Gramatyka: ${g.title}`;
         back = `/lekcje/${g.lessonId}#${g.id}`;
-        items = exercisesForGrammar(g.id).flatMap((e) => expandExercise(e, 2));
+        items = grammarPracticeItems(g.id);
       }
     } else if (exerciseId) {
       const e = exerciseById.get(exerciseId);
@@ -59,16 +55,8 @@ export function PracticePage() {
       if (l) {
         back = `/lekcje/${l.id}`;
         if (set === 'vocab') {
-          title = `Słówka – Bài ${l.number}`;
-          items = l.vocabulary
-            .filter((v) => v.srs && v.status !== 'flagged')
-            .flatMap((v) => {
-              const entry = vocabById.get(v.id)!;
-              return [
-                { kind: 'vocab' as const, direction: 'vi-pl' as const, vocab: entry, srsId: makeSrsId('vocab-vi-pl', v.id) },
-                { kind: 'vocab' as const, direction: 'pl-vi' as const, vocab: entry, srsId: makeSrsId('vocab-pl-vi', v.id) },
-              ];
-            });
+          title = `Słownictwo w użyciu – Bài ${l.number}`;
+          items = buildLessonSession(state, l.number);
         } else if (set === 'checkpoint') {
           title = `Checkpoint – Bài ${l.number}`;
           checkpointLesson = l.id;
@@ -80,6 +68,7 @@ export function PracticePage() {
       }
     }
     return { items, title, back, checkpointLesson };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
   // React Router keeps this component mounted across /cwicz?... navigations

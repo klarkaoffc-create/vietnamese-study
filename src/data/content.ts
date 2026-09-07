@@ -11,6 +11,7 @@ import {
   ReviewSchema,
   ExamBlueprintSchema,
   AudioManifestSchema,
+  ScenarioPackSchema,
   type Lesson,
   type Review,
   type ExamBlueprint,
@@ -20,6 +21,7 @@ import {
   type Dialogue,
   type Reading,
   type AudioClip,
+  type Scenario,
 } from './schema';
 import { computeBlocks, type Block } from '../learning/blocks';
 
@@ -27,6 +29,7 @@ const lessonModules = import.meta.glob('../../content/lessons/*.json', { eager: 
 const reviewModules = import.meta.glob('../../content/reviews/*.json', { eager: true, import: 'default' }) as Record<string, unknown>;
 const examModules = import.meta.glob('../../content/exams/*.json', { eager: true, import: 'default' }) as Record<string, unknown>;
 const audioModules = import.meta.glob('../../content/audio/manifest.json', { eager: true, import: 'default' }) as Record<string, unknown>;
+const scenarioModules = import.meta.glob('../../content/scenarios/*.json', { eager: true, import: 'default' }) as Record<string, unknown>;
 
 function parseAll<T>(modules: Record<string, unknown>, parse: (raw: unknown, file: string) => T): T[] {
   return Object.entries(modules).map(([file, raw]) => parse(raw, file));
@@ -55,6 +58,14 @@ export const audioClips: AudioClip[] = parseAll(audioModules, (raw, file) => {
   if (!r.success) throw new Error(`Invalid audio manifest ${file}: ${r.error.message}`);
   return r.data.clips;
 }).flat();
+
+/** Communicative situations, the top rung of the automaticity ladder. */
+export const scenarios: Scenario[] = parseAll(scenarioModules, (raw, file) => {
+  const r = ScenarioPackSchema.safeParse(raw);
+  if (!r.success) throw new Error(`Invalid scenario pack ${file}: ${r.error.message}`);
+  return r.data.scenarios;
+}).flat();
+export const scenarioById = new Map<string, Scenario>(scenarios.map((s) => [s.id, s]));
 
 /* ----------------------------------------------------------------------- */
 /* Indexes                                                                   */
@@ -143,6 +154,18 @@ export function exercisesForGrammar(grammarId: string): ExerciseEntry[] {
 
 export function exercisesForVocab(vocabId: string): ExerciseEntry[] {
   return allExercises.filter((e) => e.exercise.vocab.includes(vocabId));
+}
+
+/** Scenarios the learner is equipped for, given the lessons studied so far. */
+export function scenariosForLessons(lessonNumbers: number[]): Scenario[] {
+  const highest = lessonNumbers.length ? Math.max(...lessonNumbers) : 0;
+  const set = new Set(lessonNumbers);
+  return scenarios.filter((s) => {
+    const own = lessonById.get(s.lesson)?.number;
+    if (own === undefined || !set.has(own)) return false;
+    // A cumulative scenario only appears once every lesson it draws on is studied.
+    return s.combines.every((n) => n <= highest && set.has(n));
+  });
 }
 
 export function lessonLabel(n: number): string {

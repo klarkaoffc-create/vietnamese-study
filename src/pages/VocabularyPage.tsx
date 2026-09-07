@@ -41,8 +41,8 @@ export function VocabularyPage() {
     const qn = stripDiacritics(comparisonForm(q));
     return allVocab
       .map((v) => {
-        const viPl = state.srs[makeSrsId('vocab-vi-pl', v.id)];
-        const plVi = state.srs[makeSrsId('vocab-pl-vi', v.id)];
+        const viPl = state.srs[makeSrsId('vocab-active', v.id)];
+        const plVi = state.srs[makeSrsId('vocab-passive', v.id)];
         const m = viPl || plVi ? Math.round(((viPl ? mastery(viPl) : 0) + (plVi ? mastery(plVi) : 0)) / ((viPl ? 1 : 0) + (plVi ? 1 : 0))) : 0;
         const lvl = masteryLevel(viPl ?? plVi);
         const due = [viPl?.due, plVi?.due].filter((x): x is number => typeof x === 'number').sort((a, b) => a - b)[0];

@@ -1,44 +1,76 @@
 /**
- * Builds review / practice sessions from content + learner state.
- * A session is a list of items the ExerciseRunner can present:
- *  - vocab recall cards (VN→PL or PL→VN)
- *  - content exercises
- *  - generated exercise instances
+ * Session builder.
+ *
+ * A session is no longer a deck of cards — it is a short, mixed language
+ * workout. `buildSession('today')` produces the phased daily practice
+ * described in the learning philosophy: warm-up → retrieval → conversation →
+ * grammar in use → old mistakes → listening → free production.
+ *
+ * What decides WHICH abilities appear is still the spaced-repetition
+ * scheduler (`srs.ts`); what decides HOW they appear is the task engine
+ * (`tasks.ts`), which picks a task shape matching the automaticity level the
+ * ability has reached.
  */
 import type { Exercise } from '../data/schema';
-import { allVocab, exerciseById, exercisesForGrammar, exercisesForLessons, lessonById, lessons, vocabById, type VocabEntry, type ExerciseEntry } from '../data/content';
+import {
+  allVocab,
+  audioByTarget,
+  dialogueById,
+  exerciseById,
+  exercisesForGrammar,
+  exercisesForLessons,
+  grammarById,
+  lessonById,
+  lessons,
+  scenarioById,
+  vocabById,
+  type ExerciseEntry,
+  type VocabEntry,
+} from '../data/content';
 import { generate, type GeneratedInstance } from './generators';
-import { isDue, isWeak, makeSrsId, sortForReview, type SrsItem } from './srs';
+import { isDue, isWeak, makeSrsId, sortForReview, type AutomaticityLevel, type SrsItem, type SrsKind } from './srs';
 import { unresolvedMistakes, type AppState, type Mistake } from './state';
 import { sample, shuffle } from '../utilities/random';
+import {
+  contextualVocab,
+  dialogueTask,
+  grammarTask,
+  poolsFor,
+  scenarioTask,
+  speakingTask,
+  usableExamples,
+  vocabActiveTask,
+  vocabPassiveTask,
+  type LearningTask,
+  type TaskPhase,
+} from './tasks';
 
+/** One thing to do in a session. */
 export type SessionItem =
-  | { kind: 'vocab'; direction: 'vi-pl' | 'pl-vi'; vocab: VocabEntry; srsId: string }
+  /** A scheduled ability, presented as something to produce. */
+  | { kind: 'task'; task: LearningTask; mistakeRef?: string }
+  /** A hand-written exercise from the lesson content. */
   | { kind: 'exercise'; exercise: Exercise; lesson: string; mistakeRef?: string }
+  /** A runtime-generated drill (numbers, clock, classifiers …). */
   | { kind: 'generated'; instance: GeneratedInstance; lesson: string; mistakeRef?: string };
 
-export type ReviewMode = 'today' | 'weak' | 'vocab' | 'grammar' | 'mistakes' | 'overdue';
+export type ReviewMode = 'today' | 'production' | 'conversation' | 'grammar' | 'mistakes' | 'listening' | 'weak' | 'diagnostic';
 
 export const REVIEW_MODES: { id: ReviewMode; label: string; description: string; icon: string }[] = [
-  { id: 'today', label: 'Dzisiaj', description: 'Zaległe elementy, nowe słówka z bieżącej lekcji, dawne błędy i kilka zadań produktywnych.', icon: '🌅' },
-  { id: 'weak', label: 'Słabe elementy', description: 'Słówka i struktury, które ostatnio sprawiały problemy.', icon: '🧩' },
-  { id: 'vocab', label: 'Słownictwo', description: 'Powtórka słówek w obu kierunkach.', icon: '🗂' },
-  { id: 'grammar', label: 'Gramatyka', description: 'Ćwiczenia powiązane ze strukturami gramatycznymi.', icon: '📐' },
-  { id: 'mistakes', label: 'Moje błędy', description: 'Ćwicz ponownie zadania, w których popełniono błąd.', icon: '❌' },
-  { id: 'overdue', label: 'Wszystkie zaległe', description: 'Wszystko, co jest po terminie – bez limitu.', icon: '📚' },
+  { id: 'today', label: 'Dzisiejsza sesja', description: 'Krótka mieszana sesja: rozgrzewka, przypomnienie, rozmowa, gramatyka w użyciu, twoje błędy i swobodna wypowiedź.', icon: '🌅' },
+  { id: 'production', label: 'Budowanie zdań', description: 'Polski → wietnamski. Tworzysz całe zdania z materiału, który już znasz.', icon: '✍️' },
+  { id: 'conversation', label: 'Rozmowa', description: 'Odpowiadasz na repliki z dialogów i sytuacje komunikacyjne.', icon: '💬' },
+  { id: 'grammar', label: 'Gramatyka w użyciu', description: 'Struktury ćwiczone w żywych zdaniach, nie w regułkach.', icon: '📐' },
+  { id: 'mistakes', label: 'Moje błędy', description: 'Zadania odtworzone z tego, co ostatnio nie wyszło.', icon: '❌' },
+  { id: 'listening', label: 'Słuchanie', description: 'Zadania ze słuchu — dostępne, gdy dodasz nagrania.', icon: '🎧' },
+  { id: 'weak', label: 'Słabe miejsca', description: 'To, co najczęściej nie wychodzi: słabe umiejętności i powracające błędy.', icon: '🧩' },
+  { id: 'diagnostic', label: 'Szybka diagnoza', description: 'Krótkie sprawdzenie rozumienia słówek. Diagnostyka, nie główna nauka.', icon: '🩺' },
 ];
 
-export function vocabSrsCandidates(): { vocab: VocabEntry; direction: 'vi-pl' | 'pl-vi'; srsId: string }[] {
-  const out: { vocab: VocabEntry; direction: 'vi-pl' | 'pl-vi'; srsId: string }[] = [];
-  for (const v of allVocab) {
-    if (!v.srs || v.status === 'flagged') continue;
-    out.push({ vocab: v, direction: 'vi-pl', srsId: makeSrsId('vocab-vi-pl', v.id) });
-    out.push({ vocab: v, direction: 'pl-vi', srsId: makeSrsId('vocab-pl-vi', v.id) });
-  }
-  return out;
-}
+/* ------------------------------------------------------------------ */
+/* Where the learner is                                                */
+/* ------------------------------------------------------------------ */
 
-/** Highest lesson the learner has visited or completed; defaults to lesson 1. */
 export function currentLesson(state: AppState): number {
   let best = 0;
   for (const [id, p] of Object.entries(state.lessons)) {
@@ -50,181 +82,388 @@ export function currentLesson(state: AppState): number {
   return Math.max(1, Math.min(best || 1, maxLesson));
 }
 
-/** Lesson numbers the learner has already "unlocked" (visited, completed or before the current one). */
 export function studiedLessonNumbers(state: AppState): number[] {
   const cur = currentLesson(state);
   return lessons.map((l) => l.number).filter((n) => n <= cur);
 }
 
-export function dueVocab(state: AppState, now = Date.now()): SrsItem[] {
-  return sortForReview(
-    Object.values(state.srs).filter((i) => (i.kind === 'vocab-vi-pl' || i.kind === 'vocab-pl-vi') && isDue(i, now) && vocabById.has(i.ref)),
-    now,
-  );
+/* ------------------------------------------------------------------ */
+/* Scheduler queries                                                    */
+/* ------------------------------------------------------------------ */
+
+const itemsOfKind = (state: AppState, kinds: SrsKind[]) => Object.values(state.srs).filter((i) => kinds.includes(i.kind));
+
+export function dueItems(state: AppState, kinds: SrsKind[], now = Date.now()): SrsItem[] {
+  return sortForReview(itemsOfKind(state, kinds).filter((i) => isDue(i, now)), now);
 }
 
-export function dueGrammar(state: AppState, now = Date.now()): SrsItem[] {
-  return sortForReview(Object.values(state.srs).filter((i) => i.kind === 'grammar' && isDue(i, now)), now);
+export function weakAbilities(state: AppState): SrsItem[] {
+  return Object.values(state.srs).filter(isWeak);
 }
 
-export function weakItems(state: AppState): SrsItem[] {
-  return Object.values(state.srs).filter((i) => isWeak(i) && vocabById.has(i.ref) || (i.kind === 'grammar' && isWeak(i)));
+const levelOf = (item: SrsItem | undefined): AutomaticityLevel => (item?.level ?? 1) as AutomaticityLevel;
+
+/** Vocabulary the learner has met but has never had to PRODUCE yet. */
+function vocabNeedingActivation(state: AppState, pool: VocabEntry[], limit: number): VocabEntry[] {
+  const fresh = pool.filter((v) => !state.srs[makeSrsId('vocab-active', v.id)]);
+  // Prefer words that have a real sentence to practise inside.
+  const withContext = contextualVocab(fresh);
+  return sample(withContext.length >= limit ? withContext : fresh, limit);
 }
 
-/** New vocabulary (never reviewed) from studied lessons, current lesson first. */
-export function newVocab(state: AppState, limit: number): { vocab: VocabEntry; direction: 'vi-pl' | 'pl-vi'; srsId: string }[] {
-  const studied = new Set(studiedLessonNumbers(state));
-  const cur = currentLesson(state);
-  const cands = vocabSrsCandidates()
-    .filter((c) => studied.has(c.vocab.lessonNumber) && !state.srs[c.srsId])
-    .sort((a, b) => Math.abs(a.vocab.lessonNumber - cur) - Math.abs(b.vocab.lessonNumber - cur));
-  // Introduce VN→PL first for a word, PL→VN once the recognition card exists.
-  const out: typeof cands = [];
-  const seenWord = new Set<string>();
-  for (const c of cands) {
-    if (out.length >= limit) break;
-    if (c.direction === 'vi-pl' && !seenWord.has(c.vocab.id)) {
-      out.push(c);
-      seenWord.add(c.vocab.id);
+/* ------------------------------------------------------------------ */
+/* Turning scheduled abilities into tasks                               */
+/* ------------------------------------------------------------------ */
+
+function taskForDueItem(item: SrsItem, phase: TaskPhase): LearningTask | null {
+  const level = levelOf(item);
+  switch (item.kind) {
+    case 'vocab-active': {
+      const v = vocabById.get(item.ref);
+      return v ? vocabActiveTask(v, level, phase) : null;
     }
-  }
-  if (out.length < limit) {
-    for (const c of cands) {
-      if (out.length >= limit) break;
-      if (c.direction === 'pl-vi' && state.srs[makeSrsId('vocab-vi-pl', c.vocab.id)]) out.push(c);
+    case 'vocab-passive': {
+      const v = vocabById.get(item.ref);
+      return v ? vocabPassiveTask(v, allVocab, phase) : null;
     }
+    case 'grammar': {
+      const g = grammarById.get(item.ref);
+      return g ? grammarTask(g, level, phase) : null;
+    }
+    case 'dialogue': {
+      const [dId, idxRaw] = item.ref.split('#');
+      const d = dialogueById.get(dId);
+      const idx = Number(idxRaw);
+      return d && Number.isInteger(idx) ? dialogueTask(d, idx, level, phase) : null;
+    }
+    case 'sentence': {
+      const s = scenarioById.get(item.ref);
+      if (s) return scenarioTask({ ...s, lesson: s.lesson }, level, phase);
+      // A sentence ability can also come from a speaking task on a vocab example.
+      const v = vocabById.get(item.ref);
+      const ex = v ? usableExamples(v)[0] : undefined;
+      return v && ex ? speakingTask(ex.vi, ex.pl, v.id, v.lessonId, level, [v.id]) : null;
+    }
+    case 'listening':
+      return null; // built separately, only when audio exists
   }
-  return out;
 }
 
-function vocabItemFromSrs(i: SrsItem): SessionItem | null {
-  const v = vocabById.get(i.ref);
-  if (!v) return null;
-  return { kind: 'vocab', direction: i.kind === 'vocab-vi-pl' ? 'vi-pl' : 'pl-vi', vocab: v, srsId: i.id };
-}
-
-function exerciseItem(e: ExerciseEntry, mistakeRef?: string): SessionItem {
-  return { kind: 'exercise', exercise: e.exercise, lesson: e.ownerId, mistakeRef };
-}
-
-/** Turn a content exercise entry into session items (generators expand to instances). */
-export function expandExercise(e: ExerciseEntry, count?: number, seed?: number): SessionItem[] {
-  if (e.exercise.type === 'generator') {
-    return generate(e.exercise.generator, e.exercise.params, count ?? e.exercise.count, seed).map((instance) => ({ kind: 'generated', instance, lesson: e.ownerId }));
-  }
-  return [exerciseItem(e)];
-}
-
-function mistakeItem(m: Mistake): SessionItem | null {
+/** Rebuild a task from a logged mistake so the learner meets it again. */
+function mistakeItem(m: Mistake, state: AppState): SessionItem | null {
   if (m.refKind === 'vocab') {
     const v = vocabById.get(m.ref);
     if (!v) return null;
-    return { kind: 'vocab', direction: 'pl-vi', vocab: v, srsId: makeSrsId('vocab-pl-vi', v.id) };
+    const level = levelOf(state.srs[makeSrsId('vocab-active', v.id)]);
+    const t = vocabActiveTask(v, level, 'mistakes');
+    return t ? { kind: 'task', task: t, mistakeRef: m.ref } : null;
   }
   if (m.refKind === 'exercise') {
     const e = exerciseById.get(m.ref);
     if (!e) return null;
-    return { ...exerciseItem(e, m.ref) };
+    return { kind: 'exercise', exercise: e.exercise, lesson: e.ownerId, mistakeRef: m.ref };
   }
-  // generated: regenerate a fresh instance of the same generator kind
   if (!m.generatorKind) return null;
   const gen = generate(m.generatorKind, {}, 1)[0];
   return gen ? { kind: 'generated', instance: gen, lesson: m.lesson, mistakeRef: m.ref } : null;
 }
 
-/** Grammar exercises for due/weak grammar points, or fallback to studied lessons. */
-function grammarItems(state: AppState, limit: number, now = Date.now()): SessionItem[] {
-  const due = dueGrammar(state, now).map((i) => i.ref);
-  const studied = studiedLessonNumbers(state);
-  const pool: ExerciseEntry[] = [];
-  for (const gid of due) pool.push(...exercisesForGrammar(gid));
-  if (pool.length < limit) {
-    const extra = exercisesForLessons(studied).filter((e) => e.exercise.grammar.length > 0 && e.exercise.status !== 'flagged' && e.exercise.type !== 'open-answer');
-    pool.push(...sample(extra, limit * 2));
+/* ------------------------------------------------------------------ */
+/* Phase builders                                                       */
+/* ------------------------------------------------------------------ */
+
+const asItems = (tasks: (LearningTask | null)[]): SessionItem[] =>
+  tasks.filter((t): t is LearningTask => !!t).map((task) => ({ kind: 'task', task }));
+
+/** Short, confidence-building openers: say something you already know. */
+function warmupPhase(state: AppState, pools: ReturnType<typeof poolsFor>, limit: number): SessionItem[] {
+  const out: SessionItem[] = [];
+  // A speaking warm-up when there is a sentence worth saying aloud.
+  const speakable = pools.vocab.filter((v) => usableExamples(v).length);
+  const spoken = sample(speakable, 1).map((v) => {
+    const ex = usableExamples(v)[0];
+    const level = levelOf(state.srs[makeSrsId('sentence', v.id)]);
+    return speakingTask(ex.vi, ex.pl, v.id, v.lessonId, level, [v.id]);
+  });
+  out.push(...asItems(spoken));
+  // Plus an easy already-strong ability, presented as production.
+  const strong = itemsOfKind(state, ['vocab-active'])
+    .filter((i) => i.successes > 0 && !isWeak(i))
+    .slice(0, 8);
+  const easy = sample(strong, Math.max(0, limit - out.length)).map((i) => taskForDueItem(i, 'warmup'));
+  out.push(...asItems(easy));
+  if (out.length < limit) {
+    const fresh = vocabNeedingActivation(state, pools.vocab, limit - out.length).map((v) => vocabActiveTask(v, 2, 'warmup'));
+    out.push(...asItems(fresh));
   }
-  const unique = new Map(pool.map((e) => [e.exercise.id, e]));
-  return sample(Array.from(unique.values()), limit).flatMap((e) => expandExercise(e, 1));
+  return out.slice(0, limit);
 }
 
-function productiveItems(state: AppState, limit: number): SessionItem[] {
-  const studied = studiedLessonNumbers(state);
-  const recent = studied.slice(-3);
-  const pool = exercisesForLessons(recent).filter((e) => e.exercise.status !== 'flagged' && (e.exercise.type === 'generator' || e.exercise.type === 'typed' || e.exercise.type === 'ordering' || e.exercise.type === 'error-correction' || e.exercise.type === 'diacritics'));
-  return sample(pool, limit).flatMap((e) => expandExercise(e, 1));
+/** Polish → Vietnamese production from material already met. */
+function retrievalPhase(state: AppState, pools: ReturnType<typeof poolsFor>, limit: number, now: number): SessionItem[] {
+  const due = dueItems(state, ['vocab-active', 'sentence'], now);
+  const tasks = due.slice(0, limit).map((i) => taskForDueItem(i, 'retrieval'));
+  const out = asItems(tasks);
+  if (out.length < limit) {
+    const fresh = vocabNeedingActivation(state, pools.vocab, limit - out.length).map((v) => vocabActiveTask(v, 3, 'retrieval'));
+    out.push(...asItems(fresh));
+  }
+  return out.slice(0, limit);
+}
+
+/** Respond inside a conversation, or handle a communicative situation. */
+function conversationPhase(state: AppState, pools: ReturnType<typeof poolsFor>, limit: number, now: number): SessionItem[] {
+  const out: SessionItem[] = [];
+  const due = dueItems(state, ['dialogue'], now);
+  out.push(...asItems(due.slice(0, limit).map((i) => taskForDueItem(i, 'conversation'))));
+  if (out.length < limit && pools.dialogues.length) {
+    const fresh = sample(pools.dialogues, limit - out.length).map(({ dialogue, lineIndex }) => {
+      const level = levelOf(state.srs[makeSrsId('dialogue', `${dialogue.id}#${lineIndex}`)]);
+      return dialogueTask(dialogue, lineIndex, level, 'conversation');
+    });
+    out.push(...asItems(fresh));
+  }
+  if (out.length < limit && pools.scenarios.length) {
+    const fresh = sample(pools.scenarios, limit - out.length).map((s) => scenarioTask(s, levelOf(state.srs[makeSrsId('sentence', s.id)]), 'conversation'));
+    out.push(...asItems(fresh));
+  }
+  return out.slice(0, limit);
+}
+
+/** Grammar practised as live sentences, plus the hand-written drills. */
+function grammarPhase(state: AppState, pools: ReturnType<typeof poolsFor>, limit: number, now: number): SessionItem[] {
+  const out: SessionItem[] = [];
+  const due = dueItems(state, ['grammar'], now);
+  out.push(...asItems(due.slice(0, limit).map((i) => taskForDueItem(i, 'grammar'))));
+  if (out.length < limit && pools.grammar.length) {
+    const fresh = sample(pools.grammar, limit - out.length).map((g) => grammarTask(g, levelOf(state.srs[makeSrsId('grammar', g.id)]), 'grammar'));
+    out.push(...asItems(fresh));
+  }
+  // Fall back to authored productive exercises if the pool is thin.
+  if (out.length < limit) {
+    const studied = studiedLessonNumbers(state);
+    const authored = exercisesForLessons(studied).filter(
+      (e) => e.exercise.status !== 'flagged' && ['typed', 'ordering', 'error-correction', 'fill-blank'].includes(e.exercise.type),
+    );
+    out.push(...sample(authored, limit - out.length).map((e) => ({ kind: 'exercise' as const, exercise: e.exercise, lesson: e.ownerId })));
+  }
+  return out.slice(0, limit);
+}
+
+function mistakesPhase(state: AppState, limit: number): SessionItem[] {
+  return sample(unresolvedMistakes(state), limit)
+    .map((m) => mistakeItem(m, state))
+    .filter((x): x is SessionItem => !!x)
+    .slice(0, limit);
+}
+
+/**
+ * Listening tasks exist only where a real recording exists. No audio is
+ * invented, so with an empty audio manifest this phase is simply empty.
+ */
+function listeningPhase(state: AppState, pools: ReturnType<typeof poolsFor>, limit: number): SessionItem[] {
+  const withAudio = pools.vocab.filter((v) => (audioByTarget.get(v.id) ?? []).length > 0);
+  return sample(withAudio, limit)
+    .map((v) => {
+      const clip = audioByTarget.get(v.id)![0];
+      const ex = usableExamples(v)[0];
+      const exercise: Exercise = {
+        id: `e-${v.lessonId}-listen-${v.id}`.replace(/[^a-z0-9-]/gi, '-').toLowerCase(),
+        type: 'typed',
+        skill: 'listening',
+        source: 'generated',
+        status: 'unverified',
+        instruction: `Posłuchaj (${clip.speaker}) i zapisz, co słyszysz.`,
+        prompt: `🔊 ${ex ? 'Zapisz usłyszane zdanie.' : 'Zapisz usłyszane słowo.'}`,
+        answerLang: 'vi',
+        answers: [ex ? ex.vi : v.vi],
+        grammar: [],
+        vocab: [v.id],
+        level: 3,
+      };
+      const task: LearningTask = {
+        id: `t-listen-${v.id}`,
+        srsKind: 'listening',
+        srsRef: v.id,
+        lesson: v.lessonId,
+        level: levelOf(state.srs[makeSrsId('listening', v.id)]),
+        phase: 'listening',
+        exercise,
+        targetVocab: [v.id],
+        selfAssessed: false,
+      };
+      return { kind: 'task' as const, task };
+    })
+    .slice(0, limit);
+}
+
+/** One open prompt requiring several Vietnamese sentences. */
+function freePhase(state: AppState, pools: ReturnType<typeof poolsFor>, limit: number): SessionItem[] {
+  const multi = pools.scenarios.filter((s) => s.minSentences >= 2);
+  const chosen = sample(multi.length ? multi : pools.scenarios, limit);
+  return asItems(chosen.map((s) => scenarioTask(s, levelOf(state.srs[makeSrsId('sentence', s.id)]), 'free')));
+}
+
+/* ------------------------------------------------------------------ */
+/* Session assembly                                                     */
+/* ------------------------------------------------------------------ */
+
+export interface SessionPhaseSummary {
+  phase: TaskPhase;
+  count: number;
 }
 
 export interface SessionPlan {
   mode: ReviewMode;
   items: SessionItem[];
-  summary: { due: number; new: number; mistakes: number; grammar: number; productive: number };
+  phases: SessionPhaseSummary[];
+  /** Rough minutes, for the dashboard. */
+  estimatedMinutes: number;
+}
+
+function summarise(mode: ReviewMode, items: SessionItem[]): SessionPlan {
+  const counts = new Map<TaskPhase, number>();
+  for (const it of items) {
+    if (it.kind !== 'task') continue;
+    counts.set(it.task.phase, (counts.get(it.task.phase) ?? 0) + 1);
+  }
+  const order: TaskPhase[] = ['warmup', 'retrieval', 'conversation', 'grammar', 'mistakes', 'listening', 'free'];
+  return {
+    mode,
+    items,
+    phases: order.filter((p) => counts.has(p)).map((p) => ({ phase: p, count: counts.get(p)! })),
+    estimatedMinutes: Math.max(3, Math.round(items.length * 1.2)),
+  };
 }
 
 export function buildSession(state: AppState, mode: ReviewMode, now = Date.now()): SessionPlan {
-  const { dailyNewLimit, dailyReviewLimit } = state.settings;
-  const summary = { due: 0, new: 0, mistakes: 0, grammar: 0, productive: 0 };
-  let items: SessionItem[] = [];
+  const studied = studiedLessonNumbers(state);
+  const pools = poolsFor(studied);
 
   switch (mode) {
     case 'today': {
-      const due = dueVocab(state, now).slice(0, dailyReviewLimit).map(vocabItemFromSrs).filter((x): x is SessionItem => !!x);
-      const fresh = newVocab(state, dailyNewLimit).map((c) => ({ kind: 'vocab', direction: c.direction, vocab: c.vocab, srsId: c.srsId }) as SessionItem);
-      const mistakes = sample(unresolvedMistakes(state), 5).map(mistakeItem).filter((x): x is SessionItem => !!x);
-      const grammar = grammarItems(state, 4, now);
-      const productive = productiveItems(state, 3);
-      summary.due = due.length;
-      summary.new = fresh.length;
-      summary.mistakes = mistakes.length;
-      summary.grammar = grammar.length;
-      summary.productive = productive.length;
-      items = [...due, ...fresh, ...mistakes, ...grammar, ...productive];
-      break;
+      // The daily workout: ordered phases, roughly 15 minutes.
+      const items = [
+        ...warmupPhase(state, pools, 2),
+        ...retrievalPhase(state, pools, 3, now),
+        ...conversationPhase(state, pools, 2, now),
+        ...grammarPhase(state, pools, 2, now),
+        ...mistakesPhase(state, 2),
+        ...listeningPhase(state, pools, 2),
+        ...freePhase(state, pools, 1),
+      ];
+      return summarise(mode, items);
     }
+    case 'production': {
+      const items = [...retrievalPhase(state, pools, 8, now), ...freePhase(state, pools, 2)];
+      return summarise(mode, items);
+    }
+    case 'conversation': {
+      const items = [...conversationPhase(state, pools, 8, now), ...freePhase(state, pools, 2)];
+      return summarise(mode, items);
+    }
+    case 'grammar':
+      return summarise(mode, grammarPhase(state, pools, 10, now));
+    case 'mistakes':
+      return summarise(
+        mode,
+        unresolvedMistakes(state)
+          .map((m) => mistakeItem(m, state))
+          .filter((x): x is SessionItem => !!x),
+      );
+    case 'listening':
+      return summarise(mode, listeningPhase(state, pools, 10));
     case 'weak': {
-      const weak = weakItems(state).map(vocabItemFromSrs).filter((x): x is SessionItem => !!x);
-      const mistakes = unresolvedMistakes(state).slice(0, 10).map(mistakeItem).filter((x): x is SessionItem => !!x);
-      summary.due = weak.length;
-      summary.mistakes = mistakes.length;
-      items = [...weak, ...mistakes];
-      break;
+      const weak = weakAbilities(state).slice(0, 8);
+      const items: SessionItem[] = asItems(weak.map((i) => taskForDueItem(i, 'retrieval')));
+      items.push(...mistakesPhase(state, 4));
+      return summarise(mode, items);
     }
-    case 'vocab': {
-      const due = dueVocab(state, now).map(vocabItemFromSrs).filter((x): x is SessionItem => !!x);
-      const fresh = newVocab(state, dailyNewLimit).map((c) => ({ kind: 'vocab', direction: c.direction, vocab: c.vocab, srsId: c.srsId }) as SessionItem);
-      summary.due = due.length;
-      summary.new = fresh.length;
-      items = [...due, ...fresh];
-      if (items.length === 0) {
-        // Nothing due: practise a random sample of studied vocabulary.
-        const studied = new Set(studiedLessonNumbers(state));
-        items = sample(vocabSrsCandidates().filter((c) => studied.has(c.vocab.lessonNumber)), 15).map((c) => ({ kind: 'vocab', direction: c.direction, vocab: c.vocab, srsId: c.srsId }) as SessionItem);
-      }
-      break;
-    }
-    case 'grammar': {
-      items = grammarItems(state, 10, now);
-      summary.grammar = items.length;
-      break;
-    }
-    case 'mistakes': {
-      items = unresolvedMistakes(state).map(mistakeItem).filter((x): x is SessionItem => !!x);
-      summary.mistakes = items.length;
-      break;
-    }
-    case 'overdue': {
-      items = [...dueVocab(state, now), ...dueGrammar(state, now)].map(vocabItemFromSrs).filter((x): x is SessionItem => !!x);
-      summary.due = items.length;
-      break;
+    case 'diagnostic': {
+      // The only place isolated word recognition is used, and even here it is
+      // a real multiple-choice check, never a self-rated reveal.
+      const seen = pools.vocab.filter((v) => state.srs[makeSrsId('vocab-active', v.id)] || state.srs[makeSrsId('vocab-passive', v.id)]);
+      const pool = seen.length >= 5 ? seen : pools.vocab;
+      const items = asItems(sample(pool, 12).map((v) => vocabPassiveTask(v, allVocab, 'warmup')));
+      return summarise(mode, items);
     }
   }
-  // Interleave: shuffle but keep due vocab reasonably spread.
-  return { mode, items: mode === 'mistakes' ? items : shuffle(items), summary };
 }
 
-/** Counts shown on the dashboard. */
+/** Practice a single lesson: production-first, using its own material. */
+export function buildLessonSession(state: AppState, lessonNumber: number): SessionItem[] {
+  const pools = poolsFor([lessonNumber]);
+  const items: SessionItem[] = [];
+  for (const v of contextualVocab(pools.vocab).slice(0, 8)) {
+    const t = vocabActiveTask(v, levelOf(state.srs[makeSrsId('vocab-active', v.id)]), 'retrieval');
+    if (t) items.push({ kind: 'task', task: t });
+  }
+  for (const g of pools.grammar.slice(0, 4)) {
+    const t = grammarTask(g, levelOf(state.srs[makeSrsId('grammar', g.id)]), 'grammar');
+    if (t) items.push({ kind: 'task', task: t });
+  }
+  for (const { dialogue, lineIndex } of pools.dialogues.slice(0, 3)) {
+    const t = dialogueTask(dialogue, lineIndex, levelOf(state.srs[makeSrsId('dialogue', `${dialogue.id}#${lineIndex}`)]), 'conversation');
+    if (t) items.push({ kind: 'task', task: t });
+  }
+  for (const s of pools.scenarios.slice(0, 3)) {
+    items.push({ kind: 'task', task: scenarioTask(s, levelOf(state.srs[makeSrsId('sentence', s.id)]), 'free') });
+  }
+  return shuffle(items);
+}
+
+/** Practise one vocabulary item across changing contexts. */
+export function buildVocabSession(state: AppState, vocabId: string): SessionItem[] {
+  const v = vocabById.get(vocabId);
+  if (!v) return [];
+  const level = levelOf(state.srs[makeSrsId('vocab-active', v.id)]);
+  const out: SessionItem[] = [];
+  // Same word, three different demands — that is what "in changing contexts" means.
+  for (const lv of [Math.max(2, level - 1), level, Math.min(5, level + 1)] as AutomaticityLevel[]) {
+    const t = vocabActiveTask(v, lv, 'retrieval');
+    if (t) out.push({ kind: 'task', task: t });
+  }
+  const ex = usableExamples(v)[0];
+  if (ex) out.push({ kind: 'task', task: speakingTask(ex.vi, ex.pl, v.id, v.lessonId, level, [v.id]) });
+  return out;
+}
+
+/** Expand a content exercise (generators produce several instances). */
+export function expandExercise(e: ExerciseEntry, count?: number, seed?: number): SessionItem[] {
+  if (e.exercise.type === 'generator') {
+    return generate(e.exercise.generator, e.exercise.params, count ?? e.exercise.count, seed).map((instance) => ({
+      kind: 'generated' as const,
+      instance,
+      lesson: e.ownerId,
+    }));
+  }
+  return [{ kind: 'exercise', exercise: e.exercise, lesson: e.ownerId }];
+}
+
+/** Grammar-linked exercises, used by the per-grammar practice route. */
+export function grammarPracticeItems(grammarId: string): SessionItem[] {
+  const g = grammarById.get(grammarId);
+  const items: SessionItem[] = [];
+  if (g) {
+    for (const lv of [2, 3, 4] as AutomaticityLevel[]) {
+      const t = grammarTask(g, lv, 'grammar');
+      if (t) items.push({ kind: 'task', task: t });
+    }
+  }
+  for (const e of exercisesForGrammar(grammarId).slice(0, 6)) items.push(...expandExercise(e, 1));
+  return items;
+}
+
+/* ------------------------------------------------------------------ */
+/* Dashboard counters                                                   */
+/* ------------------------------------------------------------------ */
+
 export function dashboardCounts(state: AppState, now = Date.now()) {
-  const due = dueVocab(state, now).length + dueGrammar(state, now).length;
-  const weak = weakItems(state).length;
+  const due = dueItems(state, ['vocab-active', 'vocab-passive', 'grammar', 'sentence', 'dialogue', 'listening'], now).length;
+  const weak = weakAbilities(state).length;
   const mistakes = unresolvedMistakes(state).length;
-  const fresh = newVocab(state, state.settings.dailyNewLimit).length;
+  const studied = studiedLessonNumbers(state);
+  const pools = poolsFor(studied);
+  const fresh = pools.vocab.filter((v) => !state.srs[makeSrsId('vocab-active', v.id)]).length;
   return { due, weak, mistakes, fresh };
 }

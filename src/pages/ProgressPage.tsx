@@ -1,9 +1,10 @@
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../learning/store';
-import { allGrammar, allVocab, lessonById, lessons, lessonLabel, vocabById } from '../data/content';
+import { allGrammar, lessonById, lessons, lessonLabel, vocabById } from '../data/content';
 import { completedLessonNumbers, exportState, parseImport } from '../learning/state';
-import { makeSrsId, mastery, masteryLevel } from '../learning/srs';
+import { makeSrsId, mastery } from '../learning/srs';
+import { skillScores } from '../learning/skills';
 import { Callout, Card, PageHeader, Pill, Progress, Stat } from '../components/ui';
 import { DAY_MS, daysBetween, formatDate, formatDateTime, startOfDay } from '../utilities/dates';
 
@@ -13,10 +14,7 @@ export function ProgressPage() {
   const fileRef = useRef<HTMLInputElement>(null);
   const completed = completedLessonNumbers(state, (id) => lessonById.get(id)?.number);
   const vocabItems = Object.values(state.srs).filter((i) => i.kind.startsWith('vocab') && vocabById.has(i.ref));
-  const levels = { new: 0, learning: 0, young: 0, mature: 0 };
-  for (const i of vocabItems) levels[masteryLevel(i)]++;
-  const totalCards = allVocab.filter((v) => v.srs && v.status !== 'flagged').length * 2;
-  levels.new = Math.max(0, totalCards - vocabItems.length);
+  const skills = skillScores(state);
   const grammarItems = allGrammar.map((g) => ({ g, item: state.srs[makeSrsId('grammar', g.id)] }));
   const sessionsByDay = new Map<number, number>();
   for (const s of state.sessions) sessionsByDay.set(startOfDay(s.ts), (sessionsByDay.get(startOfDay(s.ts)) ?? 0) + s.items);
@@ -57,7 +55,7 @@ export function ProgressPage() {
       </PageHeader>
       <div className="stat-grid mb">
         <Stat value={`${completed.size}/${lessons.length}`} label="ukończone lekcje" tone="primary" />
-        <Stat value={vocabItems.length} label="kart słówek w powtórkach" />
+        <Stat value={vocabItems.length} label="umiejętności w powtórkach" />
         <Stat value={totalItems} label="przećwiczonych elementów" />
         <Stat value={`${totalMinutes} min`} label="łączny czas nauki" />
         <Stat value={state.exams.length} label="podejść do egzaminów" />
@@ -65,15 +63,20 @@ export function ProgressPage() {
 
       <div className="grid two">
         <Card>
-          <h3>Słownictwo wg poziomu opanowania</h3>
-          {(['new', 'learning', 'young', 'mature'] as const).map((k) => (
-            <div key={k} className="row" style={{ marginBottom: '0.4rem' }}>
-              <span style={{ width: 130 }} className="small">{k === 'new' ? 'nowe' : k === 'learning' ? 'w nauce' : k === 'young' ? 'młode' : 'dojrzałe'}</span>
-              <div style={{ flex: 1 }}><Progress value={levels[k]} max={Math.max(1, totalCards)} tone={k === 'mature' ? 'ok' : k === 'learning' ? 'warn' : undefined} /></div>
-              <span className="muted small">{levels[k]}</span>
+          <h3>Umiejętności językowe</h3>
+          <p className="muted tiny" style={{ marginTop: 0 }}>
+            Nie liczba opanowanych fiszek, tylko to, co potrafisz zrobić po wietnamsku.
+          </p>
+          {skills.map((sk) => (
+            <div key={sk.id} style={{ marginBottom: '0.6rem' }}>
+              <div className="row between small">
+                <span title={sk.detail}>{sk.label}</span>
+                <b>{sk.percent}%</b>
+              </div>
+              <Progress value={sk.percent} tone={sk.percent >= 70 ? 'ok' : sk.percent >= 35 ? 'warn' : undefined} thin />
+              <span className="muted tiny">{sk.detail}{sk.total > 0 ? ` · ${sk.practised}/${sk.total}` : ''}</span>
             </div>
           ))}
-          <p className="muted tiny">Karta = jedno słówko w jednym kierunku. Dojrzałe = odstęp ≥ 21 dni.</p>
         </Card>
         <Card>
           <h3>Aktywność (12 tygodni)</h3>
@@ -96,11 +99,11 @@ export function ProgressPage() {
         <h3>Lekcje i checkpointy</h3>
         <div className="table-wrap">
           <table className="table">
-            <thead><tr><th>Lekcja</th><th>Status</th><th>Słówka</th><th>Checkpointy</th></tr></thead>
+            <thead><tr><th>Lekcja</th><th>Status</th><th>Słownictwo aktywne</th><th>Checkpointy</th></tr></thead>
             <tbody>
               {lessons.map((l) => {
                 const lp = state.lessons[l.id];
-                const vm = l.vocabulary.filter((v) => v.srs).map((v) => state.srs[makeSrsId('vocab-vi-pl', v.id)]).filter(Boolean);
+                const vm = l.vocabulary.filter((v) => v.srs).map((v) => state.srs[makeSrsId('vocab-active', v.id)]).filter(Boolean);
                 const avg = l.vocabulary.length ? Math.round(vm.reduce((a, i) => a + mastery(i), 0) / l.vocabulary.length) : 0;
                 return (
                   <tr key={l.id}>

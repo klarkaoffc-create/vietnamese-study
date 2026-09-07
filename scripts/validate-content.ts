@@ -8,7 +8,7 @@
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { LessonSchema, ReviewSchema, ExamBlueprintSchema, AudioManifestSchema, type Lesson, type Review, type ExamBlueprint, type Exercise } from '../src/data/schema';
+import { LessonSchema, ReviewSchema, ExamBlueprintSchema, AudioManifestSchema, ScenarioPackSchema, type Lesson, type Review, type ExamBlueprint, type Exercise, type Scenario } from '../src/data/schema';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -79,6 +79,18 @@ for (const file of listJson('content/exams')) {
   }
   if (!file.endsWith(`${r.data.id}.json`)) errors.push(`${file}: nazwa pliku powinna być ${r.data.id}.json`);
   exams.push(r.data);
+}
+
+const scenarios: Scenario[] = [];
+for (const file of listJson('content/scenarios')) {
+  const raw = readJson(file);
+  if (!raw) continue;
+  const r = ScenarioPackSchema.safeParse(raw);
+  if (!r.success) {
+    for (const issue of r.error.issues) errors.push(`${file}: ${issue.path.join('.')} – ${issue.message}`);
+    continue;
+  }
+  scenarios.push(...r.data.scenarios);
 }
 
 let audioClips: { targetId: string; file: string }[] = [];
@@ -231,6 +243,17 @@ for (const { ex, where } of allExercises) {
   if (ex.status === 'verified' && ex.source === 'generated') errors.push(`${where}: ${ex.id} – ćwiczenie wygenerowane nie może mieć statusu verified`);
 }
 
+for (const s of scenarios) {
+  registerId(s.id, 'scenarios');
+  if (!ids.has(s.lesson)) errors.push(`scenariusz ${s.id}: lekcja ${s.lesson} nie istnieje`);
+  if (!s.id.startsWith(`s-${s.lesson}-`)) errors.push(`scenariusz ${s.id} powinien zaczynać się od s-${s.lesson}-`);
+  for (const v of s.vocab) if (!vocabIds.has(v)) errors.push(`scenariusz ${s.id}: nieistniejące słówko ${v}`);
+  for (const g of s.grammar) if (!grammarIds.has(g)) errors.push(`scenariusz ${s.id}: nieistniejąca gramatyka ${g}`);
+  if (!s.patterns.some((p) => p.includes('{x}'))) warnings.push(`scenariusz ${s.id}: wzorce bez {x} wymagają dokładnego dopasowania`);
+  const lessonNum = Number(s.lesson.slice(4));
+  for (const c of s.combines) if (c >= lessonNum) errors.push(`scenariusz ${s.id}: combines odwołuje się do lekcji ${c}, która nie jest wcześniejsza niż ${lessonNum}`);
+}
+
 for (const clip of audioClips) {
   if (!ids.has(clip.targetId.split('#')[0])) errors.push(`audio: targetId ${clip.targetId} nie istnieje w treści`);
   if (!existsSync(join(ROOT, 'public/audio', clip.file))) errors.push(`audio: brak pliku public/audio/${clip.file}`);
@@ -242,7 +265,7 @@ for (const clip of audioClips) {
 
 const totalVocab = lessons.reduce((a, l) => a + l.vocabulary.length, 0);
 const totalGrammar = lessons.reduce((a, l) => a + l.grammar.length, 0);
-console.log(`Lekcje: ${lessons.length} · słówka: ${totalVocab} · gramatyka: ${totalGrammar} · ćwiczenia: ${allExercises.length} · powtórki: ${reviews.length} · egzaminy: ${exams.length} · nagrania: ${audioClips.length}`);
+console.log(`Lekcje: ${lessons.length} · słówka: ${totalVocab} · gramatyka: ${totalGrammar} · ćwiczenia: ${allExercises.length} · scenariusze: ${scenarios.length} · powtórki: ${reviews.length} · egzaminy: ${exams.length} · nagrania: ${audioClips.length}`);
 const flagged = allExercises.filter((e) => e.ex.status === 'flagged').length;
 const unverified = allExercises.filter((e) => e.ex.status === 'unverified').length;
 console.log(`Ćwiczenia: ${allExercises.length - flagged - unverified} zweryfikowane · ${unverified} niezweryfikowane (wygenerowane / klucz do nauki) · ${flagged} oznaczone do weryfikacji`);

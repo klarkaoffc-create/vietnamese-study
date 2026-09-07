@@ -13,6 +13,34 @@ potrzebujesz szczegółów technicznych, zobacz [ARCHITECTURE.md](ARCHITECTURE.m
 format plików lekcji) i [CONTENT_REVIEW.md](CONTENT_REVIEW.md) (lista
 wątpliwych form językowych z materiału nauczycielki).
 
+## Jak ta aplikacja uczy
+
+Celem nie jest zapamiętanie fiszek, tylko **mówienie po wietnamsku**. Dlatego
+w aplikacji **nie ma klasycznych fiszek** (słowo → odsłoń tłumaczenie → oceń
+się). Zamiast tego każda powtórka to zadania, w których coś tworzysz:
+
+- ułóż zdanie po wietnamsku z polskiego opisu,
+- odpowiedz na replikę w rozmowie,
+- wykonaj sytuację („Jesteś w kawiarni w Hà Nội — zamów kawę jajeczną"),
+- uzupełnij brakujący element gramatyczny,
+- powiedz zdanie na głos i porównaj się z wzorem.
+
+Powtórki rozłożone w czasie zostały zachowane — zmienił się tylko **przedmiot**
+planowania. System nie planuje „karty ze słowem chú", tylko umiejętności:
+*potrafię użyć chú w zdaniu*, *reaguję w tej rozmowie*, *stosuję ten wzorzec*.
+Każda umiejętność wspina się po drabinie automatyzacji (rozpoznawanie →
+przypomnienie z podpowiedzią → budowanie zdania → użycie w kontekście →
+produkcja spontaniczna), a przy każdym kolejnym spotkaniu dostajesz **mniej
+podpowiedzi**.
+
+Słownictwo liczone jest w dwóch osobnych wymiarach: **aktywne** (potrafię użyć)
+i **bierne** (rozumiem). Rozpoznanie polskiego tłumaczenia nie wystarczy, żeby
+słowo uznać za opanowane — opanowanie wymaga wielokrotnej produkcji w różnych
+kontekstach.
+
+Jedyne miejsce, gdzie oceniasz się sam(a), to zadania mówione — bo przeglądarka
+nie potrafi rzetelnie ocenić wymowy i aplikacja tego nie udaje.
+
 ## Ważna zasada
 
 **`source-lessons/` nigdy nie jest modyfikowane.** To są oryginalne pliki

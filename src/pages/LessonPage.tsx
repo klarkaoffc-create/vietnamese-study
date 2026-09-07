@@ -22,6 +22,7 @@ const TYPE_LABEL: Record<Exercise['type'], string> = {
   'dialogue-completion': 'dialog',
   generator: 'generator',
   'open-answer': 'własna odpowiedź',
+  speaking: 'mówienie',
 };
 
 export function LessonPage() {
@@ -50,7 +51,7 @@ export function LessonPage() {
   const generatorExercises = lesson.exercises.filter((e) => e.type === 'generator');
   const otherExercises = lesson.exercises.filter((e) => e.type !== 'generator');
   const lastCp = lp?.checkpoints?.[lp.checkpoints.length - 1];
-  const vocabMastery = lesson.vocabulary.filter((v) => v.srs).map((v) => mastery(state.srs[makeSrsId('vocab-vi-pl', v.id)] ?? { successes: 0, failures: 0, interval: 0, lapses: 0 } as never));
+  const vocabMastery = lesson.vocabulary.filter((v) => v.srs).map((v) => mastery(state.srs[makeSrsId('vocab-active', v.id)] ?? { successes: 0, failures: 0, interval: 0, lapses: 0 } as never));
   const avg = vocabMastery.length ? Math.round(vocabMastery.reduce((a, b) => a + b, 0) / vocabMastery.length) : 0;
 
   const toc = [
@@ -107,7 +108,7 @@ export function LessonPage() {
             </div>
             <div className="vocab-list">
               {lesson.vocabulary.map((v) => {
-                const item = state.srs[makeSrsId('vocab-vi-pl', v.id)];
+                const item = state.srs[makeSrsId('vocab-active', v.id)];
                 const level = masteryLevel(item);
                 return (
                   <div key={v.id} className="vocab-item" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '0.2rem' }}>

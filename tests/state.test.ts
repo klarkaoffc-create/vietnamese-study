@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { exportState, initialState, loadState, migrate, parseImport, reducer, saveState, STORAGE_KEY, unresolvedMistakes, type StorageLike } from '../src/learning/state';
+import { exportState, initialState, loadState, migrate, parseImport, reducer, saveState, STATE_VERSION, STORAGE_KEY, unresolvedMistakes, type StorageLike } from '../src/learning/state';
 
 function memoryStorage(): StorageLike & { data: Record<string, string> } {
   const data: Record<string, string> = {};
@@ -24,18 +24,18 @@ describe('localStorage state', () => {
   it('round-trips through storage', () => {
     const storage = memoryStorage();
     let s = initialState(1000);
-    s = reducer(s, { type: 'review', kind: 'vocab-vi-pl', ref: 'v-bai-01-xin-chao', lesson: 'bai-01', grade: 2, now: 1000 });
+    s = reducer(s, { type: 'review', kind: 'vocab-active', ref: 'v-bai-01-xin-chao', lesson: 'bai-01', grade: 2, now: 1000 });
     s = reducer(s, { type: 'complete-lesson', lesson: 'bai-01', completed: true, now: 2000 });
     saveState(storage, s);
     expect(storage.data[STORAGE_KEY]).toBeTruthy();
     const loaded = loadState(storage);
-    expect(loaded.srs['vocab-vi-pl:v-bai-01-xin-chao'].successes).toBe(1);
+    expect(loaded.srs['vocab-active:v-bai-01-xin-chao'].successes).toBe(1);
     expect(loaded.lessons['bai-01'].completed).toBe(2000);
   });
   it('ignores corrupted storage', () => {
     const storage = memoryStorage();
     storage.setItem(STORAGE_KEY, '{not json');
-    expect(loadState(storage).version).toBe(1);
+    expect(loadState(storage).version).toBe(STATE_VERSION);
   });
   it('logs, merges and resolves mistakes', () => {
     let s = initialState(0);

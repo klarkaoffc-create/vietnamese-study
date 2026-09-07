@@ -1,55 +1,99 @@
 /**
- * Turns exercise / vocabulary outcomes into store actions: SRS updates for
- * vocabulary and grammar, mistake logging and mistake retries.
+ * Turns the outcome of a task into store actions: scheduler updates for the
+ * ability that was practised, plus mistake logging.
+ *
+ * The important change from the flashcard era: an ability is only credited
+ * when the learner actually PRODUCED something and it was graded. Passive
+ * recognition updates a separate, lower-weighted ability.
  */
 import type { Action } from './state';
 import type { GradeResult } from './grading';
 import type { SessionItem } from './session';
+import type { LearningTask } from './tasks';
 import { gradeFromOutcome, type SrsGrade } from './srs';
 import { taskPrompt, type Task } from '../exercises/ExerciseView';
-import { exerciseById } from '../data/content';
+import { exerciseById, vocabById } from '../data/content';
 
-export function actionsForVocab(item: Extract<SessionItem, { kind: 'vocab' }>, grade: SrsGrade, outcome: 'correct' | 'tone' | 'wrong', given: string): Action[] {
-  const actions: Action[] = [
-    { type: 'review', kind: item.direction === 'vi-pl' ? 'vocab-vi-pl' : 'vocab-pl-vi', ref: item.vocab.id, lesson: item.vocab.lessonId, grade },
-  ];
-  if (grade === 0 && item.direction === 'pl-vi') {
+/** Actions for a scheduled task that the engine graded automatically. */
+export function actionsForTask(item: Extract<SessionItem, { kind: 'task' }>, result: GradeResult, given: string): Action[] {
+  const { task } = item;
+  const outcome3 = result.outcome === 'partial' ? (result.score >= 0.5 ? 'tone' : 'wrong') : result.outcome;
+  const grade = gradeFromOutcome(outcome3);
+  return recordTask(task, grade, outcome3, given, result, item.mistakeRef);
+}
+
+/** Actions for an open task the learner rated themselves (speaking). */
+export function actionsForSelfAssessed(item: Extract<SessionItem, { kind: 'task' }>, grade: SrsGrade, given: string): Action[] {
+  const outcome = grade >= 2 ? 'correct' : grade === 1 ? 'tone' : 'wrong';
+  return recordTask(item.task, grade, outcome, given, null, item.mistakeRef);
+}
+
+function recordTask(
+  task: LearningTask,
+  grade: SrsGrade,
+  outcome: 'correct' | 'tone' | 'wrong',
+  given: string,
+  result: GradeResult | null,
+  mistakeRef?: string,
+): Action[] {
+  const actions: Action[] = [{ type: 'review', kind: task.srsKind, ref: task.srsRef, lesson: task.lesson, grade }];
+
+  // Producing a word inside a sentence also proves you understand it, so a
+  // successful active task credits the passive ability too (never the
+  // reverse — recognising a word says nothing about being able to say it).
+  if (task.srsKind === 'vocab-active' && grade >= 2) {
+    actions.push({ type: 'review', kind: 'vocab-passive', ref: task.srsRef, lesson: task.lesson, grade: 2 });
+  }
+  // Any vocabulary genuinely used inside a bigger task counts as active use.
+  if (task.srsKind !== 'vocab-active' && grade >= 2) {
+    for (const vid of task.targetVocab) {
+      const v = vocabById.get(vid);
+      if (v) actions.push({ type: 'review', kind: 'vocab-active', ref: vid, lesson: v.lessonId, grade: 2 });
+    }
+  }
+
+  const success = grade >= 2;
+  if (!success) {
     actions.push({
       type: 'mistake',
       mistake: {
-        lesson: item.vocab.lessonId,
-        ref: item.vocab.id,
-        refKind: 'vocab',
-        category: outcome === 'tone' ? 'tone' : 'vocabulary',
-        prompt: item.vocab.pl,
-        expected: item.vocab.vi,
+        lesson: task.lesson,
+        ref: task.srsRef,
+        refKind: task.srsKind === 'vocab-active' || task.srsKind === 'vocab-passive' ? 'vocab' : 'exercise',
+        category: result?.category ?? (task.srsKind === 'dialogue' ? 'dialogue' : 'grammar'),
+        prompt: taskPrompt({ kind: 'exercise', exercise: task.exercise }),
+        expected: result?.expected ?? '',
         given,
         outcome,
-        flagged: item.vocab.status === 'flagged',
+        flagged: result?.flagged ?? false,
       },
     });
-  } else if (grade >= 2) {
-    actions.push({ type: 'mistake-retry', ref: item.vocab.id, success: true });
-  } else if (grade === 0) {
-    actions.push({ type: 'mistake-retry', ref: item.vocab.id, success: false });
   }
+  actions.push({ type: 'mistake-retry', ref: mistakeRef ?? task.srsRef, success });
   return actions;
 }
 
-export function actionsForTask(task: Task, lesson: string, result: GradeResult, given: string, mistakeRef?: string): Action[] {
+/** Actions for a hand-written content exercise or a generated drill. */
+export function actionsForExercise(task: Task, lesson: string, result: GradeResult, given: string, mistakeRef?: string): Action[] {
   const actions: Action[] = [];
   const outcome3 = result.outcome === 'partial' ? (result.score >= 0.5 ? 'tone' : 'wrong') : result.outcome;
   const grade = gradeFromOutcome(outcome3);
   const ref = task.kind === 'exercise' ? task.exercise.id : task.instance.id;
   const lessonId = task.kind === 'exercise' ? exerciseById.get(task.exercise.id)?.ownerId ?? lesson : lesson;
 
-  // Grammar SRS: every grammar point the exercise practises gets the grade.
   if (task.kind === 'exercise') {
     for (const gid of task.exercise.grammar) actions.push({ type: 'review', kind: 'grammar', ref: gid, lesson: lessonId, grade });
+    // Using a word correctly in an authored exercise is active use as well.
+    if (grade >= 2) {
+      for (const vid of task.exercise.vocab) {
+        const v = vocabById.get(vid);
+        if (v) actions.push({ type: 'review', kind: 'vocab-active', ref: vid, lesson: v.lessonId, grade: 2 });
+      }
+    }
   }
 
   const success = result.outcome === 'correct';
-  if (!success && result.outcome !== 'partial' || (result.outcome === 'partial' && result.score < 0.5)) {
+  if ((!success && result.outcome !== 'partial') || (result.outcome === 'partial' && result.score < 0.5)) {
     actions.push({
       type: 'mistake',
       mistake: {
@@ -66,7 +110,6 @@ export function actionsForTask(task: Task, lesson: string, result: GradeResult, 
       },
     });
   }
-  const retryRef = mistakeRef ?? ref;
-  actions.push({ type: 'mistake-retry', ref: retryRef, success });
+  actions.push({ type: 'mistake-retry', ref: mistakeRef ?? ref, success });
   return actions;
 }

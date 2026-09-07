@@ -52,6 +52,7 @@ source-lessons/        # oryginalne DOCX — WYŁĄCZNIE DO ODCZYTU, nigdy nie m
 content/
   lessons/              # bai-01.json … bai-11.json (jedna lekcja = jeden plik)
   reviews/              # rev-01-05.json — powtórka blokowa
+  scenarios/             # sytuacje komunikacyjne (roleplay, produkcja spontaniczna)
   exams/                # exam-01.json, exam-02.json — blueprinty egzaminów
   audio/                # manifest.json + README z instrukcją dodawania nagrań
   drafts/                # szkice ze `npm run import-lesson` (gitignore nie obejmuje, ale
@@ -64,7 +65,9 @@ src/
     blocks.ts              # bloki po 5 lekcji, wyliczane z listy numerów lekcji
     numbers.ts              # liczby/daty/godziny na słowa (z wariantami regionalnymi)
     generators.ts            # generatory ćwiczeń w locie (liczby, klasyfikatory, zegar…)
-    srs.ts                    # harmonogram powtórek (SM-2-lite, patrz niżej)
+    srs.ts                    # harmonogram powtórek (SM-2-lite) + drabina automatyzacji
+    tasks.ts                   # silnik zadań: umiejętność → konkretne zadanie
+    skills.ts                   # metryki umiejętności (aktywne/bierne, produkcja…)
     grading.ts                 # ocenianie każdego typu ćwiczenia
     session.ts                  # budowanie sesji (Dzisiaj / Słabe / Słownictwo / Błędy…)
     exam.ts                      # losowanie pytań egzaminu z ziarnem
@@ -75,7 +78,7 @@ src/
     ExerciseView.tsx          # przełącznik po typie ćwiczenia → właściwy input
     inputs.tsx                 # ChoiceInput, TextInput (+ pasek znaków wietnamskich), …
     ExerciseRunner.tsx           # pętla sesji: pokaż zadanie → oceń → zapisz → następne
-    VocabCard.tsx                 # osobny komponent kart słówek (przypomnij/odsłoń/oceń)
+    (kart fiszkowych już nie ma — zastąpiły je zadania z tasks.ts)
   components/                # współdzielone komponenty UI
   pages/                     # jedna strona = jedna trasa; łączy dane + silnik + komponenty
   utilities/                 # vietnamese.ts (normalizacja/porównanie), dates.ts, random.ts, typing.ts
@@ -94,22 +97,56 @@ Uproszczone SM-2: każdy element (`SrsItem`) ma `interval` (dni), `ease`
 
 | Ocena | Efekt |
 |---|---|
-| 0 „Nie umiem” | `interval` → 0, powrót w tej samej sesji (10 minut), `ease` spada |
-| 1 „Trudne” | mały wzrost interwału, `ease` lekko spada |
-| 2 „Umiem” | 1 → 3 → `interval × ease` dni |
-| 3 „Łatwe” | szybszy wzrost, `ease` rośnie |
+| 0 „nie wyszło” | `interval` → 0, powrót w tej samej sesji (10 minut), `ease` spada |
+| 1 „z trudem” | mały wzrost interwału, `ease` lekko spada |
+| 2 „udało się” | 1 → 3 → `interval × ease` dni |
+| 3 „bez wysiłku” | szybszy wzrost, `ease` rośnie |
 
-`mastery()` (0–100%) liczy się z interwału (ile już „dojrzał”) i
-niezawodności (successes / total), nie jest osobno przechowywane —
-zawsze wyliczane z surowych liczb `SrsItem`, więc nie może się rozjechać.
-VN→PL i PL→VN to **osobne** `SrsItem` (klucz `vocab-vi-pl:<id>` /
-`vocab-pl-vi:<id>`) — można umieć rozpoznać słowo, a jeszcze nie umieć go
-napisać, i odwrotnie.
+**Kluczowa decyzja pedagogiczna: harmonogram planuje UMIEJĘTNOŚCI, nie
+fiszki.** `SrsKind` to nie kierunki karty, tylko rzeczy, które umiesz zrobić:
 
-To **nie jest** kopia systemu Leitnera ze strony referencyjnej (StudyZone) —
-tam ocena była binarna (umiem / nie umiem) i przesuwała kartę między stałymi
-„pudełkami” bez pojęcia czasu. Tutaj odstępy są rzeczywiście czasowe (dni), z
-czterema poziomami oceny i malejącym/rosnącym mnożnikiem `ease`.
+| `SrsKind` | Co znaczy |
+|---|---|
+| `vocab-active` | potrafisz wydobyć i użyć słowa samodzielnie (to liczy się najbardziej) |
+| `vocab-passive` | rozumiesz je, gdy je widzisz/słyszysz (tylko diagnostyka) |
+| `grammar` | stosujesz wzorzec w żywym zdaniu |
+| `sentence` | wykonujesz konkretną sytuację komunikacyjną |
+| `dialogue` | reagujesz w rozmowie |
+| `listening` | rozumiesz ze słuchu |
+
+Do tego każdy element ma `level` 1–5 — **drabinę automatyzacji**
+(rozpoznawanie → przypomnienie z podpowiedzią → budowanie zdania → użycie w
+kontekście → produkcja spontaniczna). Sukces przesuwa o szczebel w górę,
+porażka o szczebel w dół, a `tasks.ts` dobiera do bieżącego szczebla zadanie
+z odpowiednią ilością podpowiedzi. Dzięki temu ta sama treść wraca coraz
+mniej podparta.
+
+`mastery()` liczy się z interwału, niezawodności **i szczebla** — element,
+który był tylko rozpoznawany (poziom 1–2), nie może wyglądać na opanowany,
+choćby miał długi odstęp. `masteryLevel()` przyznaje „dojrzały” dopiero przy
+poziomie ≥ 4.
+
+Migracja z wersji 1 stanu (era fiszek) mapuje `vocab-vi-pl` → `vocab-passive`
+i `vocab-pl-vi` → `vocab-active`, zachowując interwały i historię.
+
+### Silnik zadań (`src/learning/tasks.ts`)
+
+Zamienia „umiejętność do powtórki” na **konkretne zadanie do wykonania**.
+Nic tu nie wymyśla wietnamskiego — każde zadanie powstaje z materiału, który
+już jest w `content/`: przykładowych zdań przy słówkach i gramatyce, linii
+dialogów, scenariuszy komunikacyjnych. Gdy słowo nie ma zdania przykładowego,
+silnik świadomie schodzi do słabszego zadania, zamiast fabrykować zdanie.
+
+Każde zadanie niesie zsyntetyzowany obiekt `Exercise`, więc renderuje je i
+ocenia **istniejący** silnik ćwiczeń (`ExerciseView` + `grading.ts`) bez
+żadnych zmian.
+
+### Sesje (`src/learning/session.ts`)
+
+`buildSession('today')` buduje krótki trening mieszany w fazach:
+rozgrzewka → przypomnienie (PL→VN) → rozmowa → gramatyka w użyciu → twoje
+błędy → słuchanie (gdy są nagrania) → swobodna wypowiedź. To ma być
+ćwiczenie języka, nie przerabianie talii kart.
 
 ### Ocenianie odpowiedzi (`src/learning/grading.ts` + `src/utilities/vietnamese.ts`)
 

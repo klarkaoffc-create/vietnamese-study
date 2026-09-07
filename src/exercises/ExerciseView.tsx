@@ -132,7 +132,10 @@ export function ExerciseView({
       return (
         <div>
           {meta}
-          <div className="ex-instruction">Odpowiedz pełnym zdaniem po wietnamsku.</div>
+          {/* For scenarios the instruction carries the situation itself
+              ("Jesteś w kawiarni w Hà Nội…"), which is the whole point of
+              the task — it must never be replaced by a generic line. */}
+          <div className="ex-instruction">{ex.instruction ?? 'Odpowiedz pełnym zdaniem po wietnamsku.'}</div>
           <p className="ex-prompt">{ex.prompt}</p>
           {image}
           <TextInput value={text} onChange={setText} onSubmit={onSubmit} result={result} multiline />
@@ -167,6 +170,10 @@ export function ExerciseView({
       return <DialogueCompletionView ex={ex} text={text} setText={setText} result={result} onSubmit={onSubmit} meta={meta} />;
     case 'generator':
       return <p className="muted">Ćwiczenie generowane – uruchom je z poziomu lekcji.</p>;
+    case 'speaking':
+      // Rendered by ExerciseRunner through <SpeakingTask />, which owns the
+      // record/compare/self-rate flow.
+      return <p className="muted">Zadanie mówione – uruchom je w sesji.</p>;
   }
 }
 
@@ -270,6 +277,8 @@ export function taskPrompt(task: Task): string {
       return `Dialog: ${dialogueById.get(ex.dialogueId)?.title ?? ex.dialogueId} (linia ${ex.lineIndex + 1})`;
     case 'generator':
       return ex.instruction ?? ex.generator;
+    case 'speaking':
+      return ex.prompt;
     default:
       return ex.prompt;
   }

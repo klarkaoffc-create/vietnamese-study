@@ -311,6 +311,23 @@ export const OpenAnswerExerciseSchema = ExerciseBase.extend({
   sample: z.string().optional(),
 });
 
+/**
+ * Say it aloud, optionally record yourself, compare with the model.
+ * Deliberately NOT auto-scored: browser speech scoring is not reliable
+ * enough to grade pronunciation, so the learner self-assesses after
+ * hearing the comparison. This is the only task type where self-rating is
+ * the primary control.
+ */
+export const SpeakingExerciseSchema = ExerciseBase.extend({
+  type: z.literal('speaking'),
+  prompt: z.string().min(1),
+  /** The Vietnamese the learner should end up saying. */
+  target: z.string().min(1),
+  translation: z.string().optional(),
+  /** False for de-scaffolded practice: produce it before seeing the model. */
+  showTarget: z.boolean().default(true),
+});
+
 export const ExerciseSchema = z.discriminatedUnion('type', [
   McqExerciseSchema,
   TypedExerciseSchema,
@@ -323,6 +340,7 @@ export const ExerciseSchema = z.discriminatedUnion('type', [
   DialogueCompletionExerciseSchema,
   GeneratorExerciseSchema,
   OpenAnswerExerciseSchema,
+  SpeakingExerciseSchema,
 ]);
 export type Exercise = z.infer<typeof ExerciseSchema>;
 export type ExerciseType = Exercise['type'];
@@ -407,6 +425,47 @@ export const ExamBlueprintSchema = z.object({
   exercises: z.array(ExerciseSchema).default([]),
 });
 export type ExamBlueprint = z.infer<typeof ExamBlueprintSchema>;
+
+/* ----------------------------------------------------------------------- */
+/* Communicative scenarios                                                   */
+/* ----------------------------------------------------------------------- */
+
+/**
+ * A real-life situation the learner has to handle in Vietnamese. Scenarios
+ * are the top of the automaticity ladder: no sentence is given, only the
+ * situation and the communicative goal.
+ */
+export const ScenarioSchema = z.object({
+  /** e.g. `s-bai-08-order-coffee`. */
+  id: z.string().regex(/^s-bai-\d{2}-[a-z0-9-]+$/, 'Scenario id must look like s-bai-08-name'),
+  /** Lesson from which the learner has everything needed to do this. */
+  lesson: LessonIdSchema,
+  /** Polish description of the situation ("Jesteś w kawiarni w Hà Nội…"). */
+  situation: z.string().min(1),
+  /** What the learner has to achieve, in Polish. */
+  goal: z.string().min(1),
+  /** Accepted answer shapes; `{x}` matches any words. */
+  patterns: z.array(z.string().min(1)).min(1),
+  /** A model answer built only from verified lesson material. */
+  sample: z.string().min(1),
+  /** Optional scaffold shown at low automaticity levels. */
+  hint: z.string().optional(),
+  /** How many Vietnamese sentences the answer should contain. */
+  minSentences: z.number().int().min(1).max(6).default(1),
+  vocab: z.array(z.string()).default([]),
+  grammar: z.array(z.string()).default([]),
+  /** Lessons this scenario deliberately combines (cumulative practice). */
+  combines: z.array(z.number().int()).default([]),
+  status: StatusSchema.default('unverified'),
+});
+export type Scenario = z.infer<typeof ScenarioSchema>;
+
+export const ScenarioPackSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  scenarios: z.array(ScenarioSchema),
+});
+export type ScenarioPack = z.infer<typeof ScenarioPackSchema>;
 
 /* ----------------------------------------------------------------------- */
 /* Audio manifest                                                            */

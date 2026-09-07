@@ -172,6 +172,7 @@ explanation?, grammar[], vocab[], image?, level (1-3)`.
 | `dialogue-completion` | `dialogueId, lineIndex, distractors[]` | tekst linii dialogu |
 | `generator` | `generator (GeneratorKind), params, count` | generowane w locie, patrz niżej |
 | `open-answer` | `prompt, patterns[]` (z `{x}`), `sample?` | dopasowanie do wzorca |
+| `speaking` | `prompt, target, translation?, showTarget` | **nie jest oceniane automatycznie** — uczeń mówi, nagrywa się, porównuje z wzorem i ocenia sam(a) |
 
 `skill` to jedna z kategorii błędów: `vocabulary, spelling, tone, grammar,
 pronoun, classifier, word-order, tense, reading, listening, numbers, dates,
@@ -234,6 +235,46 @@ sztywno. `minProductionShare` to minimalny udział zadań produktywnych
 (wpisywanie, szyk zdania, poprawianie błędu…) — algorytm w
 `src/learning/exam.ts` (`sampleExam`) najpierw dobiera zadania produktywne,
 dopiero potem uzupełnia resztę.
+
+## Scenariusze komunikacyjne (`content/scenarios/*.json` → `ScenarioPackSchema`)
+
+Sytuacje z życia, w których trzeba sobie poradzić po wietnamsku — najwyższy
+szczebel drabiny automatyzacji. Nie podają zdania, tylko sytuację i cel.
+
+```json
+{
+  "id": "sc-pack-07-12",
+  "title": "Sytuacje komunikacyjne – Bài 7–12",
+  "scenarios": [
+    {
+      "id": "s-bai-08-order-coffee",
+      "lesson": "bai-08",
+      "situation": "Jesteś w kawiarni w Hà Nội. Kelner jest młodszy od ciebie.",
+      "goal": "Zamów jedną kawę jajeczną (użyj cho + zaimek + liczebnik + klasyfikator).",
+      "patterns": ["{x}cho{x}ly{x}"],
+      "sample": "Cho chị một ly cà phê trứng.",
+      "hint": "Cho + zaimek + liczba + ly + napój",
+      "minSentences": 1,
+      "vocab": ["v-bai-08-cho", "v-bai-08-ly"],
+      "grammar": ["g-bai-08-ordering"],
+      "combines": [],
+      "status": "unverified"
+    }
+  ]
+}
+```
+
+- `patterns` sprawdzają, czy odpowiedź **zawiera** właściwe elementy, w tej
+  kolejności. Na brzegach wzorca `{x}` jest opcjonalne (odpowiedź może się
+  zaczynać albo kończyć na danym fragmencie).
+- `sample` to wzór pokazywany **po** odpowiedzi, nigdy przed.
+- `hint` pojawia się tylko na niskich szczeblach automatyzacji.
+- `combines` wypisuje wcześniejsze lekcje, które zadanie łączy — scenariusz
+  pojawi się dopiero, gdy wszystkie są przerobione. Tak powstają zadania
+  kumulatywne („opisz niedzielny poranek swojej rodziny").
+
+Walidator sprawdza prefiks id, istnienie lekcji, słówek i gramatyki oraz to,
+czy `combines` wskazuje wyłącznie wcześniejsze lekcje.
 
 ## Manifest audio (`content/audio/manifest.json`)
 
