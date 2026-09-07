@@ -1,0 +1,446 @@
+{
+  "id": "bai-12",
+  "number": 12,
+  "title": "W mieście: miejsca i wskazywanie drogi",
+  "titleVi": "Bài 12",
+  "summary": "Miejsca w mieście (bank, szpital, park, sklep, bankomat), czytanka o dużych miastach Wietnamu, słownictwo do wskazywania drogi (thẳng, rẽ, phải, trái) oraz pytania „như thế nào?” i „được không?”.",
+  "icon": "🏙",
+  "sourceFile": "source-lessons/bái 12.docx",
+  "objectives": [
+    "nazwać najważniejsze miejsca w mieście i zapytać, gdzie się znajdują",
+    "zrozumieć czytankę o życiu w dużych wietnamskich miastach",
+    "wskazać komuś drogę: prosto, w prawo, w lewo, przejść, zatrzymać się",
+    "zapytać „jak dojść / jak to zrobić?” (như thế nào?) i „czy można?” (được không?)",
+    "powiedzieć, że coś jest możliwe (có thể / được)"
+  ],
+  "vocabulary": [
+    { "id": "v-bai-12-truong-hoc", "vi": "trường học", "pl": "szkoła", "category": "noun", "tags": ["place"] },
+    { "id": "v-bai-12-ngan-hang", "vi": "ngân hàng", "pl": "bank", "category": "noun", "tags": ["place"] },
+    { "id": "v-bai-12-cong-vien", "vi": "công viên", "pl": "park", "category": "noun", "tags": ["place"] },
+    { "id": "v-bai-12-cong-ty", "vi": "công ty", "pl": "firma", "category": "noun", "tags": ["place"] },
+    { "id": "v-bai-12-benh-vien", "vi": "bệnh viện", "pl": "szpital", "category": "noun", "tags": ["place"] },
+    { "id": "v-bai-12-cho", "vi": "chợ", "pl": "rynek, targ", "category": "noun", "tags": ["place"] },
+    { "id": "v-bai-12-sieu-thi", "vi": "siêu thị", "pl": "supermarket", "category": "noun", "tags": ["place"] },
+    { "id": "v-bai-12-may-rut-tien", "vi": "máy rút tiền", "pl": "bankomat", "category": "noun", "tags": ["place"], "examples": [{ "vi": "Bạn có thể đi máy rút tiền hoặc đi ngân hàng.", "pl": "Możesz pójść do bankomatu albo do banku." }] },
+    { "id": "v-bai-12-nha-thuoc", "vi": "nhà thuốc", "pl": "apteka", "category": "noun", "tags": ["place"] },
+    { "id": "v-bai-12-thanh-pho", "vi": "thành phố", "pl": "miasto", "category": "noun", "tags": ["place"], "note": "W oryginale polska glosa „míasto” – literówka po stronie polskiej." },
+    { "id": "v-bai-12-noi", "vi": "nơi", "pl": "miejsce", "category": "noun", "note": "W oryginale polska glosa „mịejsce” – literówka po stronie polskiej." },
+    { "id": "v-bai-12-lon", "vi": "lớn", "pl": "wielki, duży", "category": "adjective", "examples": [{ "vi": "thành phố lớn", "pl": "duże miasto" }] },
+    { "id": "v-bai-12-co-the", "vi": "có thể, được", "pl": "móc, można", "category": "verb", "examples": [{ "vi": "Bạn có thể đi chơi đến nhiều nơi khác.", "pl": "Możesz pójść w wiele innych miejsc." }] },
+    { "id": "v-bai-12-duong", "vi": "đường", "pl": "ulica, droga", "category": "noun", "examples": [{ "vi": "có nhiều người trên đường", "pl": "na ulicy jest dużo ludzi" }] },
+    { "id": "v-bai-12-khac", "vi": "khác", "pl": "różny, inny", "category": "adjective" },
+    { "id": "v-bai-12-tre-em", "vi": "trẻ em", "pl": "dzieci", "category": "noun", "note": "To samo słowo pojawiło się w Bài 10." },
+    { "id": "v-bai-12-tra-the", "vi": "trả thẻ", "pl": "płacić kartą (wg lekcji)", "category": "phrase", "status": "flagged", "note": "CONTENT_REVIEW: standardowo „trả bằng thẻ” / „thanh toán bằng thẻ”; samo „trả thẻ” znaczy raczej „oddać kartę”.", "srs": false },
+    { "id": "v-bai-12-thang", "vi": "(đi) thẳng", "pl": "prosto", "category": "adverb", "tags": ["directions"] },
+    { "id": "v-bai-12-qua", "vi": "(đi) qua", "pl": "iść przez, minąć", "category": "verb", "tags": ["directions"] },
+    { "id": "v-bai-12-re", "vi": "rẽ / quẹo", "pl": "skręcić", "category": "verb", "tags": ["directions"], "dialect": "północ: rẽ · południe: quẹo" },
+    { "id": "v-bai-12-phai", "vi": "phải", "pl": "prawo", "category": "noun", "tags": ["directions"], "note": "To samo słowo co „musieć” z Bài 5 – tu w znaczeniu kierunku." },
+    { "id": "v-bai-12-trai", "vi": "trái", "pl": "lewo", "category": "noun", "tags": ["directions"] },
+    { "id": "v-bai-12-dung", "vi": "dừng", "pl": "zatrzymać się", "category": "verb", "tags": ["directions"] },
+    { "id": "v-bai-12-tiep-tuc", "vi": "tiếp tục", "pl": "kontynuować", "category": "verb", "tags": ["directions"] },
+    { "id": "v-bai-12-thuoc", "vi": "thuốc", "pl": "lekarstwo, lek", "category": "noun" },
+    { "id": "v-bai-12-may", "vi": "máy", "pl": "maszyna", "category": "noun" },
+    { "id": "v-bai-12-rut", "vi": "rút", "pl": "wyciągać, wypłacać (wg lekcji: „wyrzucać”)", "category": "verb", "status": "flagged", "note": "CONTENT_REVIEW: w oryginale glosa „wyrzucać”; „rút” to raczej „wyciągać / wypłacać” (máy rút tiền = bankomat)." },
+    { "id": "v-bai-12-tien", "vi": "tiền", "pl": "pieniądze", "category": "noun", "note": "Powtórka z Bài 8." },
+    { "id": "v-bai-12-duoc-khong", "vi": "được không?", "pl": "może być? / czy można?", "category": "phrase", "examples": [{ "vi": "Trả thẻ được không?", "pl": "Czy można płacić kartą?", "status": "flagged" }] },
+    { "id": "v-bai-12-im-di", "vi": "im đi!", "pl": "cicho bądź! (niegrzeczne)", "category": "phrase", "note": "Wyrażenie nieuprzejme – w materiale lekcji podane potocznie. Wyłączone z powtórek.", "srs": false },
+    { "id": "v-bai-12-im-lang", "vi": "im lặng", "pl": "cisza, cicho", "category": "phrase", "note": "W oryginale „im lăng” – CONFIRMED TYPO (powinno być „im lặng”)." },
+    { "id": "v-bai-12-yeu", "vi": "yêu", "pl": "kochać", "category": "verb", "note": "Powtórka z Bài 6." },
+    { "id": "v-bai-12-nhu-the-nao", "vi": "như thế nào?", "pl": "jak? w jaki sposób?", "category": "question-word", "examples": [{ "vi": "Đi từ nhà Hoa đến ngân hàng như thế nào?", "pl": "Jak dojść z domu Hoa do banku?" }] },
+    { "id": "v-bai-12-den", "vi": "đến", "pl": "przybyć, dotrzeć do", "category": "verb", "examples": [{ "vi": "Khi bạn đến thành phố lớn…", "pl": "Kiedy przyjedziesz do dużego miasta…" }] },
+    { "id": "v-bai-12-buoi-toi", "vi": "buổi tối", "pl": "wieczór, wieczorem", "category": "time", "note": "Rozszerzenie „tối” z Bài 9." },
+    { "id": "v-bai-12-nhu", "vi": "như", "pl": "jak, taki jak", "category": "particle", "examples": [{ "vi": "thành phố lớn như Hà Nội", "pl": "duże miasta takie jak Hanoi" }] }
+  ],
+  "grammar": [
+    {
+      "id": "g-bai-12-directions",
+      "title": "Wskazywanie drogi",
+      "pattern": "đi thẳng · đi qua + miejsce · rẽ (quẹo) phải / trái · dừng · tiếp tục",
+      "explanation": "Do wskazywania drogi lekcja podaje zestaw czasowników i kierunków: „đi thẳng” (idź prosto), „đi qua” (przejdź przez / minij), „rẽ phải” (skręć w prawo), „rẽ trái” (skręć w lewo), „dừng” (zatrzymaj się), „tiếp tục” (kontynuuj).\n\n„rẽ” to forma północna; na południu mówi się „quẹo”. Kierunki to rzeczowniki: „phải” (prawo), „trái” (lewo) – uwaga, „phải” to również „musieć” z Bài 5.",
+      "examples": [
+        { "vi": "Đi thẳng.", "pl": "Idź prosto." },
+        { "vi": "Rẽ phải.", "pl": "Skręć w prawo." },
+        { "vi": "Rẽ trái.", "pl": "Skręć w lewo." },
+        { "vi": "Đi qua công viên.", "pl": "Przejdź przez park." },
+        { "vi": "Tiếp tục đi thẳng.", "pl": "Idź dalej prosto." }
+      ],
+      "keywords": ["thẳng", "rẽ", "quẹo", "phải", "trái", "dừng", "tiếp tục", "droga"],
+      "practice": ["e-bai-12-directions-match", "e-bai-12-mcq-turn", "e-bai-12-map-1", "e-bai-12-order-directions"]
+    },
+    {
+      "id": "g-bai-12-nhu-the-nao",
+      "title": "Pytanie o sposób: như thế nào?",
+      "pattern": "Đi từ + A + đến + B + như thế nào? · rzeczownik + như thế nào?",
+      "explanation": "„như thế nào?” pyta o SPOSÓB („jak?”) i stoi na końcu zdania. W połączeniu z „từ … đến …” (z Bài 11) tworzy pytanie o drogę: „Đi từ nhà Hoa đến ngân hàng như thế nào?” – jak dojść z domu Hoa do banku?\n\nUwaga na różnicę wobec Bài 10: „thế nào?” pytało o cechę („jaki jest?”), a „như thế nào?” pyta o sposób wykonania.",
+      "examples": [
+        { "vi": "Đi từ nhà Hoa đến ngân hàng như thế nào?", "pl": "Jak dojść z domu Hoa do banku?" },
+        { "vi": "Đi từ chợ đến bệnh viện như thế nào?", "pl": "Jak dojść z targu do szpitala?" }
+      ],
+      "keywords": ["như thế nào", "jak", "từ đến", "droga"],
+      "practice": ["e-bai-12-typed-how", "e-bai-12-map-3"]
+    },
+    {
+      "id": "g-bai-12-co-the",
+      "title": "Możliwość: có thể / được / được không?",
+      "pattern": "Zaimek + có thể + czasownik · czasownik + được không?",
+      "explanation": "„có thể” stoi PRZED czasownikiem i znaczy „móc, można”: „Bạn có thể đi máy rút tiền” – możesz pójść do bankomatu.\n\n„được” na końcu zdania również wyraża możliwość, a „được không?” to pytanie „czy można?”: „Trả thẻ được không?” – czy można płacić kartą? Odpowiedź twierdząca to „được” (można), przecząca „không được”.",
+      "examples": [
+        { "vi": "Bạn có thể đi chơi đến nhiều nơi khác.", "pl": "Możesz pójść w wiele innych miejsc." },
+        { "vi": "Thành phố lớn cũng có nhiều nơi bạn có thể trả thẻ.", "pl": "W dużych miastach jest też wiele miejsc, gdzie można płacić kartą." },
+        { "vi": "Trả thẻ được không?", "pl": "Czy można płacić kartą?", "status": "flagged", "note": "CONTENT_REVIEW: standardowo „trả bằng thẻ được không?”" }
+      ],
+      "keywords": ["có thể", "được", "được không", "możliwość"],
+      "practice": ["e-bai-12-fill-cothe", "e-bai-12-typed-card", "e-bai-12-read-4"]
+    }
+  ],
+  "readings": [
+    {
+      "id": "r-bai-12-thanh-pho",
+      "title": "Thành phố lớn ở Việt Nam",
+      "paragraphs": [
+        "Việt Nam có nhiều nơi rất hay. Khi bạn đến thành phố lớn như Hà Nội hoặc Thành phố Hồ Chí Minh, bạn có thể đi chơi đến nhiều nơi khác.",
+        "Mỗi sáng người việt nam đi làm việc ở công ty và trẻ em đi trường học, thế thì có nhiều người trên đường. Buổi tối người có thời gian, vì vậy đi siêu thị hoặc chợ. Thời gian này quán ăn, quán cà phê và quán rượu cũng có nhiều người. Ở nơi này, bạn có thể nói với bạn, ăn và uống.",
+        "Khi bạn sẽ đến Việt Nam, bạn phải có mắt tiền Việt Nam, tên là đồng. Bạn có thể đi máy rút tiền hoặc đi ngân hàng. Thành phố lớn cũng có nhiều nơi bạn có thể trả thẻ."
+      ],
+      "translation": [
+        "Wietnam ma wiele bardzo ciekawych miejsc. Kiedy przyjedziesz do dużego miasta, takiego jak Hanoi albo Ho Chi Minh, możesz wybrać się w wiele różnych miejsc.",
+        "Każdego ranka Wietnamczycy idą do pracy w firmie, a dzieci idą do szkoły, więc na ulicach jest dużo ludzi. Wieczorem ludzie mają czas, dlatego idą do supermarketu albo na targ. O tej porze w restauracjach, kawiarniach i barach też jest dużo osób. W tych miejscach można porozmawiać ze znajomymi, zjeść i się napić.",
+        "Kiedy przyjedziesz do Wietnamu, musisz mieć wietnamską gotówkę, która nazywa się dong. Możesz pójść do bankomatu albo do banku. W dużych miastach jest też sporo miejsc, w których można płacić kartą."
+      ],
+      "glossary": ["v-bai-12-thanh-pho", "v-bai-12-noi", "v-bai-12-lon", "v-bai-12-co-the", "v-bai-12-khac", "v-bai-12-duong", "v-bai-12-cong-ty", "v-bai-12-sieu-thi", "v-bai-12-cho", "v-bai-12-ngan-hang", "v-bai-12-may-rut-tien"],
+      "note": "Kilka form w tej czytance jest oznaczonych w CONTENT_REVIEW: „mắt tiền” (standardowo „tiền mặt”), „đi trường học”, „Buổi tối người có thời gian”, „Khi bạn sẽ đến” oraz zapis „người việt nam” małą literą.",
+      "status": "flagged"
+    }
+  ],
+  "images": [
+    { "src": "images/lessons/bai-12/city-map.png", "alt": "Mapa miasta: dom Hoa, szpital, sklep 24h, park, szkoła, bar, bankomat, biuro, kawiarnia, bank, targ, restauracja", "caption": "Ćwiczenie z lekcji: pytania o drogę na podstawie mapy", "source": "source-lessons/bái 12.docx" }
+  ],
+  "exercises": [
+    {
+      "id": "e-bai-12-places-match",
+      "type": "matching",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Dopasuj miejsca w mieście.",
+      "pairs": [
+        { "left": "ngân hàng", "right": "bank" },
+        { "left": "bệnh viện", "right": "szpital" },
+        { "left": "trường học", "right": "szkoła" },
+        { "left": "công viên", "right": "park" },
+        { "left": "chợ", "right": "rynek, targ" },
+        { "left": "nhà thuốc", "right": "apteka" }
+      ],
+      "vocab": ["v-bai-12-ngan-hang", "v-bai-12-benh-vien", "v-bai-12-truong-hoc", "v-bai-12-cong-vien", "v-bai-12-cho", "v-bai-12-nha-thuoc"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-12-places-match-2",
+      "type": "matching",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Dopasuj kolejne miejsca i słowa.",
+      "pairs": [
+        { "left": "siêu thị", "right": "supermarket" },
+        { "left": "máy rút tiền", "right": "bankomat" },
+        { "left": "công ty", "right": "firma" },
+        { "left": "thành phố", "right": "miasto" },
+        { "left": "đường", "right": "ulica" },
+        { "left": "nơi", "right": "miejsce" }
+      ],
+      "level": 1
+    },
+    {
+      "id": "e-bai-12-directions-match",
+      "type": "matching",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Dopasuj słowa do wskazywania drogi.",
+      "pairs": [
+        { "left": "đi thẳng", "right": "iść prosto" },
+        { "left": "rẽ phải", "right": "skręcić w prawo" },
+        { "left": "rẽ trái", "right": "skręcić w lewo" },
+        { "left": "đi qua", "right": "iść przez, minąć" },
+        { "left": "dừng", "right": "zatrzymać się" },
+        { "left": "tiếp tục", "right": "kontynuować" }
+      ],
+      "grammar": ["g-bai-12-directions"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-12-mcq-turn",
+      "type": "mcq",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Jak powiedzieć „skręć w lewo”?",
+      "options": ["Rẽ trái.", "Rẽ phải.", "Đi thẳng.", "Dừng."],
+      "answer": 0,
+      "explanation": "trái = lewo, phải = prawo. Na południu zamiast „rẽ” mówi się „quẹo”.",
+      "grammar": ["g-bai-12-directions"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-12-mcq-dialect",
+      "type": "mcq",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Którego słowa użyje osoba z południa Wietnamu zamiast „rẽ”?",
+      "options": ["quẹo", "thẳng", "dừng", "tiếp tục"],
+      "answer": 0,
+      "explanation": "Lekcja podaje: Rẽ (płn.) / Quẹo (płd.).",
+      "vocab": ["v-bai-12-re"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-12-typed-how",
+      "type": "typed",
+      "skill": "grammar",
+      "source": "teacher",
+      "prompt": "Zapytaj o drogę: „Jak dojść z domu Hoa do banku?”",
+      "answerLang": "vi",
+      "answers": ["Đi từ nhà Hoa đến ngân hàng như thế nào?", "Đi từ nhà Hoa đến ngân hàng như thế nào"],
+      "grammar": ["g-bai-12-nhu-the-nao"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-12-order-directions",
+      "type": "ordering",
+      "skill": "word-order",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Ułóż wskazówkę: „Idź prosto, potem skręć w prawo.”",
+      "tokens": ["Đi thẳng,", "sau đó", "rẽ", "phải."],
+      "translation": "Idź prosto, potem skręć w prawo.",
+      "grammar": ["g-bai-12-directions"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-12-fill-cothe",
+      "type": "fill-blank",
+      "skill": "grammar",
+      "source": "teacher",
+      "sentence": "Bạn ___ đi máy rút tiền hoặc đi ngân hàng.",
+      "answers": ["có thể"],
+      "bank": ["có thể", "được không", "phải", "chưa"],
+      "translation": "Możesz pójść do bankomatu albo do banku.",
+      "grammar": ["g-bai-12-co-the"],
+      "level": 1
+    },
+    {
+      "id": "e-bai-12-typed-card",
+      "type": "typed",
+      "skill": "grammar",
+      "source": "teacher",
+      "status": "flagged",
+      "prompt": "Zapytaj w sklepie (formą z lekcji): „Czy można płacić kartą?”",
+      "answerLang": "vi",
+      "answers": ["Trả thẻ được không?", "Trả thẻ được không", "Trả bằng thẻ được không?"],
+      "explanation": "Forma z lekcji to „Trả thẻ được không?”. W standardzie częściej „Trả bằng thẻ được không?” – zob. CONTENT_REVIEW.",
+      "grammar": ["g-bai-12-co-the"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-12-read-1",
+      "type": "reading-question",
+      "skill": "reading",
+      "source": "generated",
+      "status": "unverified",
+      "readingId": "r-bai-12-thanh-pho",
+      "prompt": "Jakie dwa duże miasta wymienia tekst?",
+      "options": ["Hà Nội i Thành phố Hồ Chí Minh", "Hà Nội i Đà Nẵng", "Sài Gòn i Huế", "Hà Nội i Hải Phòng"],
+      "answer": 0,
+      "level": 1
+    },
+    {
+      "id": "e-bai-12-read-2",
+      "type": "reading-question",
+      "skill": "reading",
+      "source": "generated",
+      "status": "unverified",
+      "readingId": "r-bai-12-thanh-pho",
+      "prompt": "Buổi tối người ta đi đâu? (odpowiedz po wietnamsku)",
+      "answers": ["Đi siêu thị hoặc chợ.", "Đi siêu thị hoặc chợ", "siêu thị hoặc chợ", "Buổi tối đi siêu thị hoặc chợ."],
+      "answerLang": "vi",
+      "level": 2
+    },
+    {
+      "id": "e-bai-12-read-3",
+      "type": "reading-question",
+      "skill": "reading",
+      "source": "generated",
+      "status": "unverified",
+      "readingId": "r-bai-12-thanh-pho",
+      "prompt": "Jak nazywa się wietnamska waluta według tekstu?",
+      "options": ["đồng", "đô la", "yên", "bạt"],
+      "answer": 0,
+      "level": 1
+    },
+    {
+      "id": "e-bai-12-read-4",
+      "type": "reading-question",
+      "skill": "reading",
+      "source": "generated",
+      "status": "unverified",
+      "readingId": "r-bai-12-thanh-pho",
+      "prompt": "Gdzie można wypłacić pieniądze? (po wietnamsku, dwa miejsca)",
+      "answers": ["Máy rút tiền hoặc ngân hàng.", "máy rút tiền hoặc ngân hàng", "Bạn có thể đi máy rút tiền hoặc đi ngân hàng.", "máy rút tiền và ngân hàng"],
+      "answerLang": "vi",
+      "grammar": ["g-bai-12-co-the"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-12-map-1",
+      "type": "open-answer",
+      "skill": "grammar",
+      "source": "teacher",
+      "status": "unverified",
+      "prompt": "Ćwiczenie z lekcji (mapa): Đi từ nhà Hoa đến ngân hàng như thế nào? Opisz drogę (đi thẳng, rẽ phải/trái, đi qua…). W oryginale brak klucza – oceniana jest struktura odpowiedzi.",
+      "patterns": ["{x} thẳng {x}", "{x} rẽ {x}", "{x} quẹo {x}", "Đi thẳng {x}", "{x} đi qua {x}"],
+      "sample": "Đi thẳng, rẽ phải, đi qua công viên, ngân hàng ở bên phải.",
+      "image": { "src": "images/lessons/bai-12/city-map.png", "alt": "Mapa miasta z lekcji", "source": "source-lessons/bái 12.docx" },
+      "grammar": ["g-bai-12-directions", "g-bai-12-nhu-the-nao"],
+      "level": 3
+    },
+    {
+      "id": "e-bai-12-map-2",
+      "type": "open-answer",
+      "skill": "grammar",
+      "source": "teacher",
+      "status": "unverified",
+      "prompt": "Ćwiczenie z lekcji (mapa): Máy rút tiền ở đâu? Odpowiedz schematem położenia z Bài 11.",
+      "patterns": ["Máy rút tiền ở {x}", "{x} ở {x}"],
+      "sample": "Máy rút tiền ở quán rượu bên cạnh.",
+      "image": { "src": "images/lessons/bai-12/city-map.png", "alt": "Mapa miasta z lekcji", "source": "source-lessons/bái 12.docx" },
+      "grammar": ["g-bai-11-position"],
+      "level": 3
+    },
+    {
+      "id": "e-bai-12-map-3",
+      "type": "open-answer",
+      "skill": "grammar",
+      "source": "teacher",
+      "status": "unverified",
+      "prompt": "Ćwiczenie z lekcji (mapa): Đi từ chợ đến bệnh viện như thế nào?",
+      "patterns": ["{x} thẳng {x}", "{x} rẽ {x}", "{x} quẹo {x}", "Đi thẳng {x}", "{x} đi qua {x}"],
+      "sample": "Đi thẳng, rẽ trái, đi qua siêu thị, bệnh viện ở bên trái.",
+      "image": { "src": "images/lessons/bai-12/city-map.png", "alt": "Mapa miasta z lekcji", "source": "source-lessons/bái 12.docx" },
+      "grammar": ["g-bai-12-directions", "g-bai-12-nhu-the-nao"],
+      "level": 3
+    },
+    {
+      "id": "e-bai-12-map-4",
+      "type": "open-answer",
+      "skill": "grammar",
+      "source": "teacher",
+      "status": "unverified",
+      "prompt": "Ćwiczenie z lekcji (mapa): Đi từ quán cà phê đến quán rượu như thế nào?",
+      "patterns": ["{x} thẳng {x}", "{x} rẽ {x}", "{x} quẹo {x}", "Đi thẳng {x}", "{x} đi qua {x}"],
+      "sample": "Đi thẳng, rẽ phải, tiếp tục đi thẳng, quán rượu ở bên trái.",
+      "image": { "src": "images/lessons/bai-12/city-map.png", "alt": "Mapa miasta z lekcji", "source": "source-lessons/bái 12.docx" },
+      "grammar": ["g-bai-12-directions"],
+      "level": 3
+    },
+    {
+      "id": "e-bai-12-map-5",
+      "type": "open-answer",
+      "skill": "grammar",
+      "source": "teacher",
+      "status": "unverified",
+      "prompt": "Ćwiczenie z lekcji (mapa): Công viên ở đâu? Odpowiedz schematem położenia z Bài 11.",
+      "patterns": ["Công viên ở {x}", "{x} ở {x}"],
+      "sample": "Công viên ở trường học bên cạnh.",
+      "image": { "src": "images/lessons/bai-12/city-map.png", "alt": "Mapa miasta z lekcji", "source": "source-lessons/bái 12.docx" },
+      "grammar": ["g-bai-11-position"],
+      "level": 3
+    },
+    {
+      "id": "e-bai-12-map-6",
+      "type": "open-answer",
+      "skill": "grammar",
+      "source": "teacher",
+      "status": "unverified",
+      "prompt": "Ćwiczenie z lekcji (mapa): Đi từ công ty đến nhà của Hoa như thế nào?",
+      "patterns": ["{x} thẳng {x}", "{x} rẽ {x}", "{x} quẹo {x}", "Đi thẳng {x}", "{x} đi qua {x}"],
+      "sample": "Đi thẳng, rẽ trái, đi qua công viên, tiếp tục đi thẳng.",
+      "image": { "src": "images/lessons/bai-12/city-map.png", "alt": "Mapa miasta z lekcji", "source": "source-lessons/bái 12.docx" },
+      "grammar": ["g-bai-12-directions", "g-bai-12-nhu-the-nao"],
+      "level": 3
+    },
+    {
+      "id": "e-bai-12-typed-place",
+      "type": "typed",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Napisz po wietnamsku: „bankomat”.",
+      "answerLang": "vi",
+      "answers": ["máy rút tiền"],
+      "vocab": ["v-bai-12-may-rut-tien"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-12-typed-hospital",
+      "type": "typed",
+      "skill": "vocabulary",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Napisz po wietnamsku: „szpital”.",
+      "answerLang": "vi",
+      "answers": ["bệnh viện"],
+      "vocab": ["v-bai-12-benh-vien"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-12-diacritics",
+      "type": "diacritics",
+      "skill": "tone",
+      "source": "generated",
+      "status": "unverified",
+      "stripped": "Cong vien o dau?",
+      "answers": ["Công viên ở đâu?"],
+      "translation": "Gdzie jest park?",
+      "vocab": ["v-bai-12-cong-vien"],
+      "level": 2
+    },
+    {
+      "id": "e-bai-12-diacritics-2",
+      "type": "diacritics",
+      "skill": "tone",
+      "source": "generated",
+      "status": "unverified",
+      "stripped": "Thanh pho lon o Viet Nam",
+      "answers": ["Thành phố lớn ở Việt Nam"],
+      "translation": "Duże miasta w Wietnamie",
+      "level": 2
+    },
+    {
+      "id": "e-bai-12-open-city",
+      "type": "open-answer",
+      "skill": "grammar",
+      "source": "generated",
+      "status": "unverified",
+      "prompt": "Bạn thích đi đâu ở thành phố? – odpowiedz o sobie (Mình thích đi + miejsce).",
+      "patterns": ["Mình thích đi {x}", "Tôi thích đi {x}", "Mình thích {x}", "Tôi thích {x}"],
+      "sample": "Mình thích đi quán cà phê và công viên.",
+      "grammar": ["g-bai-05-modal"],
+      "level": 3
+    }
+  ],
+  "checkpoint": ["e-bai-12-places-match", "e-bai-12-directions-match", "e-bai-12-typed-how", "e-bai-12-fill-cothe", "e-bai-12-read-2", "e-bai-12-map-1", "e-bai-12-diacritics"],
+  "reviewLinks": ["g-bai-11-position", "g-bai-07-place", "g-bai-09-time", "g-bai-05-modal"],
+  "original": [
+    { "kind": "table", "rows": [["trường học", "szkoła"], ["ngân hàng", "bank"], ["công viên", "park"], ["công ty", "firma"], ["bệnh viện", "szpital"], ["chợ", "rynek"], ["siêu thị", "supermarket"], ["máy rút tiền", "bankomat"], ["nhà thuốc", "apteka"], ["thành phố", "míasto"], ["nơi", "mịejsce"], ["lớn", "wielki"], ["có thể, được", "móc"], ["đường", "ulica"], ["khác", "różny, inny"], ["trẻ em", "dzieci"], ["trả thẻ", "płacić kartą"]] },
+    { "kind": "heading", "text": "Thành phố lớn ở Việt Nam" },
+    { "kind": "paragraph", "text": "Việt Nam có nhiều nơi rất hay. Khi bạn đến thành phố lớn như Hà Nội hoặc Thành phố Hồ Chí Minh, bạn có thể đi chơi đến nhiều nơi khác.\nMỗi sáng người việt nam đi làm việc ở công ty và trẻ em đi trường học, thế thì có nhiều người trên đường. Buổi tối người có thời gian, vì vậy đi siêu thị hoặc chợ. Thời gian này quán ăn, quán cà phê và quán rượu cũng có nhiều người. Ở nơi này, bạn có thể nói với bạn, ăn và uống.\nKhi bạn sẽ đến Việt Nam, bạn phải có mắt tiền Việt Nam, tên là đồng. Bạn có thể đi máy rút tiền hoặc đi ngân hàng. Thành phố lớn cũng có nhiều nơi bạn có thể trả thẻ." },
+    { "kind": "heading", "text": "Mówienie o drodze:" },
+    { "kind": "table", "rows": [["( đi)Thẳng", "prosto"], ["(đi) Qua", "iść przez"], ["Rẽ (płn.) / Quẹo (płd.)", "skręcić"], ["Phải", "prawo"], ["Trái", "lewo"], ["Dừng", "zatrzymać się"], ["Tiếp tục", "kontynuować"], ["Đường", "ulica"]] },
+    { "kind": "heading", "text": "Ćwiczenie:" },
+    { "kind": "image", "image": { "src": "images/lessons/bai-12/city-map.png", "alt": "Mapa miasta z lekcji", "source": "source-lessons/bái 12.docx" } },
+    { "kind": "paragraph", "text": "Đi từ nhà Hoa đến ngân hàng như thế nào?\nMáy rút tiền ở đâu?\nĐi từ chợ đến bệnh viện như thế nào?\nĐi từ quán cà phê đến quán rượu như thế nào?\nCông viên ở đâu?\nĐi từ công ty đến nhà của Hoa như thế nào?" },
+    { "kind": "paragraph", "text": "thuốc -  lekarstwo, lek\nmáy - maszyna\nrút - wyrzucać\ntiền - pieniądze\nđược không? - może być?\ntrả thẻ được không? -  czy można płacić kartą?\nim đi! - Zamknij sie!!!!\nim lăng - cicho!\nyêu - kochać" }
+  ]
+}

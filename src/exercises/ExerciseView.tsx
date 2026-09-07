@@ -134,6 +134,7 @@ export function ExerciseView({
           {meta}
           <div className="ex-instruction">Odpowiedz pełnym zdaniem po wietnamsku.</div>
           <p className="ex-prompt">{ex.prompt}</p>
+          {image}
           <TextInput value={text} onChange={setText} onSubmit={onSubmit} result={result} multiline />
           <div className="ex-hint">Wzór: <Vi>{ex.patterns[0].replace(/\{x\}/g, '…')}</Vi></div>
         </div>

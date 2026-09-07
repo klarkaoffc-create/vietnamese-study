@@ -27,7 +27,12 @@ describe('lesson discovery', () => {
     const blocks = computeBlocks(numbers);
     expect(blocks[0].complete).toBe(true);
     expect(blocks[1].complete).toBe(true);
-    expect(blocks[2].lessons).toEqual([11]);
+    // Block 3 (Bài 11–15) stays incomplete until Bài 15 exists, so no review
+    // or exam is generated for it.
+    expect(blocks[2].lessons).toEqual([11, 12]);
+    expect(blocks[2].complete).toBe(false);
+    expect(blocks[2].reviewId).toBeUndefined();
+    expect(blocks[2].examId).toBeUndefined();
   });
   it('has unique ids across all content', () => {
     const ids = new Set<string>();

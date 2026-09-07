@@ -365,28 +365,47 @@ function genComparison(rng: Rng): GeneratedInstance {
   };
 }
 
-const POSITIONS: { key: string; pl: string; vi: string[]; }[] = [
-  { key: 'trong', pl: 'W pudełku', vi: ['trong', 'bên trong'] },
-  { key: 'ngoài', pl: 'NA ZEWNĄTRZ pudełka', vi: ['ngoài', 'bên ngoài'] },
-  { key: 'trên', pl: 'NA pudełku', vi: ['trên', 'bên trên', 'phía trên'] },
-  { key: 'dưới', pl: 'POD pudełkiem', vi: ['dưới', 'bên dưới', 'phía dưới'] },
-  { key: 'cạnh', pl: 'OBOK pudełka', vi: ['cạnh', 'bên cạnh'] },
-  { key: 'trước', pl: 'PRZED pudełkiem', vi: ['trước', 'phía trước', 'mặt trước'] },
-  { key: 'sau', pl: 'ZA pudełkiem', vi: ['sau', 'phía sau'] },
+/**
+ * Bài 11 teaches the pattern "rzecz 1 + ở + rzecz 2 + bên/phía + kierunek"
+ * ("Quyển sách ở cái bàn bên cạnh"), with trên/dưới additionally allowing the
+ * shortened Polish-like order ("quyển sách trên cái bàn"). `course` holds the
+ * direction words used in the taught pattern; `alsoAccept` holds equally
+ * reasonable alternatives (standard "ở bên cạnh cái bàn" order, and the
+ * shortened form where the lesson permits it) so the learner is never marked
+ * wrong for producing standard Vietnamese.
+ */
+const POSITIONS: { key: string; pl: string; course: string[]; shortened?: boolean }[] = [
+  { key: 'trong', pl: 'W pudełku', course: ['bên trong', 'trong'] },
+  { key: 'ngoài', pl: 'NA ZEWNĄTRZ pudełka', course: ['bên ngoài', 'ngoài'] },
+  { key: 'trên', pl: 'NA pudełku', course: ['bên trên', 'phía trên', 'trên'], shortened: true },
+  { key: 'dưới', pl: 'POD pudełkiem', course: ['bên dưới', 'phía dưới', 'dưới'], shortened: true },
+  { key: 'cạnh', pl: 'OBOK pudełka', course: ['bên cạnh', 'cạnh'] },
+  { key: 'trước', pl: 'PRZED pudełkiem', course: ['phía trước', 'bên trước', 'trước'] },
+  { key: 'sau', pl: 'ZA pudełkiem', course: ['phía sau', 'bên sau', 'sau'] },
 ];
 
 function genPosition(rng: Rng): GeneratedInstance {
   const p = pick(POSITIONS, rng);
-  const answers = p.vi.flatMap((v) => [`Con mèo ở ${v} cái hộp`, `Con mèo ở ${v} hộp`]);
+  const nouns = ['cái hộp', 'hộp'];
+  const answers: string[] = [];
+  for (const noun of nouns) {
+    // Pattern taught in Bài 11: subject + ở + reference noun + bên/phía + direction
+    for (const dir of p.course) answers.push(`Con mèo ở ${noun} ${dir}`);
+    // Standard Vietnamese order, also accepted
+    for (const dir of p.course) answers.push(`Con mèo ở ${dir} ${noun}`);
+    // trên / dưới may drop "ở" entirely (explicit exception in the lesson)
+    if (p.shortened) answers.push(`Con mèo ${p.key} ${noun}`);
+  }
   return {
     id: `gen:position:${p.key}`,
     generator: 'position',
     skill: 'grammar',
-    prompt: `Kot jest ${p.pl}. Napisz: Con mèo ở … (pudełko = cái hộp)`,
+    prompt: `Kot jest ${p.pl}. Opisz to schematem z lekcji: Con mèo ở … (pudełko = cái hộp)`,
     answers,
     answerLang: 'vi',
     visual: { kind: 'position', position: p.key },
-    explanation: `Con mèo ở ${p.vi[0]} cái hộp.`,
+    hint: 'rzecz 1 + ở + rzecz 2 + bên/phía + kierunek',
+    explanation: `Schemat z lekcji: Con mèo ở cái hộp ${p.course[0]}.${p.shortened ? ` Z „${p.key}” można też skrócić: Con mèo ${p.key} cái hộp.` : ''}`,
     level: 2,
   };
 }
