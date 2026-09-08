@@ -36,7 +36,7 @@ function itemsOf(state: AppState, kind: string): SrsItem[] {
  * number reflects the share of the course you can actually use, not just how
  * well the handful of items you have touched are going.
  */
-function populationScore(items: SrsItem[], population: number): number {
+export function populationScore(items: SrsItem[], population: number): number {
   if (population === 0) return 0;
   const sum = items.reduce((a, i) => a + mastery(i), 0);
   return Math.round(sum / population);

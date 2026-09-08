@@ -1,20 +1,24 @@
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../learning/store';
-import { allGrammar, lessonById, lessons, lessonLabel, vocabById } from '../data/content';
+import { allGrammar, lessonById, lessons, lessonLabel } from '../data/content';
 import { completedLessonNumbers, exportState, parseImport } from '../learning/state';
 import { makeSrsId, mastery } from '../learning/srs';
 import { skillScores } from '../learning/skills';
+import { estimateCefr } from '../learning/cefr';
+import { CefrDetail, CefrStat } from '../components/CefrCard';
 import { Callout, Card, PageHeader, Pill, Progress, Stat } from '../components/ui';
 import { DAY_MS, daysBetween, formatDate, formatDateTime, startOfDay } from '../utilities/dates';
 
 export function ProgressPage() {
   const { state, dispatch } = useStore();
   const [msg, setMsg] = useState<string | null>(null);
+  const [cefrOpen, setCefrOpen] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const completed = completedLessonNumbers(state, (id) => lessonById.get(id)?.number);
-  const vocabItems = Object.values(state.srs).filter((i) => i.kind.startsWith('vocab') && vocabById.has(i.ref));
   const skills = skillScores(state);
+  // Read-only: the estimate never writes to progress.
+  const cefr = estimateCefr(state);
   const grammarItems = allGrammar.map((g) => ({ g, item: state.srs[makeSrsId('grammar', g.id)] }));
   const sessionsByDay = new Map<number, number>();
   for (const s of state.sessions) sessionsByDay.set(startOfDay(s.ts), (sessionsByDay.get(startOfDay(s.ts)) ?? 0) + s.items);
@@ -54,12 +58,13 @@ export function ProgressPage() {
         <p>Wszystko jest zapisane lokalnie w tej przeglądarce. Inna osoba na stronie publicznej zaczyna od zera. Eksportuj plik, aby przenieść postęp na inne urządzenie.</p>
       </PageHeader>
       <div className="stat-grid mb">
+        <CefrStat estimate={cefr} open={cefrOpen} onToggle={() => setCefrOpen((o) => !o)} />
         <Stat value={`${completed.size}/${lessons.length}`} label="ukończone lekcje" tone="primary" />
-        <Stat value={vocabItems.length} label="umiejętności w powtórkach" />
         <Stat value={totalItems} label="przećwiczonych elementów" />
         <Stat value={`${totalMinutes} min`} label="łączny czas nauki" />
         <Stat value={state.exams.length} label="podejść do egzaminów" />
       </div>
+      {cefrOpen && <CefrDetail estimate={cefr} />}
 
       <div className="grid two">
         <Card>
