@@ -36,7 +36,7 @@ import { comparisonForm } from '../utilities/vietnamese';
 /* ------------------------------------------------------------------ */
 
 /** Broad grouping used to build a balanced daily session. */
-export type TaskPhase = 'warmup' | 'retrieval' | 'conversation' | 'grammar' | 'mistakes' | 'listening' | 'free';
+export type TaskPhase = 'warmup' | 'retrieval' | 'conversation' | 'grammar' | 'mistakes' | 'listening' | 'speaking' | 'free';
 
 export interface LearningTask {
   /** Unique within a session. */
@@ -66,6 +66,7 @@ const PHASE_LABEL: Record<TaskPhase, string> = {
   grammar: 'Gramatyka w użyciu',
   mistakes: 'Twoje błędy',
   listening: 'Słuchanie',
+  speaking: 'Mówienie',
   free: 'Swobodna wypowiedź',
 };
 
@@ -522,7 +523,7 @@ export function speakingTask(vi: string, pl: string, ref: string, lesson: string
     srsRef: ref,
     lesson,
     level,
-    phase: 'warmup',
+    phase: 'speaking',
     targetVocab,
     selfAssessed: true,
     exercise: {
@@ -531,11 +532,14 @@ export function speakingTask(vi: string, pl: string, ref: string, lesson: string
       skill: 'listening',
       source: 'generated',
       status: 'unverified',
-      instruction: 'Powiedz na głos, potem nagraj się i porównaj.',
-      prompt: level >= 4 ? `Powiedz po wietnamsku: „${pl}”` : `Przeczytaj na głos i powtórz: ${vi}`,
+      instruction: 'Powiedz na głos, nagraj się, potem porównaj ze wzorem.',
+      // Always production-first: the Vietnamese model is never shown before
+      // the attempt, at any level. Seeing the answer and then rating yourself
+      // is the flashcard pattern this app deliberately avoids.
+      prompt: `Powiedz po wietnamsku: „${pl}”`,
       target: vi,
       translation: pl,
-      showTarget: level < 4,
+      showTarget: false,
       grammar: [],
       vocab: targetVocab,
       level: 3,

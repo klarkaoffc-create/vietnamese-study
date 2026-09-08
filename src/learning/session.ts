@@ -175,28 +175,33 @@ function mistakeItem(m: Mistake, state: AppState): SessionItem | null {
 const asItems = (tasks: (LearningTask | null)[]): SessionItem[] =>
   tasks.filter((t): t is LearningTask => !!t).map((task) => ({ kind: 'task', task }));
 
-/** Short, confidence-building openers: say something you already know. */
-function warmupPhase(state: AppState, pools: ReturnType<typeof poolsFor>, limit: number): SessionItem[] {
+/**
+ * Contextual vocabulary use: retrieve the word inside a real sentence
+ * (cloze) rather than as an isolated pair. Used to open the session because
+ * it is productive but well supported.
+ */
+function contextVocabPhase(state: AppState, pools: ReturnType<typeof poolsFor>, limit: number): SessionItem[] {
   const out: SessionItem[] = [];
-  // A speaking warm-up when there is a sentence worth saying aloud.
-  const speakable = pools.vocab.filter((v) => usableExamples(v).length);
-  const spoken = sample(speakable, 1).map((v) => {
-    const ex = usableExamples(v)[0];
-    const level = levelOf(state.srs[makeSrsId('sentence', v.id)]);
-    return speakingTask(ex.vi, ex.pl, v.id, v.lessonId, level, [v.id]);
-  });
-  out.push(...asItems(spoken));
-  // Plus an easy already-strong ability, presented as production.
-  const strong = itemsOfKind(state, ['vocab-active'])
-    .filter((i) => i.successes > 0 && !isWeak(i))
-    .slice(0, 8);
-  const easy = sample(strong, Math.max(0, limit - out.length)).map((i) => taskForDueItem(i, 'warmup'));
-  out.push(...asItems(easy));
-  if (out.length < limit) {
-    const fresh = vocabNeedingActivation(state, pools.vocab, limit - out.length).map((v) => vocabActiveTask(v, 2, 'warmup'));
-    out.push(...asItems(fresh));
+  const contextual = contextualVocab(pools.vocab);
+  // Prefer words already met (they have a scheduled ability), then new ones.
+  const met = contextual.filter((v) => state.srs[makeSrsId('vocab-active', v.id)]);
+  const pool = met.length >= limit ? met : [...met, ...contextual.filter((v) => !met.includes(v))];
+  for (const v of sample(pool, limit)) {
+    // Level 2 = the word blanked inside its own sentence.
+    const t = vocabActiveTask(v, 2, 'warmup');
+    if (t) out.push({ kind: 'task', task: t });
   }
   return out.slice(0, limit);
+}
+
+/** One spoken task, placed late in the session — never as the opener. */
+function speakingPhase(state: AppState, pools: ReturnType<typeof poolsFor>, limit: number): SessionItem[] {
+  const speakable = pools.vocab.filter((v) => usableExamples(v).length);
+  return sample(speakable, limit).map((v) => {
+    const ex = usableExamples(v)[0];
+    const level = levelOf(state.srs[makeSrsId('sentence', v.id)]);
+    return { kind: 'task' as const, task: speakingTask(ex.vi, ex.pl, v.id, v.lessonId, level, [v.id]) };
+  });
 }
 
 /** Polish → Vietnamese production from material already met. */
@@ -308,6 +313,29 @@ function freePhase(state: AppState, pools: ReturnType<typeof poolsFor>, limit: n
 /* Session assembly                                                     */
 /* ------------------------------------------------------------------ */
 
+/** A task is "pure recognition" when it can be answered by picking, not producing. */
+function isRecognition(item: SessionItem): boolean {
+  const ex = item.kind === 'task' ? item.task.exercise : item.kind === 'exercise' ? item.exercise : null;
+  if (ex) return ex.type === 'mcq' || ex.type === 'matching' || (ex.type === 'reading-question' && !!ex.options);
+  return item.kind === 'generated' ? !!item.instance.options : false;
+}
+
+/**
+ * Keep the session feeling like language practice: never let more than two
+ * pure recognition tasks run back to back. Any third one in a row is swapped
+ * with the next productive task further down the queue.
+ */
+export function interleave(items: SessionItem[]): SessionItem[] {
+  const out = items.slice();
+  for (let i = 2; i < out.length; i++) {
+    if (!isRecognition(out[i]) || !isRecognition(out[i - 1]) || !isRecognition(out[i - 2])) continue;
+    const swap = out.findIndex((it, j) => j > i && !isRecognition(it));
+    if (swap === -1) break; // nothing productive left to pull forward
+    [out[i], out[swap]] = [out[swap], out[i]];
+  }
+  return out;
+}
+
 export interface SessionPhaseSummary {
   phase: TaskPhase;
   count: number;
@@ -342,17 +370,21 @@ export function buildSession(state: AppState, mode: ReviewMode, now = Date.now()
 
   switch (mode) {
     case 'today': {
-      // The daily workout: ordered phases, roughly 15 minutes.
+      // Daily workout, ~12 tasks, mixed roughly to the intended proportions:
+      // 25% PL→VN production, 20% contextual vocabulary, 20% grammar in
+      // sentences, 15% dialogue, 10% mistakes, 10% freer production, plus a
+      // spoken task when there is something worth saying aloud.
       const items = [
-        ...warmupPhase(state, pools, 2),
-        ...retrievalPhase(state, pools, 3, now),
-        ...conversationPhase(state, pools, 2, now),
-        ...grammarPhase(state, pools, 2, now),
-        ...mistakesPhase(state, 2),
-        ...listeningPhase(state, pools, 2),
-        ...freePhase(state, pools, 1),
+        ...contextVocabPhase(state, pools, 2),      // ~20% contextual vocabulary
+        ...retrievalPhase(state, pools, 3, now),    // ~25% PL → VN production
+        ...grammarPhase(state, pools, 2, now),      // ~20% grammar in use
+        ...conversationPhase(state, pools, 2, now), // ~15% dialogue response
+        ...mistakesPhase(state, 1),                 // ~10% old mistakes
+        ...listeningPhase(state, pools, 1),         // only when audio exists
+        ...speakingPhase(state, pools, 1),          // spoken, never first
+        ...freePhase(state, pools, 1),              // ~10% freer production
       ];
-      return summarise(mode, items);
+      return summarise(mode, interleave(items));
     }
     case 'production': {
       const items = [...retrievalPhase(state, pools, 8, now), ...freePhase(state, pools, 2)];

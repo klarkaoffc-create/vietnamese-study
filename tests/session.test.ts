@@ -1,6 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { buildSession } from '../src/learning/session';
+import { buildSession, interleave, type SessionItem } from '../src/learning/session';
 import { initialState, reducer } from '../src/learning/state';
+
+/** A learner who has opened the first eight lessons. */
+function seededState() {
+  let s = initialState(0);
+  for (const n of [1, 2, 3, 4, 5, 6, 7, 8]) {
+    s = reducer(s, { type: 'visit-lesson', lesson: `bai-0${n}`, now: 1000 });
+  }
+  return s;
+}
 
 /**
  * Regression coverage for a real crash found during manual verification:
@@ -72,5 +81,61 @@ describe('buildSession with generated mistakes', () => {
   it('builds the "today" session without crashing on an empty state', () => {
     const s = initialState(0);
     expect(() => buildSession(s, 'today')).not.toThrow();
+  });
+});
+
+/**
+ * The daily session is the user-facing product. These tests pin the two
+ * properties that were explicitly asked for: it must be a mixed production
+ * workout, and it must never open with (or cluster) passive tasks.
+ */
+describe('daily session shape', () => {
+  it('opens with a productive task, never a self-rated speaking card', () => {
+    const s = seededState();
+    const plan = buildSession(s, 'today');
+    expect(plan.items.length).toBeGreaterThan(4);
+    const first = plan.items[0];
+    expect(first.kind).toBe('task');
+    if (first.kind === 'task') {
+      expect(first.task.exercise.type).not.toBe('speaking');
+      expect(first.task.selfAssessed).toBe(false);
+    }
+  });
+
+  it('is mostly production, not recognition', () => {
+    const plan = buildSession(seededState(), 'today');
+    const producing = plan.items.filter((i) => {
+      const ex = i.kind === 'task' ? i.task.exercise : i.kind === 'exercise' ? i.exercise : null;
+      return ex ? !['mcq', 'matching'].includes(ex.type) : false;
+    });
+    expect(producing.length / plan.items.length).toBeGreaterThan(0.6);
+  });
+
+  it('mixes several kinds of task rather than one drill repeated', () => {
+    const plan = buildSession(seededState(), 'today');
+    const phases = new Set(plan.items.filter((i) => i.kind === 'task').map((i) => (i as { task: { phase: string } }).task.phase));
+    expect(phases.size).toBeGreaterThanOrEqual(3);
+  });
+
+  it('never runs three pure recognition tasks back to back', () => {
+    const mcq = (id: string): SessionItem => ({
+      kind: 'task',
+      task: {
+        id, srsKind: 'vocab-passive', srsRef: id, lesson: 'bai-01', level: 1, phase: 'warmup', targetVocab: [], selfAssessed: false,
+        exercise: { id: `e-bai-01-${id}`, type: 'mcq', skill: 'vocabulary', source: 'generated', status: 'unverified', prompt: 'p', options: ['a', 'b'], answer: 0, grammar: [], vocab: [], level: 1 },
+      },
+    });
+    const typed = (id: string): SessionItem => ({
+      kind: 'task',
+      task: {
+        id, srsKind: 'vocab-active', srsRef: id, lesson: 'bai-01', level: 3, phase: 'retrieval', targetVocab: [], selfAssessed: false,
+        exercise: { id: `e-bai-01-${id}`, type: 'typed', skill: 'vocabulary', source: 'generated', status: 'unverified', prompt: 'p', answerLang: 'vi', answers: ['x'], grammar: [], vocab: [], level: 3 },
+      },
+    });
+    const mixed = interleave([mcq('a'), mcq('b'), mcq('c'), mcq('d'), typed('t1'), typed('t2')]);
+    const isMcq = (i: SessionItem) => i.kind === 'task' && i.task.exercise.type === 'mcq';
+    for (let i = 2; i < mixed.length; i++) {
+      expect(isMcq(mixed[i]) && isMcq(mixed[i - 1]) && isMcq(mixed[i - 2])).toBe(false);
+    }
   });
 });

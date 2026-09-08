@@ -184,6 +184,12 @@ export function ExerciseRunner({
     const onKey = (e: KeyboardEvent) => {
       if (!item || speaking) return;
       if (e.key === 'Enter') {
+        // The focused input handles its own Enter (and calls preventDefault).
+        // Without this guard the same keystroke is processed twice: the input
+        // submits, React re-renders and re-registers this listener, and the
+        // fresh listener then sees `result` set and skips straight past the
+        // feedback the learner never got to read.
+        if (e.defaultPrevented) return;
         if (e.target instanceof HTMLTextAreaElement && !result) return;
         e.preventDefault();
         if (result && task) next({ item, outcome: result.outcome, score: result.score, expected: result.expected, given: answerToText(answer, task), prompt: taskPrompt(task) });
@@ -223,6 +229,8 @@ export function ExerciseRunner({
 
         {speaking ? (
           <SpeakingTask
+            prompt={speaking.prompt}
+            instruction={speaking.instruction}
             target={speaking.target}
             translation={speaking.translation}
             showTarget={speaking.showTarget}

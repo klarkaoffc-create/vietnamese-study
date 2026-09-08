@@ -14,12 +14,17 @@ import { Callout, Kbd, Pill, Vi } from './ui';
  * model. Recording is optional — the task works without a microphone.
  */
 export function SpeakingTask({
+  prompt,
+  instruction,
   target,
   translation,
   showTarget,
   targetId,
   onDone,
 }: {
+  /** What the learner has to say, in Polish. Shown before the attempt. */
+  prompt: string;
+  instruction?: string;
   target: string;
   translation?: string;
   showTarget: boolean;
@@ -73,12 +78,22 @@ export function SpeakingTask({
     setRecording(false);
   };
 
-  const grades: { g: SrsGrade; label: string; sub: string }[] = [
-    { g: 0, label: 'Nie umiałam/em', sub: 'powtórz wkrótce' },
-    { g: 1, label: 'Z trudem', sub: 'jeszcze poćwicz' },
-    { g: 2, label: 'Powiedziane', sub: 'normalny odstęp' },
-    { g: 3, label: 'Płynnie', sub: 'długi odstęp' },
-  ];
+  // Enter drives the task, matching every other exercise. The runner's own
+  // Enter handler stands down for spoken tasks, so it is wired here instead.
+  // preventDefault also stops the browser re-firing it as a click on the
+  // focused button, which would advance twice.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Enter' || e.defaultPrevented) return;
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      e.preventDefault();
+      if (revealed) onDone(2);
+      else setRevealed(true);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onDone, revealed]);
+
 
   return (
     <div className="fade-in">
@@ -87,20 +102,25 @@ export function SpeakingTask({
         {!hasModelAudio && <Pill tone="warn">brak nagrania wzorcowego</Pill>}
       </div>
 
+      {instruction && <p className="ex-instruction">{instruction}</p>}
+      {/* The task itself is always visible: the learner must know what to
+          say before saying it. Only the Vietnamese model is hidden. */}
+      <h2 className="ex-prompt">{prompt}</h2>
+
       {revealed ? (
         <div className="speak-target">
+          <div className="muted tiny">Wzór</div>
           <Vi big>{target}</Vi>
           {translation && <div className="muted small">{translation}</div>}
-          <div className="row" style={{ marginTop: '0.5rem' }}>
+          <div className="row" style={{ marginTop: '0.5rem', justifyContent: 'center' }}>
             <AudioButton targetId={targetId} text={target} />
           </div>
         </div>
       ) : (
         <div className="speak-target muted">
-          <p style={{ margin: 0 }}>Najpierw powiedz to po wietnamsku na głos, dopiero potem odsłoń wzór.</p>
-          <button type="button" className="btn mt" onClick={() => setRevealed(true)}>
-            Pokaż wzór
-          </button>
+          <p style={{ margin: 0 }}>
+            Powiedz to po wietnamsku na głos (możesz się nagrać). Wzór odsłonisz dopiero po próbie.
+          </p>
         </div>
       )}
 
@@ -123,20 +143,30 @@ export function SpeakingTask({
 
       {error && <Callout tone="warn">{error}</Callout>}
 
-      {revealed && (
+      {!revealed ? (
+        <div className="ex-actions">
+          <button type="button" className="btn primary" onClick={() => setRevealed(true)}>
+            Powiedziałam/em — pokaż wzór <Kbd>Enter</Kbd>
+          </button>
+        </div>
+      ) : (
         <>
-          <p className="muted small" style={{ marginTop: '1rem' }}>
-            Porównaj swoją wersję ze wzorem i oceń, jak ci poszło. Wymowy nie da się rzetelnie ocenić automatycznie, więc tę ocenę wystawiasz sam(a).
-          </p>
-          <div className="grade-row">
-            {grades.map((g) => (
-              <button key={g.g} type="button" className={`btn ${g.g >= 2 ? 'primary' : ''}`.trim()} onClick={() => onDone(g.g)}>
-                {g.label}
-                <small>
-                  <Kbd>{g.g + 1}</Kbd> {g.sub}
-                </small>
-              </button>
-            ))}
+          <div className="ex-actions">
+            {/* Continuing IS the normal outcome: you produced the sentence.
+                The scheduler takes that as a plain success, so there is no
+                "did you know it?" question to answer. */}
+            <button type="button" className="btn primary" onClick={() => onDone(2)}>
+              Dalej <Kbd>Enter</Kbd>
+            </button>
+          </div>
+          {/* Secondary, deliberately small: pronunciation cannot be graded
+              automatically, so the only self-assessment offered is a nudge
+              up or down — never a four-button rating screen. */}
+          <div className="self-assess">
+            <span>Wyszło inaczej?</span>
+            <button type="button" onClick={() => onDone(0)}>nie wyszło</button>
+            <button type="button" onClick={() => onDone(1)}>z trudem</button>
+            <button type="button" onClick={() => onDone(3)}>bez wysiłku</button>
           </div>
         </>
       )}

@@ -120,11 +120,17 @@ describe('speaking is the only self-assessed task', () => {
     if (t.exercise.type === 'speaking') expect(t.exercise.target).toBe('Xin chào!');
   });
 
-  it('hides the model at high automaticity so it must be produced first', () => {
-    const early = speakingTask('Xin chào!', 'Dzień dobry!', 'r', 'bai-01', 2);
-    const late = speakingTask('Xin chào!', 'Dzień dobry!', 'r', 'bai-01', 5);
-    if (early.exercise.type !== 'speaking' || late.exercise.type !== 'speaking') throw new Error('expected speaking');
-    expect(early.exercise.showTarget).toBe(true);
-    expect(late.exercise.showTarget).toBe(false);
+  it('never shows the model before the attempt, at any level', () => {
+    // Production-first is unconditional: showing the Vietnamese (and its
+    // translation) and then asking "did you know it?" is exactly the
+    // flashcard pattern this app avoids.
+    for (const level of [1, 2, 3, 4, 5] as const) {
+      const t = speakingTask('Xin chào!', 'Dzień dobry!', 'r', 'bai-01', level);
+      if (t.exercise.type !== 'speaking') throw new Error('expected speaking');
+      expect(t.exercise.showTarget, `level ${level}`).toBe(false);
+      // The prompt asks for production from Polish, never "read this aloud".
+      expect(t.exercise.prompt).toContain('Dzień dobry!');
+      expect(t.exercise.prompt).not.toContain('Xin chào!');
+    }
   });
 });
