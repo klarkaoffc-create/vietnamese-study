@@ -70,7 +70,7 @@
       "goal": "Zapytaj, która jest godzina.",
       "patterns": ["{x}mấy giờ{x}"],
       "sample": "Bây giờ là mấy giờ?",
-      "hint": "Bây giờ là mấy giờ?",
+      "hint": "„mấy” do małych liczb; godzina → mấy giờ?",
       "vocab": ["v-bai-09-bay-gio", "v-bai-09-gio"],
       "grammar": ["g-bai-09-time"],
       "status": "unverified"

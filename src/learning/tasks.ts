@@ -30,6 +30,7 @@ import {
 import type { AutomaticityLevel, SrsKind } from './srs';
 import { pick, sample, shuffle } from '../utilities/random';
 import { comparisonForm } from '../utilities/vietnamese';
+import { glossWithoutAnswer, hintUnlessRevealing } from './answers';
 
 /* ------------------------------------------------------------------ */
 /* Task shape                                                          */
@@ -181,7 +182,7 @@ export function vocabActiveTask(v: VocabEntry, level: AutomaticityLevel, phase: 
         prompt: `Powiedz po wietnamsku: „${ex.pl}”`,
         answerLang: 'vi',
         answers: [ex.vi],
-        hint: level === 3 ? `${v.vi} = ${v.pl}` : undefined,
+        hint: level === 3 ? hintUnlessRevealing(`${v.vi} = ${v.pl}`, ex.vi) : undefined,
         grammar: [],
         vocab: [v.id],
         level: 3,
@@ -226,7 +227,8 @@ export function vocabActiveTask(v: VocabEntry, level: AutomaticityLevel, phase: 
       source: 'generated',
       status: 'unverified',
       instruction: v.classifier ? `Klasyfikator: ${v.classifier}` : undefined,
-      prompt: `Jak powiesz po wietnamsku: „${v.pl}”?`,
+      // The gloss is the prompt here, so it must not contain the word itself.
+      prompt: `Jak powiesz po wietnamsku: „${glossWithoutAnswer(v.pl, v.vi)}”?`,
       answerLang: 'vi',
       answers: [v.vi, ...v.vi.split('/').map((s) => s.trim()).filter(Boolean)],
       explanation: v.note,
@@ -331,7 +333,7 @@ export function grammarTask(g: GrammarEntry, level: AutomaticityLevel, phase: Ta
         prompt: `Powiedz po wietnamsku: „${ex.pl}”`,
         answerLang: 'vi',
         answers: [ex.vi],
-        hint: level === 3 ? g.pattern : undefined,
+        hint: level === 3 ? hintUnlessRevealing(g.pattern, ex.vi) : undefined,
         explanation: g.pattern,
         grammar: [g.id],
         vocab: [],
@@ -375,7 +377,7 @@ export function grammarTask(g: GrammarEntry, level: AutomaticityLevel, phase: Ta
       prompt: `Powiedz po wietnamsku: „${ex.pl}”`,
       answerLang: 'vi',
       answers: [ex.vi],
-      hint: g.pattern,
+      hint: hintUnlessRevealing(g.pattern, ex.vi),
       grammar: [g.id],
       vocab: [],
       level: 2,
@@ -442,7 +444,7 @@ export function dialogueTask(d: DialogueEntry, lineIndex: number, level: Automat
       prompt: `${prev.speaker}: „${prev.vi}”${prev.pl ? ` (${prev.pl})` : ''}\n\n${line.speaker}: ?${line.pl && level <= 2 ? `\nSens: ${line.pl}` : ''}`,
       answerLang: 'vi',
       answers: [line.vi],
-      hint: level === 1 && line.pl ? line.pl : undefined,
+      hint: level === 1 ? hintUnlessRevealing(line.pl, line.vi) : undefined,
       grammar: [],
       vocab: [],
       level: 2,
@@ -497,7 +499,11 @@ export function scenarioTask(
       prompt: s.goal,
       patterns: withOptionalEdges(s.patterns),
       sample: s.sample,
-      explanation: level <= 2 && s.hint ? s.hint : undefined,
+      // The scenario's own hint is a structure reminder, not the answer, so
+      // it may be shown up front at low automaticity. It is repeated as the
+      // explanation after grading at every level.
+      hint: level <= 2 ? s.hint : undefined,
+      explanation: s.hint,
       grammar: s.grammar,
       vocab: s.vocab,
       level: 3,

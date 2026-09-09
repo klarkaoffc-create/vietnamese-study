@@ -16,7 +16,6 @@ import {
   allVocab,
   audioByTarget,
   dialogueById,
-  exerciseById,
   exercisesForGrammar,
   exercisesForLessons,
   grammarById,
@@ -29,7 +28,8 @@ import {
 } from '../data/content';
 import { generate, type GeneratedInstance } from './generators';
 import { isDue, isWeak, makeSrsId, sortForReview, type AutomaticityLevel, type SrsItem, type SrsKind } from './srs';
-import { unresolvedMistakes, type AppState, type Mistake } from './state';
+import { mistakeSessionItems, mistakeTask, openMistakes } from './mistakes';
+import { type AppState } from './state';
 import { sample, shuffle } from '../utilities/random';
 import {
   contextualVocab,
@@ -149,25 +149,6 @@ function taskForDueItem(item: SrsItem, phase: TaskPhase): LearningTask | null {
   }
 }
 
-/** Rebuild a task from a logged mistake so the learner meets it again. */
-function mistakeItem(m: Mistake, state: AppState): SessionItem | null {
-  if (m.refKind === 'vocab') {
-    const v = vocabById.get(m.ref);
-    if (!v) return null;
-    const level = levelOf(state.srs[makeSrsId('vocab-active', v.id)]);
-    const t = vocabActiveTask(v, level, 'mistakes');
-    return t ? { kind: 'task', task: t, mistakeRef: m.ref } : null;
-  }
-  if (m.refKind === 'exercise') {
-    const e = exerciseById.get(m.ref);
-    if (!e) return null;
-    return { kind: 'exercise', exercise: e.exercise, lesson: e.ownerId, mistakeRef: m.ref };
-  }
-  if (!m.generatorKind) return null;
-  const gen = generate(m.generatorKind, {}, 1)[0];
-  return gen ? { kind: 'generated', instance: gen, lesson: m.lesson, mistakeRef: m.ref } : null;
-}
-
 /* ------------------------------------------------------------------ */
 /* Phase builders                                                       */
 /* ------------------------------------------------------------------ */
@@ -256,8 +237,8 @@ function grammarPhase(state: AppState, pools: ReturnType<typeof poolsFor>, limit
 }
 
 function mistakesPhase(state: AppState, limit: number): SessionItem[] {
-  return sample(unresolvedMistakes(state), limit)
-    .map((m) => mistakeItem(m, state))
+  return sample(openMistakes(state), limit)
+    .map((m) => mistakeTask(m, state))
     .filter((x): x is SessionItem => !!x)
     .slice(0, limit);
 }
@@ -397,12 +378,8 @@ export function buildSession(state: AppState, mode: ReviewMode, now = Date.now()
     case 'grammar':
       return summarise(mode, grammarPhase(state, pools, 10, now));
     case 'mistakes':
-      return summarise(
-        mode,
-        unresolvedMistakes(state)
-          .map((m) => mistakeItem(m, state))
-          .filter((x): x is SessionItem => !!x),
-      );
+      // Exactly the mistakes the UI counted as open — see learning/mistakes.ts.
+      return summarise(mode, mistakeSessionItems(state));
     case 'listening':
       return summarise(mode, listeningPhase(state, pools, 10));
     case 'weak': {
@@ -493,7 +470,7 @@ export function grammarPracticeItems(grammarId: string): SessionItem[] {
 export function dashboardCounts(state: AppState, now = Date.now()) {
   const due = dueItems(state, ['vocab-active', 'vocab-passive', 'grammar', 'sentence', 'dialogue', 'listening'], now).length;
   const weak = weakAbilities(state).length;
-  const mistakes = unresolvedMistakes(state).length;
+  const mistakes = openMistakes(state).length;
   const studied = studiedLessonNumbers(state);
   const pools = poolsFor(studied);
   const fresh = pools.vocab.filter((v) => !state.srs[makeSrsId('vocab-active', v.id)]).length;

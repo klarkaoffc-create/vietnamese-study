@@ -162,10 +162,11 @@
       "type": "fill-blank",
       "skill": "vocabulary",
       "source": "teacher",
-      "sentence": "A: Bạn muốn ___ gì? B: Mình muốn ăn phở.",
+      "sentence": "A: Bạn muốn ___ gì?",
       "answers": ["ăn"],
       "bank": ["ngày mai", "rất", "bao nhiêu", "ăn", "nói", "sở thích", "đã"],
-      "translation": "A: Co chcesz zjeść? B: Chcę zjeść phở.",
+      "translation": "A: Co chcesz zjeść?",
+      "explanation": "Pełna wymiana z lekcji: A: Bạn muốn ăn gì? – B: Mình muốn ăn phở. (Co chcesz zjeść? – Chcę zjeść phở.)",
       "vocab": ["v-bai-05-an"],
       "level": 1
     },

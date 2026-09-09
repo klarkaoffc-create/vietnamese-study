@@ -305,10 +305,19 @@ export const GeneratorExerciseSchema = ExerciseBase.extend({
 export const OpenAnswerExerciseSchema = ExerciseBase.extend({
   type: z.literal('open-answer'),
   prompt: z.string().min(1),
-  /** Model answers / patterns. `{x}` means "any word(s) here". */
+  /**
+   * ANSWER KEY — grading only. `{x}` means "any word(s) here". Never render
+   * this before the learner has attempted the task: for short answers the
+   * pattern is almost the whole sentence.
+   */
   patterns: z.array(z.string().min(1)).min(1),
-  /** Example answer shown after the attempt. */
+  /** ANSWER KEY — one possible answer, revealed only after the attempt. */
   sample: z.string().optional(),
+  /**
+   * Scaffold shown BEFORE the attempt: a structure reminder in Polish, or the
+   * shape of the answer, but never the answer itself.
+   */
+  hint: z.string().optional(),
 });
 
 /**

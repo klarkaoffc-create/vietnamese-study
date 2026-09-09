@@ -9,6 +9,7 @@ import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { LessonSchema, ReviewSchema, ExamBlueprintSchema, AudioManifestSchema, ScenarioPackSchema, type Lesson, type Review, type ExamBlueprint, type Exercise, type Scenario } from '../src/data/schema';
+import { findAnswerLeaks, revealsAnswer, type ContentLookup } from '../src/learning/answers';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -197,6 +198,23 @@ for (const l of lessons) {
   for (const r of l.readings) for (const gid of r.glossary) if (!vocabIds.has(gid)) errors.push(`${l.id}: czytanka ${r.id} odwołuje się do nieistniejącego słówka ${gid}`);
 }
 for (const rv of reviews) for (const r of rv.readings) for (const gid of r.glossary) if (!vocabIds.has(gid)) errors.push(`${rv.id}: czytanka ${r.id} odwołuje się do nieistniejącego słówka ${gid}`);
+
+// Answer leakage: nothing the learner reads before answering may contain the
+// solution. Source DOCX lessons often ship the completed exercise, so this
+// runs over every lesson, review and exam. See src/learning/answers.ts.
+const dialoguesForAnswers = new Map<string, { lines: { vi: string; pl?: string }[] }>();
+for (const l of lessons) for (const d of l.dialogues) dialoguesForAnswers.set(d.id, d);
+const answerLookup: ContentLookup = { dialogue: (id) => dialoguesForAnswers.get(id) };
+for (const { ex, where } of allExercises) {
+  for (const leak of findAnswerLeaks(ex, answerLookup)) {
+    errors.push(`${where}: ${ex.id} – odpowiedź „${leak.answer}” widoczna przed próbą w polu ${leak.field}: „${leak.text}”`);
+  }
+}
+for (const sc of scenarios) {
+  if (sc.hint && revealsAnswer(sc.hint, sc.sample)) {
+    errors.push(`scenariusz ${sc.id} – podpowiedź zdradza całą odpowiedź „${sc.sample}”`);
+  }
+}
 
 for (const { ex, where } of allExercises) {
   for (const gid of ex.grammar) if (!grammarIds.has(gid)) errors.push(`${where}: ${ex.id} odwołuje się do nieistniejącej gramatyki ${gid}`);

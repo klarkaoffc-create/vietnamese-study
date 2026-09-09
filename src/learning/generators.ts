@@ -127,6 +127,13 @@ function genAge(rng: Rng): GeneratedInstance {
   };
 }
 
+/**
+ * Worked example for the year drill. Deliberately outside the 1950–2030 draw
+ * range: the old hint spelled out 2026 in full, so whenever the drill picked
+ * 2026 the hint WAS the answer.
+ */
+const YEAR_HINT_EXAMPLE = 1945;
+
 function genYear(rng: Rng): GeneratedInstance {
   const y = randInt(1950, 2030, rng);
   const w = yearToWords(y);
@@ -137,7 +144,7 @@ function genYear(rng: Rng): GeneratedInstance {
     prompt: `Przeczytaj rok słowami: ${y}`,
     answers: w.accepted,
     answerLang: 'vi',
-    hint: 'np. 2026 = hai nghìn không trăm hai mươi sáu (albo cyframi: hai không hai sáu)',
+    hint: `np. ${YEAR_HINT_EXAMPLE} = ${yearToWords(YEAR_HINT_EXAMPLE).primary} (albo cyframi: ${digitsToWords(String(YEAR_HINT_EXAMPLE))})`,
     explanation: w.note,
     level: 3,
   };

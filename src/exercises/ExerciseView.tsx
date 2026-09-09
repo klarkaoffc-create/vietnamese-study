@@ -139,7 +139,11 @@ export function ExerciseView({
           <p className="ex-prompt">{ex.prompt}</p>
           {image}
           <TextInput value={text} onChange={setText} onSubmit={onSubmit} result={result} multiline />
-          <div className="ex-hint">Wzór: <Vi>{ex.patterns[0].replace(/\{x\}/g, '…')}</Vi></div>
+          {/* `patterns` is the grading key — showing it here handed the
+              learner most of the sentence before they had tried. Only the
+              purpose-written scaffold is shown before an attempt; the model
+              answer arrives with the feedback, after grading. */}
+          {ex.hint && !result && <div className="ex-hint">💡 {ex.hint}</div>}
         </div>
       );
     case 'reading-question': {

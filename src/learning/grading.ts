@@ -127,11 +127,11 @@ export function gradeExercise(ex: Exercise, answer: UserAnswer): GradeResult {
     case 'open-answer': {
       if (answer.kind !== 'text') return { outcome: 'wrong', score: 0, feedback: 'Wpisz odpowiedź.', expected: ex.sample ?? ex.patterns[0], category: ex.skill, ...meta };
       const expected = ex.sample ?? ex.patterns[0].replace(/\{x\}/g, '…');
-      if (!answer.value.trim()) return { outcome: 'wrong', score: 0, feedback: `Brak odpowiedzi. Przykład: ${expected}`, expected, category: ex.skill, ...meta };
+      if (!answer.value.trim()) return { outcome: 'wrong', score: 0, feedback: `Brak odpowiedzi. Przykładowa odpowiedź (jedna z wielu): ${expected}`, expected, category: ex.skill, ...meta };
       const m = matchPatterns(answer.value, ex.patterns);
-      if (m.kind === 'correct') return { outcome: 'correct', score: 1, feedback: `Struktura zdania się zgadza. Przykład: ${expected}`, expected, category: ex.skill, ...meta };
+      if (m.kind === 'correct') return { outcome: 'correct', score: 1, feedback: `Struktura zdania się zgadza. Przykładowa odpowiedź (jedna z wielu): ${expected}`, expected, category: ex.skill, ...meta };
       if (m.kind === 'tone') return { outcome: 'tone', score: 0.5, feedback: feedbackFor(m, expected), expected, category: 'tone', ...meta };
-      return { outcome: 'wrong', score: 0, feedback: `Zdanie nie pasuje do wzorca „${ex.patterns[0]}”. Przykład: ${expected}`, expected, category: ex.skill, ...meta };
+      return { outcome: 'wrong', score: 0, feedback: `Zdanie nie pasuje do wzorca „${ex.patterns[0]}”. Przykładowa odpowiedź (jedna z wielu): ${expected}`, expected, category: ex.skill, ...meta };
     }
     case 'matching': {
       const expected = ex.pairs.map((p) => `${p.left} → ${p.right}`).join('; ');

@@ -125,7 +125,7 @@
       "skill": "time",
       "source": "teacher",
       "status": "unverified",
-      "prompt": "Ćwiczenie z lekcji: pierwszy zegar w drugim rzędzie (mała wskazówka między 4 a 5, duża na 4). Bây giờ là mấy giờ? Odpowiedz „… giờ … phút” lub cyframi (np. 4:20). Klucz opracowany do nauki.",
+      "prompt": "Ćwiczenie z lekcji: pierwszy zegar w drugim rzędzie (mała wskazówka między 4 a 5, duża na 4). Bây giờ là mấy giờ? Odpowiedz „… giờ … phút” lub cyframi (np. 7:05). Klucz opracowany do nauki.",
       "answerLang": "vi",
       "answers": ["bốn giờ hai mươi phút", "Bây giờ là bốn giờ hai mươi phút.", "4 giờ 20 phút", "Bây giờ là 4 giờ 20 phút.", "4:20"],
       "image": { "src": "images/lessons/bai-09/clocks.png", "alt": "Dziewięć zegarów", "source": "source-lessons/bái 9.docx" },
