@@ -10,6 +10,7 @@ import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { LessonSchema, ReviewSchema, ExamBlueprintSchema, AudioManifestSchema, ScenarioPackSchema, type Lesson, type Review, type ExamBlueprint, type Exercise, type Scenario } from '../src/data/schema';
 import { findAnswerLeaks, revealsAnswer, type ContentLookup } from '../src/learning/answers';
+import { matchPatterns, withOptionalEdges } from '../src/utilities/vietnamese';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -210,7 +211,21 @@ for (const { ex, where } of allExercises) {
     errors.push(`${where}: ${ex.id} – odpowiedź „${leak.answer}” widoczna przed próbą w polu ${leak.field}: „${leak.text}”`);
   }
 }
+// An open-answer key must accept its own model answer. `{x}` matches one or
+// more characters and the match is anchored, so a pattern ending in a literal
+// silently rejects every natural continuation — which is how
+// "Tôi thường đi ngủ 10 giờ tối." came to be graded wrong by the very
+// exercise that offers it as the model.
+for (const { ex, where } of allExercises) {
+  if (ex.type !== 'open-answer' || !ex.sample) continue;
+  if (matchPatterns(ex.sample, ex.patterns).kind !== 'correct') {
+    errors.push(`${where}: ${ex.id} – wzorcowa odpowiedź „${ex.sample}” nie pasuje do własnych patterns`);
+  }
+}
 for (const sc of scenarios) {
+  if (matchPatterns(sc.sample, withOptionalEdges(sc.patterns)).kind !== 'correct') {
+    errors.push(`scenariusz ${sc.id} – wzorcowa odpowiedź „${sc.sample}” nie pasuje do własnych patterns`);
+  }
   if (sc.hint && revealsAnswer(sc.hint, sc.sample)) {
     errors.push(`scenariusz ${sc.id} – podpowiedź zdradza całą odpowiedź „${sc.sample}”`);
   }

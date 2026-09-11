@@ -4,6 +4,24 @@
  * fully correct – they are only stripped to detect the "almost" case.
  */
 
+/**
+ * Typography that never decides whether a Vietnamese answer is right.
+ *
+ * Sentence-final marks are the important part of this list — `.` `!` `?` `…`
+ * and any run or mixture of them (`!!`, `?!`, `...`) — because a learner
+ * writing "Bạn khỏe không" must score exactly the same as one writing
+ * "Bạn khỏe không?". Commas and the remaining marks are folded too: they
+ * separate, they do not carry meaning in the sentences this course teaches.
+ *
+ * Each run is replaced by a SPACE rather than deleted, so "đi thẳng,sau đó"
+ * still tokenises into words; the following whitespace collapse then makes
+ * comma-ful and comma-less versions identical.
+ *
+ * The rule is: IGNORE TYPOGRAPHY, PRESERVE LANGUAGE. Nothing here touches a
+ * tone mark, a vowel diacritic (ă â ê ô ơ ư) or đ/d — those are letters, and
+ * `stripDiacritics` is the only function that removes them, used solely to
+ * detect the "almost right" case.
+ */
 const PUNCTUATION = /[.,!?;:"'„”“‘’…()\[\]{}«»\-–—/\\]+/g;
 
 /** Unicode NFC, trim, collapse whitespace. Keeps tones and case. */
@@ -11,7 +29,11 @@ export function normalizeVietnamese(input: string): string {
   return input.normalize('NFC').replace(/\s+/g, ' ').trim();
 }
 
-/** Comparison form: NFC + lower-case + punctuation removed + whitespace collapsed. */
+/**
+ * The form every answer comparison runs on: NFC, lower-case, punctuation
+ * folded to spaces, whitespace collapsed, trimmed. Tones and vowel
+ * diacritics are deliberately preserved.
+ */
 export function comparisonForm(input: string): string {
   return input
     .normalize('NFC')
@@ -97,6 +119,16 @@ export function matchVietnamese(given: string, expected: string): MatchResult {
   return { kind: 'wrong' };
 }
 
+/**
+ * True when two answers say the same Vietnamese and differ only in
+ * typography — spacing, capitalisation or punctuation. Used by the grading
+ * tests to prove that such a difference can never cost the learner credit,
+ * produce a mistake record or lower an SRS grade.
+ */
+export function differsOnlyInTypography(a: string, b: string): boolean {
+  return a !== b && comparisonForm(a) === comparisonForm(b);
+}
+
 /** Best result across several accepted answers (correct > tone > wrong). */
 export function matchAny(given: string, expected: string[]): MatchResult & { expected: string } {
   let best: (MatchResult & { expected: string }) | null = null;
@@ -173,6 +205,63 @@ const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 export function patternToRegExp(pattern: string, strip = false): RegExp {
   const body = patternSegments(pattern, strip).map(escapeRegExp).join('(.+?)');
   return new RegExp(`^${body}$`, 'u');
+}
+
+/**
+ * The concrete Vietnamese forms a dictionary headword can take in a sentence.
+ *
+ * Most entries are plain lemmas, but the course also stores alternatives and
+ * one scaffolding formula, and a pattern built naively from the raw string can
+ * then never match a real sentence:
+ *
+ *   "có thể, được"                 → ["có thể", "được"]
+ *   "bố / ba"                      → ["bố", "ba"]
+ *   "(tuần / tháng / năm) này"     → ["tuần này", "tháng này", "năm này"]
+ *   "mỗi (ngày / tuần / tháng)"    → ["mỗi ngày", "mỗi tuần", "mỗi tháng"]
+ *   "zaimek + ơi!"                 → ["ơi!"]
+ *
+ * The `+` case is a formula whose left side is a Polish part-of-speech label,
+ * so pure-ASCII fragments are dropped — safe here because `+` appears in
+ * exactly one headword and Vietnamese text in this course always carries
+ * diacritics somewhere in the phrase.
+ */
+export function headwordForms(vi: string): string[] {
+  const base = vi.includes('+')
+    ? vi
+        .split('+')
+        .map((part) => part.trim())
+        .filter((part) => part && /[^\u0000-\u007F]/.test(part))
+        .join(' ')
+    : vi;
+  const bracket = base.match(/^(.*)\(([^)]*\/[^)]*)\)(.*)$/);
+  const seeds = bracket ? bracket[2].split('/').map((alt) => `${bracket[1]}${alt.trim()}${bracket[3]}`) : [base];
+  const out = new Set<string>();
+  for (const seed of seeds) {
+    for (const part of seed.split(/[/,]/)) {
+      const t = part.replace(/\s+/g, ' ').trim();
+      if (t) out.add(t);
+    }
+  }
+  return out.size ? [...out] : [vi];
+}
+
+/**
+ * Scenario patterns say "your answer should contain these fragments, in this
+ * order". `{x}` matches one-or-more characters, which would wrongly reject an
+ * answer that simply *starts* or *ends* on one of those fragments ("Cho chị
+ * một ly cà phê trứng" against `{x}cho{x}ly{x}`). Rather than loosening `{x}`
+ * globally — that would also weaken the authored lesson exercises — the edge
+ * placeholders are expanded into optional variants here.
+ */
+export function withOptionalEdges(patterns: string[]): string[] {
+  const out = new Set<string>();
+  for (const p of patterns) {
+    const variants = [p];
+    if (p.startsWith('{x}')) variants.push(p.slice(3));
+    for (const v of [...variants]) if (v.endsWith('{x}')) variants.push(v.slice(0, -3));
+    for (const v of variants) if (v.trim()) out.add(v);
+  }
+  return [...out];
 }
 
 /** Match a free answer against `{x}` patterns. */

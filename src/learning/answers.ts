@@ -115,7 +115,9 @@ export function hintUnlessRevealing(hint: string | undefined, ...answers: (strin
  * dropped; if every clause does, the word itself is elided instead, so the
  * learner still gets a usable prompt.
  */
-export function glossWithoutAnswer(pl: string, vi: string): string {
+export function glossWithoutAnswer(pl: string, vi: string, ...alsoHide: string[]): string {
+  const forms = [vi, ...alsoHide].filter(Boolean);
+  const reveals = (text: string) => forms.some((f) => revealsAnswer(text, f));
   const tidy = (t: string) =>
     t
       .replace(/\s+/g, ' ')
@@ -126,12 +128,12 @@ export function glossWithoutAnswer(pl: string, vi: string): string {
     const kept = pl
       .split(sep)
       .map((c) => c.trim())
-      .filter((c) => c && !revealsAnswer(c, vi));
+      .filter((c) => c && !reveals(c));
     if (kept.length) return tidy(kept.join('; '));
   }
   // The word appears in every clause: drop revealing asides, then the word.
-  const withoutAsides = pl.replace(/\([^)]*\)|„[^”]*”/g, (m) => (revealsAnswer(m, vi) ? ' ' : m));
-  const needle = normalise(vi).split(' ').filter(Boolean);
+  const withoutAsides = pl.replace(/\([^)]*\)|„[^”]*”/g, (m) => (reveals(m) ? ' ' : m));
+  const needle = forms.flatMap((f) => normalise(f).split(' ')).filter(Boolean);
   const stripped = tidy(
     withoutAsides
       .split(/\s+/)

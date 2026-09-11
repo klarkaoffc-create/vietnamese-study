@@ -29,7 +29,7 @@ import {
 } from '../data/content';
 import type { AutomaticityLevel, SrsKind } from './srs';
 import { pick, sample, shuffle } from '../utilities/random';
-import { comparisonForm } from '../utilities/vietnamese';
+import { comparisonForm, headwordForms, withOptionalEdges } from '../utilities/vietnamese';
 import { glossWithoutAnswer, hintUnlessRevealing } from './answers';
 
 /* ------------------------------------------------------------------ */
@@ -158,7 +158,7 @@ export function vocabActiveTask(v: VocabEntry, level: AutomaticityLevel, phase: 
           status: 'unverified',
           instruction: 'Bez podpowiedzi — powiedz to po swojemu.',
           prompt: `Ułóż własne zdanie po wietnamsku ze słowem „${v.vi}” (${v.pl}).`,
-          patterns: withOptionalEdges([`{x}${v.vi}{x}`]),
+          patterns: withOptionalEdges(headwordForms(v.vi).map((form) => `{x}${form}{x}`)),
           sample: examples[0].vi,
           explanation: `Przykład użycia: ${examples[0].vi} – ${examples[0].pl}`,
           grammar: [],
@@ -228,9 +228,9 @@ export function vocabActiveTask(v: VocabEntry, level: AutomaticityLevel, phase: 
       status: 'unverified',
       instruction: v.classifier ? `Klasyfikator: ${v.classifier}` : undefined,
       // The gloss is the prompt here, so it must not contain the word itself.
-      prompt: `Jak powiesz po wietnamsku: „${glossWithoutAnswer(v.pl, v.vi)}”?`,
+      prompt: `Jak powiesz po wietnamsku: „${glossWithoutAnswer(v.pl, v.vi, ...headwordForms(v.vi))}”?`,
       answerLang: 'vi',
-      answers: [v.vi, ...v.vi.split('/').map((s) => s.trim()).filter(Boolean)],
+      answers: [v.vi, ...headwordForms(v.vi)],
       explanation: v.note,
       grammar: [],
       vocab: [v.id],
@@ -455,25 +455,6 @@ export function dialogueTask(d: DialogueEntry, lineIndex: number, level: Automat
 /* ------------------------------------------------------------------ */
 /* Scenario tasks — communicative situations from content/scenarios     */
 /* ------------------------------------------------------------------ */
-
-/**
- * Scenario patterns say "your answer should contain these fragments, in this
- * order". `{x}` matches one-or-more words everywhere else in the app, which
- * would wrongly reject an answer that simply *starts* or *ends* on one of
- * those fragments ("Cho chị một ly cà phê trứng" against `{x}cho{x}ly{x}`).
- * Rather than loosening `{x}` globally — that would also weaken the authored
- * lesson exercises — the edge cases are expanded here, for scenarios only.
- */
-function withOptionalEdges(patterns: string[]): string[] {
-  const out = new Set<string>();
-  for (const p of patterns) {
-    const variants = [p];
-    if (p.startsWith('{x}')) variants.push(p.slice(3));
-    for (const v of [...variants]) if (v.endsWith('{x}')) variants.push(v.slice(0, -3));
-    for (const v of variants) if (v.trim()) out.add(v);
-  }
-  return [...out];
-}
 
 export function scenarioTask(
   s: { id: string; lesson: string; situation: string; goal: string; patterns: string[]; sample: string; vocab: string[]; grammar: string[]; hint?: string },

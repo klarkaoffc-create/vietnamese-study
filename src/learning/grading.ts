@@ -139,7 +139,9 @@ export function gradeExercise(ex: Exercise, answer: UserAnswer): GradeResult {
       let ok = 0;
       const wrongPairs: string[] = [];
       for (const p of ex.pairs) {
-        if (answer.pairs[p.left] === p.right) ok++;
+        // Normalised rather than compared raw, so this path obeys the same
+        // "typography never decides correctness" rule as every other type.
+        if (comparisonForm(answer.pairs[p.left] ?? '') === comparisonForm(p.right)) ok++;
         else wrongPairs.push(`${p.left} → ${p.right}`);
       }
       const score = ok / ex.pairs.length;
