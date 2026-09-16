@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { lessons } from '../src/data/content';
 import { initialState, reducer, type AppState } from '../src/learning/state';
 import { buildSession, currentLesson, DAILY_MISTAKE_CAP, DAILY_REVIEW_CAP, DAILY_TASKS, studiedLessonNumbers, type DailyPlan, type SessionItem } from '../src/learning/session';
-import { completedLessons, lessonStatus, lessonTargets, lessonsToMarkComplete, nextLesson } from '../src/learning/progression';
+import { completedLessonNumbers, completedLessons, lessonReadyToAdvance, lessonStatus, lessonTargets, nextLesson } from '../src/learning/progression';
 import { frontierLessons } from '../src/learning/session';
 import { MAINTENANCE_MIN_DAYS, MASTERY_SUCCESSES, isMastered, targetPhase } from '../src/learning/targets';
 import { makeSrsId } from '../src/learning/srs';
@@ -132,7 +132,9 @@ describe('CASE C: completing Bài 5, 6 and 7 in one day', () => {
     for (const n of [5, 6, 7]) s = completeLesson(s, n, T0);
     expect(nextLesson(s)!.number).toBe(8);
     expect(currentLesson(s)).toBe(8);
-    expect(completedLessons(s).map((l) => l.number)).toEqual([1, 2, 3, 4, 5, 6, 7]);
+    // Progression claim, so it asks the advance rule. Formal completion is a
+    // separate, stricter thing — covered by its own suite below.
+    expect([1, 2, 3, 4, 5, 6, 7].every((n) => lessonReadyToAdvance(s, byNumber(n)))).toBe(true);
   });
 
   it('keeps Bài 8 next the following day, despite review coming due', () => {
@@ -190,7 +192,7 @@ describe('CASE E: Bài 6 complete', () => {
   it('never returns as the new lesson', () => {
     let s = initialState(T0);
     for (const n of [1, 2, 3, 4, 5, 6]) s = completeLesson(s, n, T0);
-    expect(lessonStatus(s, byNumber(6)).complete).toBe(true);
+    expect(lessonReadyToAdvance(s, byNumber(6))).toBe(true);
     expect(nextLesson(s)!.number).toBe(7);
     for (const day of [0, 1, 2, 7]) {
       const plan = buildSession(s, 'today', T0 + day * DAY_MS) as DailyPlan;
@@ -261,14 +263,11 @@ describe('existing progress', () => {
     for (const n of [1, 2, 3, 4]) s = completeLesson(s, n, T0);
     expect(nextLesson(s)!.number).toBe(5);
 
-    // The app writes down lessons finished by demonstration…
-    for (const l of lessonsToMarkComplete(s)) s = reducer(s, { type: 'complete-lesson', lesson: l.id, completed: true, now: T0 });
-    expect(lessonsToMarkComplete(s)).toEqual([]);
-
-    // …so failing several Bài 3 targets later changes nothing about progression.
+    // Failing several Bài 3 targets later changes nothing about progression:
+    // `successes` never decreases, so the frontier cannot walk backwards.
     const l3 = byNumber(3);
     for (const t of lessonTargets(l3).slice(0, 8)) s = demonstrate(s, t.kind, t.ref, l3.id, 1, 0, T0 + 40 * DAY_MS);
-    expect(lessonStatus(s, l3).complete).toBe(true);
+    expect(lessonReadyToAdvance(s, l3)).toBe(true);
     expect(nextLesson(s)!.number).toBe(5);
     const plan = buildSession(s, 'today', T0 + 41 * DAY_MS) as DailyPlan;
     expect(plan.course.next!.number).toBe(5);
@@ -401,5 +400,93 @@ describe('the frontier advances continuously, never by the clock', () => {
     for (const t of l5.slice(0, l5.length - 1)) s = demonstrate(s, t.kind, t.ref, byNumber(5).id, MASTERY_SUCCESSES, 2, T0);
     const numbers = frontierNumbersIn(buildSession(s, 'today', T0 + 4 * DAY_MS));
     expect(numbers.has(6), 'session never reached into Bài 6').toBe(true);
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/* Formal completion is not the same claim as "ready to move on"       */
+/* ------------------------------------------------------------------ */
+
+describe('"ukończone lekcje" counts only real completion evidence', () => {
+  it('does NOT count a lesson whose targets are merely mastered', () => {
+    // Exactly the Bài 2 case: a small lesson (12 targets, 10 needed for the
+    // 80 % bar) drilled through ordinary review sessions.
+    let s = initialState(T0);
+    s = completeLesson(s, 2, T0);
+    const st = lessonStatus(s, byNumber(2));
+    expect(st.demonstrated).toBe(true);
+    expect(st.complete, 'mastery alone must not read as "ukończona"').toBe(false);
+    expect(completedLessons(s)).toEqual([]);
+  });
+
+  it('counts a lesson the learner explicitly finished', () => {
+    let s = initialState(T0);
+    s = reducer(s, { type: 'complete-lesson', lesson: byNumber(1).id, completed: true, now: T0 });
+    expect(lessonStatus(s, byNumber(1)).complete).toBe(true);
+    expect(completedLessons(s).map((l) => l.number)).toEqual([1]);
+  });
+
+  it('counts a lesson whose checkpoint was passed', () => {
+    let s = initialState(T0);
+    s = reducer(s, { type: 'checkpoint', lesson: byNumber(1).id, score: 9, total: 10, now: T0 });
+    expect(lessonStatus(s, byNumber(1)).checkpointPassed).toBe(true);
+    expect(completedLessons(s).map((l) => l.number)).toEqual([1]);
+  });
+
+  it('does not count a failed checkpoint', () => {
+    let s = initialState(T0);
+    s = reducer(s, { type: 'checkpoint', lesson: byNumber(1).id, score: 4, total: 10, now: T0 });
+    expect(completedLessons(s)).toEqual([]);
+  });
+
+  it('reproduces the reported state: Bài 1 finished, Bài 2 only practised → 1/12', () => {
+    let s = initialState(T0);
+    s = reducer(s, { type: 'complete-lesson', lesson: byNumber(1).id, completed: true, now: T0 });
+    s = completeLesson(s, 2, T0); // drilled, never formally closed
+    expect(completedLessons(s).map((l) => l.number)).toEqual([1]);
+    expect(completedLessonNumbers(s).size).toBe(1);
+  });
+
+  it('keeps supplying new material from the frontier despite the stricter count', () => {
+    // Bài 1 formally done, Bài 2 practised through: the course must move on to
+    // Bài 3 rather than re-teaching Bài 2 just because it is not "ukończona".
+    let s = initialState(T0);
+    s = reducer(s, { type: 'complete-lesson', lesson: byNumber(1).id, completed: true, now: T0 });
+    s = completeLesson(s, 2, T0);
+    expect(completedLessons(s).map((l) => l.number)).toEqual([1]);
+    expect(nextLesson(s)!.number).toBe(3);
+    const plan = buildSession(s, 'today', T0 + DAY_MS) as DailyPlan;
+    expect(plan.course.next!.number).toBe(3);
+    expect(frontierNumbersIn(plan).has(3)).toBe(true);
+  });
+
+  it('still advances through several lessons in one day', () => {
+    let s = initialState(T0);
+    for (const n of [1, 2, 3, 4]) s = completeLesson(s, n, T0);
+    expect(nextLesson(s)!.number).toBe(5);
+    for (const n of [5, 6, 7]) s = completeLesson(s, n, T0);
+    expect(nextLesson(s)!.number).toBe(8);
+    // …while the visible count stays honest: none of them were formally closed.
+    expect(completedLessons(s)).toEqual([]);
+  });
+
+  it('leaves an older explicitly completed lesson completed', () => {
+    let s = initialState(T0);
+    for (const n of [1, 2, 3]) s = reducer(s, { type: 'complete-lesson', lesson: byNumber(n).id, completed: true, now: T0 });
+    expect(completedLessons(s).map((l) => l.number)).toEqual([1, 2, 3]);
+    // A later failed review does not take it away.
+    const t = lessonTargets(byNumber(2))[0];
+    s = demonstrate(s, t.kind, t.ref, byNumber(2).id, 1, 0, T0 + 10 * DAY_MS);
+    expect(completedLessons(s).map((l) => l.number)).toEqual([1, 2, 3]);
+  });
+
+  it('resets nothing while evaluating', () => {
+    let s = initialState(T0);
+    s = completeLesson(s, 2, T0);
+    const before = JSON.stringify(s);
+    completedLessons(s);
+    nextLesson(s);
+    buildSession(s, 'today', T0 + DAY_MS);
+    expect(JSON.stringify(s)).toBe(before);
   });
 });

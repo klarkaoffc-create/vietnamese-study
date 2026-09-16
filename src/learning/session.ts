@@ -28,7 +28,7 @@ import {
 import { generate, type GeneratedInstance } from './generators';
 import { isDue, isWeak, makeSrsId, sortForReview, type AutomaticityLevel, type SrsItem, type SrsKind } from './srs';
 import { mistakeSessionItems, mistakeTask, openMistakes } from './mistakes';
-import { courseProgress, isLessonComplete, lessonTargets, nextLesson, studiedLessons, type CourseProgress } from './progression';
+import { courseProgress, lessonReadyToAdvance, lessonTargets, nextLesson, studiedLessons, type CourseProgress } from './progression';
 import { inCooldown, isMastered } from './targets';
 import { type AppState } from './state';
 import { sample, shuffle } from '../utilities/random';
@@ -361,7 +361,9 @@ class Picker {
  * learner actually stopped.
  */
 export function frontierLessons(state: AppState): Lesson[] {
-  return [...lessons].sort((a, b) => a.number - b.number).filter((l) => !isLessonComplete(state, l));
+  // The advance rule, not formal completion: a lesson practised through stops
+  // supplying new material even though the learner never formally closed it.
+  return [...lessons].sort((a, b) => a.number - b.number).filter((l) => !lessonReadyToAdvance(state, l));
 }
 
 /** Unlearned targets along the frontier, nearest lesson first. */

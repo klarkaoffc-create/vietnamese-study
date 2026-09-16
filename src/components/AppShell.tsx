@@ -4,7 +4,6 @@ import { useStore } from '../learning/store';
 import { dashboardCounts } from '../learning/session';
 import { useNowForDay } from '../learning/today';
 import { useTheme } from '../learning/theme';
-import { lessonsToMarkComplete } from '../learning/progression';
 
 const NAV = [
   { to: '/', icon: '🏠', label: 'Dzisiaj', end: true },
@@ -20,7 +19,7 @@ const NAV = [
 ];
 
 export function AppShell() {
-  const { state, dispatch } = useStore();
+  const { state } = useStore();
   // Recomputed when the local calendar day rolls over, so the badges are
   // never a day stale on a tab left open overnight.
   const counts = dashboardCounts(state, useNowForDay());
@@ -29,13 +28,6 @@ export function AppShell() {
   useEffect(() => {
     window.scrollTo({ top: 0 });
   }, [location.pathname]);
-  // A lesson finished by demonstrating its targets is written down here, so
-  // completion is a permanent fact rather than something a later failed
-  // review could quietly take away.
-  useEffect(() => {
-    for (const l of lessonsToMarkComplete(state)) dispatch({ type: 'complete-lesson', lesson: l.id, completed: true });
-  }, [state, dispatch]);
-
   const current = NAV.find((n) => (n.end ? location.pathname === n.to : location.pathname.startsWith(n.to)));
   return (
     <div className="app">

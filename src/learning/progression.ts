@@ -20,10 +20,14 @@
 import { lessons } from '../data/content';
 import type { Lesson } from '../data/schema';
 import { makeSrsId } from './srs';
-import { isMastered } from './targets';
+import { isMastered, MASTERY_SUCCESSES } from './targets';
 import type { AppState } from './state';
 
-/** Share of a lesson's learning targets that must be mastered to count it done. */
+/**
+ * Share of a lesson's targets that must have been demonstrated before the
+ * course frontier moves past it. This governs WHAT TO TEACH NEXT only — it has
+ * never been, and must not be, a claim that the lesson was finished.
+ */
 export const LESSON_TARGET_SHARE = 0.8;
 
 /** Checkpoint score that counts as passing. */
@@ -41,29 +45,46 @@ export interface LessonStatus {
   lesson: Lesson;
   /** Opened at least once. */
   viewed: boolean;
-  /** Learning targets that have reached three successful demonstrations. */
+  /** Targets currently at three demonstrations and not shaky — shown to the learner. */
   mastered: number;
   total: number;
   checkpointPassed: boolean;
-  /** Explicitly finished — a passed checkpoint, or the manual toggle. */
+  /** Explicitly finished — the manual toggle, or a checkpoint that set the flag. */
   markedComplete: boolean;
-  /** Enough of the lesson's targets are mastered right now. */
+  /** Enough targets have EVER been demonstrated for the course to move on. */
   demonstrated: boolean;
+  /**
+   * FORMAL completion — what "ukończona" and the "ukończone lekcje" count
+   * mean. Explicit evidence only.
+   */
   complete: boolean;
+  /**
+   * Whether the course frontier may move past this lesson. A superset of
+   * `complete`: practising a lesson thoroughly is reason enough to start
+   * introducing the next one, but it is NOT reason to tell the learner they
+   * finished it.
+   */
+  readyToAdvance: boolean;
 }
+
+/**
+ * Has this target ever been demonstrated three times?
+ *
+ * `successes` only ever increases — a failure raises `failures` and leaves it
+ * alone — so this is monotonic, which is what keeps the frontier from walking
+ * backwards after a shaky review. `isMastered` is the stricter, weakness-aware
+ * test and stays in charge of what still gets drilled.
+ */
+const everDemonstrated = (item: { successes: number } | undefined): boolean => (item?.successes ?? 0) >= MASTERY_SUCCESSES;
 
 export function lessonStatus(state: AppState, lesson: Lesson): LessonStatus {
   const lp = state.lessons[lesson.id];
   const targets = lessonTargets(lesson);
   const mastered = targets.filter((t) => isMastered(state.srs[makeSrsId(t.kind, t.ref)])).length;
+  const proved = targets.filter((t) => everDemonstrated(state.srs[makeSrsId(t.kind, t.ref)])).length;
   const checkpointPassed = (lp?.checkpoints ?? []).some((c) => c.total > 0 && c.score / c.total >= CHECKPOINT_PASS);
   const markedComplete = !!lp?.completed;
-  // Two honest routes to "finished": pass the checkpoint (which already sets
-  // `completed`), or simply demonstrate the material — a learner who has
-  // mastered the lesson's targets in review has met the objectives and should
-  // not be held behind a quiz they never opened. Nothing here requires every
-  // last task to be repeated.
-  const demonstrated = targets.length > 0 && mastered >= Math.ceil(targets.length * LESSON_TARGET_SHARE);
+  const demonstrated = targets.length > 0 && proved >= Math.ceil(targets.length * LESSON_TARGET_SHARE);
   return {
     lesson,
     viewed: !!lp?.visited,
@@ -73,31 +94,25 @@ export function lessonStatus(state: AppState, lesson: Lesson): LessonStatus {
     markedComplete,
     demonstrated,
     /*
-     * Completion never goes backwards. `markedComplete` and `checkpointPassed`
-     * are historical facts and cannot regress; `demonstrated` can, because a
-     * target that is later failed drops out of mastery. Without the first two
-     * terms, missing one review of Bài 3 months later would un-finish the
-     * lesson and march the course back to it — which is exactly the "why am I
-     * being sent to redo old lessons" complaint. `syncLessonCompletion` below
-     * turns a demonstrated lesson into a stored one so the fact is kept.
+     * FORMAL completion needs real completion evidence, and nothing else.
+     * Inferring it from "80 % of the targets happen to be mastered" told the
+     * learner they had finished Bài 2 after a few ordinary review sessions —
+     * a small lesson needs only 10 of its 12 targets — which is not the same
+     * claim at all. Both terms here are historical facts, so this can never
+     * go backwards.
      */
-    complete: markedComplete || checkpointPassed || demonstrated,
+    complete: markedComplete || checkpointPassed,
+    // Teaching decision, not an achievement: practising a lesson thoroughly is
+    // reason enough to start introducing the next one.
+    readyToAdvance: markedComplete || checkpointPassed || demonstrated,
   };
 }
 
-/**
- * Lessons finished by demonstration but not yet written down. The app
- * dispatches `complete-lesson` for each so the achievement is permanent and a
- * later wobble in review cannot undo it.
- */
-export function lessonsToMarkComplete(state: AppState): Lesson[] {
-  return lessons.filter((l) => {
-    const st = lessonStatus(state, l);
-    return st.demonstrated && !st.markedComplete;
-  });
-}
-
+/** FORMAL completion — the definition behind "ukończone lekcje". */
 export const isLessonComplete = (state: AppState, lesson: Lesson): boolean => lessonStatus(state, lesson).complete;
+
+/** Whether the course frontier may move past this lesson. */
+export const lessonReadyToAdvance = (state: AppState, lesson: Lesson): boolean => lessonStatus(state, lesson).readyToAdvance;
 
 /**
  * THE next lesson: the earliest one that is not finished yet.
@@ -107,10 +122,12 @@ export const isLessonComplete = (state: AppState, lesson: Lesson): boolean => le
  */
 export function nextLesson(state: AppState): Lesson | null {
   const ordered = [...lessons].sort((a, b) => a.number - b.number);
-  return ordered.find((l) => !isLessonComplete(state, l)) ?? null;
+  // Frontier question, so it asks `readyToAdvance` — a thoroughly practised
+  // lesson stops supplying new material even if it was never formally closed.
+  return ordered.find((l) => !lessonReadyToAdvance(state, l)) ?? null;
 }
 
-/** Every finished lesson, earliest first. */
+/** Every FORMALLY completed lesson, earliest first. */
 export function completedLessons(state: AppState): Lesson[] {
   return [...lessons].sort((a, b) => a.number - b.number).filter((l) => isLessonComplete(state, l));
 }
@@ -121,7 +138,9 @@ export function completedLessons(state: AppState): Lesson[] {
  */
 export function studiedLessons(state: AppState): Lesson[] {
   const next = nextLesson(state);
-  const done = completedLessons(state);
+  // Everything the frontier has moved past, plus the lesson in hand. Uses the
+  // advance rule, not formal completion, so review pools are unchanged.
+  const done = [...lessons].sort((a, b) => a.number - b.number).filter((l) => lessonReadyToAdvance(state, l));
   if (!next) return done;
   return done.some((l) => l.id === next.id) ? done : [...done, next];
 }
