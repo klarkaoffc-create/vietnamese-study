@@ -1,5 +1,6 @@
 import { HashRouter, Route, Routes } from 'react-router-dom';
 import { StoreProvider } from './learning/store';
+import { TodayProvider } from './learning/today';
 import { AppShell } from './components/AppShell';
 import { DashboardPage } from './pages/DashboardPage';
 import { LessonsPage } from './pages/LessonsPage';
@@ -20,7 +21,8 @@ import { PracticePage } from './pages/PracticePage';
 export function App() {
   return (
     <StoreProvider>
-      <HashRouter>
+      <TodayProvider>
+        <HashRouter>
         <Routes>
           <Route element={<AppShell />}>
             <Route path="/" element={<DashboardPage />} />
@@ -43,7 +45,8 @@ export function App() {
             <Route path="*" element={<DashboardPage />} />
           </Route>
         </Routes>
-      </HashRouter>
+        </HashRouter>
+      </TodayProvider>
     </StoreProvider>
   );
 }

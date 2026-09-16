@@ -9,6 +9,7 @@ import { estimateCefr } from '../learning/cefr';
 import { CefrDetail, CefrStat } from '../components/CefrCard';
 import { Callout, Card, PageHeader, Pill, Progress, Stat } from '../components/ui';
 import { DAY_MS, daysBetween, formatDate, formatDateTime, startOfDay } from '../utilities/dates';
+import { useToday } from '../learning/today';
 
 export function ProgressPage() {
   const { state, dispatch } = useStore();
@@ -22,7 +23,7 @@ export function ProgressPage() {
   const grammarItems = allGrammar.map((g) => ({ g, item: state.srs[makeSrsId('grammar', g.id)] }));
   const sessionsByDay = new Map<number, number>();
   for (const s of state.sessions) sessionsByDay.set(startOfDay(s.ts), (sessionsByDay.get(startOfDay(s.ts)) ?? 0) + s.items);
-  const today = startOfDay(Date.now());
+  const today = useToday();
   const heat = Array.from({ length: 12 * 7 }, (_, i) => {
     const day = today - (12 * 7 - 1 - i) * DAY_MS;
     return { day, n: sessionsByDay.get(day) ?? 0 };

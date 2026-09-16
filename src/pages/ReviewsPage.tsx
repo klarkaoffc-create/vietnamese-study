@@ -6,10 +6,11 @@ import { phaseLabel } from '../learning/tasks';
 import { ExerciseRunner, RunnerSummaryView, type RunnerSummary } from '../exercises/ExerciseRunner';
 import { Callout, Card, PageHeader, Pill, Progress } from '../components/ui';
 import { skillScores } from '../learning/skills';
+import { useNowForDay, useToday } from '../learning/today';
 
 export function ReviewsPage() {
   const { state } = useStore();
-  const counts = dashboardCounts(state);
+  const counts = dashboardCounts(state, useNowForDay());
   const skills = skillScores(state);
   const production = skills.find((s) => s.id === 'vocab-active');
   const passive = skills.find((s) => s.id === 'vocab-passive');
@@ -74,13 +75,33 @@ export function ReviewSessionPage() {
   const [retry, setRetry] = useState<SessionItem[] | null>(null);
   const [round, setRound] = useState(0);
   const reviewMode = (REVIEW_MODES.some((m) => m.id === mode) ? mode : 'today') as ReviewMode;
-  const plan = useMemo(() => buildSession(state, reviewMode), [reviewMode]); // eslint-disable-line react-hooks/exhaustive-deps
+  const today = useToday();
+
+  /**
+   * Which calendar day this queue was built for.
+   *
+   * Crossing midnight must never yank the task the learner is mid-way through
+   * answering, so the queue is NOT rebuilt on the day change itself. The new
+   * day is adopted at the first safe moment: while the summary is showing, or
+   * when the session is empty. Any other route out of here — finishing,
+   * exiting, opening the dashboard — unmounts this page, so the next visit
+   * builds a fresh queue anyway. Counters in the nav and on the dashboard
+   * switch to the new day immediately, independently of this.
+   */
+  const [queueDay, setQueueDay] = useState(today);
+  const plan = useMemo(() => buildSession(state, reviewMode), [reviewMode, queueDay]); // eslint-disable-line react-hooks/exhaustive-deps
   const info = REVIEW_MODES.find((m) => m.id === reviewMode)!;
+
+  useEffect(() => {
+    if (today === queueDay) return;
+    if (summary || plan.items.length === 0) setQueueDay(today);
+  }, [today, queueDay, summary, plan.items.length]);
 
   useEffect(() => {
     setSummary(null);
     setRetry(null);
     setRound(0);
+    setQueueDay(today);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reviewMode]);
 

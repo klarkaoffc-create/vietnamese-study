@@ -72,7 +72,7 @@ export function TextInput({
 }: {
   value: string;
   onChange: (v: string) => void;
-  onSubmit?: () => void;
+  onSubmit?: (latest?: string) => void;
   result: GradeResult | null;
   lang?: 'vi' | 'pl';
   placeholder?: string;
@@ -80,6 +80,23 @@ export function TextInput({
   multiline?: boolean;
 }) {
   const ref = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
+  /**
+   * True while an input method editor holds an unfinished syllable.
+   *
+   * Typing Vietnamese on macOS (Telex/VNI) or any other IME leaves the word
+   * being composed as "marked text". Two things follow, and both used to
+   * break submission:
+   *
+   *  - The Enter that ends a composition belongs to the IME, not to us. It
+   *    must not be read as "Sprawdź", or the first Enter is swallowed and the
+   *    learner has to press it again.
+   *  - Some browsers do not fire `input` for marked text, only
+   *    `compositionupdate`. Without listening for that, React state lags the
+   *    box, "Sprawdź" stays disabled and the answer looks unsubmittable until
+   *    some character ends the composition — which is exactly what typing
+   *    a final "." or "?" does.
+   */
+  const composing = useRef(false);
   useEffect(() => {
     if (autoFocus && !result) ref.current?.focus();
   }, [autoFocus, result]);
@@ -105,11 +122,26 @@ export function TextInput({
     autoCorrect: 'off',
     spellCheck: false,
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.target.value),
-    onKeyDown: (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' && !e.shiftKey && onSubmit) {
-        e.preventDefault();
-        onSubmit();
-      }
+    onCompositionStart: () => {
+      composing.current = true;
+    },
+    // Keep state level with the box even mid-composition. Setting state to the
+    // value the DOM already holds means React has nothing to write back, so
+    // the composition itself is never disturbed.
+    onCompositionUpdate: (e: React.CompositionEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.currentTarget.value),
+    onCompositionEnd: (e: React.CompositionEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      composing.current = false;
+      onChange(e.currentTarget.value);
+    },
+    onKeyDown: (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      if (e.key !== 'Enter' || e.shiftKey || !onSubmit) return;
+      const native = e.nativeEvent as KeyboardEvent;
+      if (composing.current || native.isComposing || native.keyCode === 229) return;
+      e.preventDefault();
+      // Hand over what is actually in the box. State is normally identical,
+      // but a composition that ended on this very keystroke can still be one
+      // React render behind, and grading must never see a stale answer.
+      onSubmit(e.currentTarget.value);
     },
   };
   return (
@@ -150,7 +182,7 @@ export function FillBlankInput({
   bank?: string[];
   value: string;
   onChange: (v: string) => void;
-  onSubmit?: () => void;
+  onSubmit?: (latest?: string) => void;
   result: GradeResult | null;
 }) {
   const [before, after] = sentence.split('___');

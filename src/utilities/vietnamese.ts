@@ -7,22 +7,23 @@
 /**
  * Typography that never decides whether a Vietnamese answer is right.
  *
- * Sentence-final marks are the important part of this list — `.` `!` `?` `…`
- * and any run or mixture of them (`!!`, `?!`, `...`) — because a learner
- * writing "Bạn khỏe không" must score exactly the same as one writing
- * "Bạn khỏe không?". Commas and the remaining marks are folded too: they
- * separate, they do not carry meaning in the sentences this course teaches.
+ * `\p{P}` is every Unicode punctuation mark, so this covers far more than the
+ * handful a hand-written class would: sentence-final `.` `!` `?` `…` and any
+ * run or mixture of them (`!!`, `?!`, `...`), plus commas, colons, semicolons,
+ * every quote and bracket style, dashes, slashes and their non-Latin
+ * equivalents. A learner writing "Bạn khỏe không" must score exactly the same
+ * as one writing "Bạn, khỏe không?!".
  *
- * Each run is replaced by a SPACE rather than deleted, so "đi thẳng,sau đó"
- * still tokenises into words; the following whitespace collapse then makes
+ * Each run becomes a SPACE rather than vanishing, so "đi thẳng,sau đó" still
+ * tokenises into words; the whitespace collapse that follows then makes the
  * comma-ful and comma-less versions identical.
  *
  * The rule is: IGNORE TYPOGRAPHY, PRESERVE LANGUAGE. Nothing here touches a
- * tone mark, a vowel diacritic (ă â ê ô ơ ư) or đ/d — those are letters, and
+ * tone mark, a vowel diacritic (ă â ê ô ơ ư) or đ/d — those are letters.
  * `stripDiacritics` is the only function that removes them, used solely to
  * detect the "almost right" case.
  */
-const PUNCTUATION = /[.,!?;:"'„”“‘’…()\[\]{}«»\-–—/\\]+/g;
+const PUNCTUATION = /\p{P}+/gu;
 
 /** Unicode NFC, trim, collapse whitespace. Keeps tones and case. */
 export function normalizeVietnamese(input: string): string {
@@ -30,11 +31,18 @@ export function normalizeVietnamese(input: string): string {
 }
 
 /**
- * The form every answer comparison runs on: NFC, lower-case, punctuation
- * folded to spaces, whitespace collapsed, trimmed. Tones and vowel
- * diacritics are deliberately preserved.
+ * THE canonical normalisation for natural-language answers. Every grader that
+ * compares Vietnamese (or Polish) prose goes through this, directly or via
+ * `matchVietnamese` / `matchPatterns` / `editDistance`.
+ *
+ *   1. Unicode NFC          — "ế" typed as e+◌̂+◌́ equals the precomposed "ế"
+ *   2. lower-case           — capitalisation is typography, not language
+ *   3. punctuation → space  — Unicode-aware, see PUNCTUATION above
+ *   4. whitespace collapsed and trimmed
+ *
+ * Tones and vowel diacritics survive untouched, so "phở" ≠ "pho".
  */
-export function comparisonForm(input: string): string {
+export function normalizeNaturalLanguageAnswer(input: string): string {
   return input
     .normalize('NFC')
     .toLowerCase()
@@ -42,6 +50,26 @@ export function comparisonForm(input: string): string {
     .replace(/\s+/g, ' ')
     .trim();
 }
+
+/**
+ * For answers whose punctuation is part of the data rather than prose —
+ * a phone number, a slash-separated date, a clock time. Case and surrounding
+ * whitespace are still forgiven; separators are not.
+ *
+ * No exercise in Bài 1–12 needs this today: the number, date, time and phone
+ * generators all accept Vietnamese word forms (and bare digit strings), where
+ * separators carry no meaning. It exists so that a future structured task has
+ * somewhere correct to go instead of loosening the prose rule for everyone.
+ */
+export function normalizeStructuredAnswer(input: string): string {
+  return input.normalize('NFC').toLowerCase().replace(/\s+/g, ' ').trim();
+}
+
+/**
+ * Historical name for {@link normalizeNaturalLanguageAnswer}, kept because it
+ * is used across grading, task building and the page-level search boxes.
+ */
+export const comparisonForm = normalizeNaturalLanguageAnswer;
 
 /**
  * Remove all tone marks and vowel diacritics; đ becomes d. Used only for the

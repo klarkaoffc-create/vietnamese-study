@@ -4,7 +4,7 @@ import { grade, gradeExercise, gradeGenerated, type UserAnswer } from '../src/le
 import { actionsForTask } from '../src/learning/record';
 import { dialogueTask, grammarTask, scenarioTask, vocabActiveTask } from '../src/learning/tasks';
 import { generate } from '../src/learning/generators';
-import { comparisonForm, differsOnlyInTypography, matchVietnamese } from '../src/utilities/vietnamese';
+import { comparisonForm, differsOnlyInTypography, matchVietnamese, normalizeNaturalLanguageAnswer, normalizeStructuredAnswer } from '../src/utilities/vietnamese';
 import { GeneratorKindSchema, type Exercise } from '../src/data/schema';
 import type { AutomaticityLevel } from '../src/learning/srs';
 
@@ -43,6 +43,37 @@ describe('sentence-final punctuation never decides correctness', () => {
   it('accepts every ending for „Bạn khỏe không?”', () => {
     const ex = typed(['Bạn khỏe không?']);
     for (const v of ['Bạn khỏe không', 'Bạn khỏe không?', 'Bạn khỏe không!', 'Bạn khỏe không...', 'Bạn khỏe không…', 'Bạn khỏe không?!']) {
+      expect(outcomeOf(ex, v), v).toBe('correct');
+    }
+  });
+
+  it('accepts every case and punctuation variant the learner listed', () => {
+    const ex = typed(['Mình thích học tiếng Việt.']);
+    for (const v of [
+      'Mình thích học tiếng Việt',
+      'mình thích học tiếng việt',
+      'MÌNH THÍCH HỌC TIẾNG VIỆT',
+      'Mình thích học tiếng Việt.',
+      'Mình thích học tiếng Việt!',
+      'Mình thích học tiếng Việt?',
+      'Mình, thích học tiếng Việt',
+      'Mình thích học tiếng Việt...',
+      'Mình thích học tiếng Việt!!!',
+      '  Mình   thích   học tiếng Việt',
+    ]) {
+      expect(outcomeOf(ex, v), v).toBe('correct');
+    }
+
+    const q = typed(['Bạn khỏe không?']);
+    for (const v of ['Bạn khỏe không', 'bạn khỏe không', 'Bạn khỏe không?', 'Bạn khỏe không.', 'Bạn, khỏe không?!', 'Bạn khỏe không!!!']) {
+      expect(outcomeOf(q, v), v).toBe('correct');
+    }
+  });
+
+  it('ignores punctuation the old hand-written class never listed', () => {
+    const ex = typed(['Bạn khỏe không?']);
+    // Unicode-aware now: full-width and non-Latin marks fold too.
+    for (const v of ['Bạn khỏe không。', 'Bạn khỏe không！', '¿Bạn khỏe không?', '«Bạn khỏe không»', 'Bạn — khỏe không']) {
       expect(outcomeOf(ex, v), v).toBe('correct');
     }
   });
@@ -222,6 +253,25 @@ describe('the rule holds across every exercise in the course', () => {
 /* ------------------------------------------------------------------ */
 /* The primitive itself                                                */
 /* ------------------------------------------------------------------ */
+
+describe('structured answers keep their separators', () => {
+  it('has a stricter normaliser available for data-shaped answers', () => {
+    // Prose folds punctuation; a phone number or a slash date must not.
+    expect(normalizeNaturalLanguageAnswer('5/3/2026')).toBe(normalizeNaturalLanguageAnswer('5.3.2026'));
+    expect(normalizeStructuredAnswer('5/3/2026')).not.toBe(normalizeStructuredAnswer('5.3.2026'));
+    expect(normalizeStructuredAnswer('  0912 345 678 ')).toBe('0912 345 678');
+  });
+
+  it('still grades the number, date, time and phone drills correctly', () => {
+    for (const kind of ['number', 'phone', 'age', 'year', 'date', 'weekday', 'month', 'time'] as const) {
+      for (const inst of generate(kind, {}, 8, 5)) {
+        const model = inst.answers?.[0];
+        if (!model || inst.options) continue;
+        expect(gradeGenerated(inst, { kind: 'text', value: model }).outcome, `${kind}: ${model}`).toBe('correct');
+      }
+    }
+  });
+});
 
 describe('comparisonForm', () => {
   it('folds typography and keeps language', () => {

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useStore } from '../learning/store';
 import { blocks, lessonById, lessonByNumber, lessons, lessonLabel, vocabById } from '../data/content';
 import { buildSession, currentLesson, dashboardCounts, REVIEW_MODES } from '../learning/session';
+import { useNowForDay, useToday } from '../learning/today';
 import { phaseLabel } from '../learning/tasks';
 import { completedLessonNumbers, unresolvedMistakes } from '../learning/state';
 import { isWeak, mastery } from '../learning/srs';
@@ -24,7 +25,9 @@ function streakDays(sessionTs: number[], now = Date.now()): number {
 
 export function DashboardPage() {
   const { state } = useStore();
-  const counts = dashboardCounts(state);
+  const today = useToday();
+  const now = useNowForDay();
+  const counts = dashboardCounts(state, now);
   const cur = currentLesson(state);
   const lesson = lessonByNumber.get(cur) ?? lessons[0];
   const completed = completedLessonNumbers(state, (id) => lessonById.get(id)?.number);
@@ -39,11 +42,12 @@ export function DashboardPage() {
     .filter((i) => isWeak(i) && (i.kind !== 'vocab-active' || vocabById.has(i.ref)))
     .sort((a, b) => mastery(a) - mastery(b))
     .slice(0, 5);
-  const streak = streakDays(state.sessions.map((s) => s.ts));
-  const todayStudied = state.sessions.filter((s) => daysBetween(s.ts, Date.now()) === 0).reduce((a, s) => a + s.items, 0);
+  const streak = streakDays(state.sessions.map((s) => s.ts), now);
+  const todayStudied = state.sessions.filter((s) => daysBetween(s.ts, now) === 0).reduce((a, s) => a + s.items, 0);
 
   // Preview of what today's session will actually contain.
-  const plan = useMemo(() => buildSession(state, 'today'), [state]);
+  // `today` is a dependency so the preview follows the calendar day.
+  const plan = useMemo(() => buildSession(state, 'today', now), [state, today]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="container">

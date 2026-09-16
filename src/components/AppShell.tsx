@@ -2,6 +2,8 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useStore } from '../learning/store';
 import { dashboardCounts } from '../learning/session';
+import { useNowForDay } from '../learning/today';
+import { useTheme } from '../learning/theme';
 
 const NAV = [
   { to: '/', icon: '🏠', label: 'Dzisiaj', end: true },
@@ -18,7 +20,10 @@ const NAV = [
 
 export function AppShell() {
   const { state } = useStore();
-  const counts = dashboardCounts(state);
+  // Recomputed when the local calendar day rolls over, so the badges are
+  // never a day stale on a tab left open overnight.
+  const counts = dashboardCounts(state, useNowForDay());
+  const [theme, setTheme] = useTheme();
   const location = useLocation();
   useEffect(() => {
     window.scrollTo({ top: 0 });
@@ -48,6 +53,10 @@ export function AppShell() {
             );
           })}
         </ul>
+        <div className="theme-toggle" role="group" aria-label="Motyw kolorystyczny">
+          <button type="button" aria-pressed={theme === 'dark'} onClick={() => setTheme('dark')}>🌙 Ciemny</button>
+          <button type="button" aria-pressed={theme === 'light'} onClick={() => setTheme('light')}>☀️ Jasny</button>
+        </div>
       </nav>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div className="mobile-topbar">

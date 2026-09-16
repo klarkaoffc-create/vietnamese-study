@@ -34,7 +34,7 @@ export function ExerciseView({
   answer: UserAnswer | null;
   onAnswer: (a: UserAnswer) => void;
   result: GradeResult | null;
-  onSubmit?: () => void;
+  onSubmit?: (latest?: string) => void;
   optionOrder?: number[];
   showMeta?: boolean;
 }) {
@@ -193,7 +193,7 @@ function DialogueCompletionView({
   text: string;
   setText: (v: string) => void;
   result: GradeResult | null;
-  onSubmit?: () => void;
+  onSubmit?: (latest?: string) => void;
   meta: React.ReactNode;
 }) {
   const d = dialogueById.get(ex.dialogueId);
@@ -239,7 +239,7 @@ function GeneratedView({
   answer: UserAnswer | null;
   onAnswer: (a: UserAnswer) => void;
   result: GradeResult | null;
-  onSubmit?: () => void;
+  onSubmit?: (latest?: string) => void;
   optionOrder?: number[];
 }) {
   const text = answer?.kind === 'text' ? answer.value : '';

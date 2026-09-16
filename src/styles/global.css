@@ -1,57 +1,101 @@
 /* ------------------------------------------------------------------ */
 /* Design tokens                                                        */
 /* ------------------------------------------------------------------ */
+/*
+ * Dark is the default theme: `:root` carries the dark palette outright rather
+ * than hiding behind `prefers-color-scheme`, so the app is dark on a machine
+ * set to light and there is no first-paint flash. Light is opt-in through
+ * `data-theme="light"` on <html>, written by the toggle in the sidebar.
+ *
+ * The palette is a cool near-neutral — greys carrying a trace of blue-green —
+ * layered over four surfaces so panels separate by luminance instead of heavy
+ * borders. Accents are desaturated on purpose: a calm learning tool, not a
+ * dashboard. Nothing is pure #000 or pure #fff.
+ *
+ * Contrast against --bg (WCAG AA needs 4.5:1 for body text, 3:1 for UI):
+ *   --text  15.1:1    --muted 7.3:1    --primary 7.7:1
+ *   --ok     8.6:1    --warn  9.2:1    --bad     7.0:1
+ * Button labels use --on-primary / --on-accent: dark ink on the light accent
+ * fills, which reads at 7.6:1 where white would have managed only 2.5:1.
+ */
 :root {
-  --bg: #f5f4ef;
-  --surface: #ffffff;
-  --surface-2: #f0efe8;
-  --border: #e2e0d6;
-  --text: #1c2421;
-  --muted: #667069;
-  --primary: #1f6f5f;
-  --primary-strong: #175447;
-  --primary-soft: #dcefe9;
-  --accent: #c8845a;
-  --accent-soft: #f6e6da;
-  --ok: #2f8f5b;
-  --ok-soft: #e0f3e7;
-  --warn: #b5811f;
-  --warn-soft: #fbf0d6;
-  --bad: #b8474b;
-  --bad-soft: #f8e1e2;
-  --info-soft: #e5ecf7;
+  --bg: #0f1214;
+  --surface: #161a1d;
+  --surface-2: #1c2124;
+  --surface-3: #232a2e;
+  --border: #272e33;
+  --border-strong: #37424a;
+  --text: #e6eaec;
+  --muted: #98a3aa;
+  --primary: #4fb3a0;
+  --primary-strong: #74c9b8;
+  --primary-soft: #14302c;
+  --on-primary: #06110f;
+  --accent: #d79b74;
+  --accent-soft: #33261e;
+  --on-accent: #1b0f07;
+  --ok: #5fbf8a;
+  --ok-soft: #14291f;
+  --warn: #d8ab57;
+  --warn-soft: #2e2617;
+  --bad: #e08386;
+  --bad-soft: #301f21;
+  --info-soft: #1b2430;
+  --focus: #7fd4c2;
+  --heat-0: #191e21;
+  --heat-1: #1f4039;
+  --heat-2: #2c6a5c;
+  --heat-3: #3f9d85;
+  --heat-4: #74c9b8;
   --radius: 14px;
   --radius-sm: 9px;
-  --shadow: 0 1px 2px rgba(20, 30, 26, 0.05), 0 6px 20px rgba(20, 30, 26, 0.06);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.35);
   --font: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   --font-vi: "Inter", "Segoe UI", system-ui, -apple-system, "Noto Sans", "Arial Unicode MS", sans-serif;
   --nav-w: 232px;
-  color-scheme: light;
+  color-scheme: dark;
+
+  /* Aliases under the conventional names. Same values, so either spelling
+     works in new code without a sweeping rename of the existing rules. */
+  --surface-elevated: var(--surface-3);
+  --text-primary: var(--text);
+  --text-secondary: var(--muted);
+  --success: var(--ok);
+  --warning: var(--warn);
+  --danger: var(--bad);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #14191a;
-    --surface: #1d2426;
-    --surface-2: #232c2e;
-    --border: #2f3a3c;
-    --text: #e8ebe7;
-    --muted: #9aa5a0;
-    --primary: #5cbba3;
-    --primary-strong: #86d3c0;
-    --primary-soft: #1f3b35;
-    --accent: #e0a07a;
-    --accent-soft: #3d2c22;
-    --ok: #6fcf97;
-    --ok-soft: #1f3a2b;
-    --warn: #e2b45a;
-    --warn-soft: #3d3220;
-    --bad: #ef8a8d;
-    --bad-soft: #3f2426;
-    --info-soft: #253040;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.25);
-    color-scheme: dark;
-  }
+:root[data-theme='light'] {
+  --bg: #f5f4ef;
+  --surface: #ffffff;
+  --surface-2: #f0efe8;
+  --surface-3: #e9e8df;
+  --border: #e2e0d6;
+  --border-strong: #cbc8ba;
+  --text: #1c2421;
+  --muted: #5d665f;
+  --primary: #1f6f5f;
+  --primary-strong: #175447;
+  --primary-soft: #dcefe9;
+  --on-primary: #ffffff;
+  --accent: #a75f32;
+  --accent-soft: #f6e6da;
+  --on-accent: #ffffff;
+  --ok: #24784a;
+  --ok-soft: #e0f3e7;
+  --warn: #8a6113;
+  --warn-soft: #fbf0d6;
+  --bad: #a8383c;
+  --bad-soft: #f8e1e2;
+  --info-soft: #e5ecf7;
+  --focus: #1f6f5f;
+  --heat-0: #e7e6dd;
+  --heat-1: #bfe3d6;
+  --heat-2: #7fc7ae;
+  --heat-3: #3f9d80;
+  --heat-4: #175447;
+  --shadow: 0 1px 2px rgba(20, 30, 26, 0.05), 0 6px 20px rgba(20, 30, 26, 0.06);
+  color-scheme: light;
 }
 
 * { box-sizing: border-box; }
@@ -95,7 +139,7 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 .nav-brand { display: flex; align-items: center; gap: 0.6rem; padding: 0.25rem 0.5rem 1rem; }
 .nav-brand .logo {
   width: 36px; height: 36px; border-radius: 10px;
-  background: var(--primary); color: #fff;
+  background: var(--primary); color: var(--on-primary);
   display: grid; place-items: center; font-weight: 700; font-size: 1.1rem;
 }
 .nav-brand .name { font-weight: 700; line-height: 1.1; }
@@ -188,10 +232,11 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 }
 .btn:hover { background: var(--surface-2); text-decoration: none; }
 .btn:active { transform: translateY(1px); }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+.btn:disabled { opacity: 0.65; cursor: not-allowed; color: var(--muted); border-style: dashed; }
+.btn.primary { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
 .btn.primary:hover { background: var(--primary-strong); border-color: var(--primary-strong); }
-.btn.accent { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.primary:disabled, .btn.primary[disabled] { background: var(--surface-3); border-color: var(--border-strong); color: var(--muted); }
+.btn.accent { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .btn.ghost { background: transparent; }
 .btn.danger { color: var(--bad); border-color: var(--bad); }
 .btn.big { padding: 0.85rem 1.4rem; font-size: 1.05rem; border-radius: var(--radius); }
@@ -266,13 +311,15 @@ h4.cefr-heading { margin: 1rem 0 0.4rem; font-size: 0.9rem; }
 
 input.text, textarea.text {
   width: 100%; padding: 0.7rem 0.85rem; border-radius: var(--radius-sm);
-  border: 1px solid var(--border); background: var(--surface); font-size: 1.05rem;
+  border: 1px solid var(--border-strong); background: var(--surface-3); color: var(--text);
+  font-size: 1.1rem; line-height: 1.5;
 }
-input.text:focus, textarea.text:focus { outline: 2px solid var(--primary); outline-offset: 1px; border-color: var(--primary); }
+input.text::placeholder, textarea.text::placeholder { color: var(--muted); opacity: 1; }
+input.text:focus, textarea.text:focus { outline: 2px solid var(--focus); outline-offset: 1px; border-color: var(--focus); background: var(--surface-2); }
 input.text.ok { border-color: var(--ok); background: var(--ok-soft); }
 input.text.tone { border-color: var(--warn); background: var(--warn-soft); }
 input.text.bad { border-color: var(--bad); background: var(--bad-soft); }
-select.select { padding: 0.5rem 0.7rem; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface); }
+select.select { padding: 0.5rem 0.7rem; border-radius: var(--radius-sm); border: 1px solid var(--border-strong); background: var(--surface-3); color: var(--text); }
 
 .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .chip {
@@ -316,8 +363,8 @@ details.disclosure[open] summary { margin-bottom: 0.5rem; }
 .option.wrong { border-color: var(--bad); background: var(--bad-soft); }
 .option:disabled { cursor: default; }
 .option .letter { width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--surface-2); display: grid; place-items: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
-.feedback { margin-top: 1rem; padding: 0.8rem 1rem; border-radius: var(--radius-sm); font-size: 0.95rem; }
-.feedback.correct { background: var(--ok-soft); color: var(--ok); }
+.feedback { margin-top: 1rem; padding: 0.8rem 1rem; border-radius: var(--radius-sm); font-size: 0.95rem; border-left: 3px solid transparent; }
+.feedback.correct { background: var(--ok-soft); color: var(--ok); border-left-color: var(--ok); }
 .feedback.tone, .feedback.partial { background: var(--warn-soft); color: var(--warn); }
 .feedback.wrong { background: var(--bad-soft); color: var(--bad); }
 .feedback .expl { display: block; color: var(--text); margin-top: 0.35rem; font-size: 0.9rem; }
@@ -380,8 +427,8 @@ section.lesson-section { scroll-margin-top: 1rem; }
 .vocab-item .pl { color: var(--muted); font-size: 0.9rem; }
 .original-block { white-space: pre-wrap; font-size: 0.93rem; }
 .heatmap { display: flex; flex-wrap: wrap; gap: 3px; }
-.heatmap i { width: 12px; height: 12px; border-radius: 3px; background: var(--surface-2); display: block; }
-.heatmap i.l1 { background: #bfe3d6; } .heatmap i.l2 { background: #7fc7ae; } .heatmap i.l3 { background: #3f9d80; } .heatmap i.l4 { background: var(--primary-strong); }
+.heatmap i { width: 12px; height: 12px; border-radius: 3px; background: var(--heat-0); display: block; }
+.heatmap i.l1 { background: var(--heat-1); } .heatmap i.l2 { background: var(--heat-2); } .heatmap i.l3 { background: var(--heat-3); } .heatmap i.l4 { background: var(--heat-4); }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .fade-in { animation: fade 0.18s ease; }
 @keyframes fade { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
@@ -396,3 +443,32 @@ section.lesson-section { scroll-margin-top: 1rem; }
 }
 .speak-target .vi.big { display: block; margin-bottom: 0.25rem; }
 .speak-target audio { width: 100%; margin-top: 0.5rem; }
+
+/* ------------------------------------------------------------------ */
+/* Focus, selection and theme control                                   */
+/* ------------------------------------------------------------------ */
+/* One visible ring for every keyboard user, on every interactive thing.
+   Pointer users never see it, so nothing looks boxed-in during normal use. */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+::selection { background: var(--primary-soft); color: var(--text); }
+
+.theme-toggle {
+  display: flex; gap: 0.25rem; margin-top: 0.75rem; padding: 0.25rem;
+  border: 1px solid var(--border); border-radius: 999px; background: var(--surface-2);
+}
+.theme-toggle button {
+  flex: 1; padding: 0.3rem 0.5rem; border: 0; border-radius: 999px; cursor: pointer;
+  background: none; color: var(--muted); font-size: 0.78rem; font-weight: 600;
+}
+.theme-toggle button[aria-pressed='true'] { background: var(--surface-3); color: var(--text); }
+@media (max-width: 860px) { .theme-toggle { display: none; } }

@@ -6,6 +6,26 @@ export function startOfDay(ts: number): number {
   return d.getTime();
 }
 
+/** Same LOCAL calendar day? Never compares UTC dates. */
+export function isSameLocalDay(a: number, b: number): boolean {
+  return startOfDay(a) === startOfDay(b);
+}
+
+/**
+ * Milliseconds from `now` until the next local midnight.
+ *
+ * Built by advancing the calendar date and zeroing the clock rather than by
+ * adding 24 h, so days that are not 24 h long — the DST switches — still land
+ * exactly on midnight. Always at least 1 ms, so a caller scheduling a timeout
+ * can never busy-loop on the boundary itself.
+ */
+export function msUntilNextLocalMidnight(now = Date.now()): number {
+  const d = new Date(now);
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + 1);
+  return Math.max(1, d.getTime() - now);
+}
+
 export function daysBetween(a: number, b: number): number {
   return Math.round((startOfDay(b) - startOfDay(a)) / DAY_MS);
 }

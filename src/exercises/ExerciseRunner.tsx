@@ -152,10 +152,14 @@ export function ExerciseRunner({
   );
 
   const submit = useCallback(
-    (forceEmpty = false) => {
+    (forceEmpty = false, latestText?: string) => {
       if (!task || !item || result) return;
-      const a: UserAnswer = forceEmpty ? { kind: 'text', value: '' } : answer!;
-      if (!forceEmpty && !answerReady(answer)) return;
+      // `latestText` is what the answer box actually holds. An IME composition
+      // that ended on the submitting keystroke can leave React state a render
+      // behind, so the typed value wins over state whenever it is offered.
+      const a: UserAnswer = forceEmpty ? { kind: 'text', value: '' } : latestText !== undefined ? { kind: 'text', value: latestText } : answer!;
+      if (!forceEmpty && !answerReady(a)) return;
+      if (latestText !== undefined) setAnswer(a);
       const graded = gradeTask(
         task.kind === 'exercise' ? { source: 'exercise', exercise: task.exercise } : { source: 'generated', instance: task.instance },
         a,
@@ -183,6 +187,9 @@ export function ExerciseRunner({
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (!item || speaking) return;
+      // An Enter that closes an IME composition belongs to the input method,
+      // not to the exercise; grading on it would submit a half-typed syllable.
+      if (e.isComposing || e.keyCode === 229) return;
       if (e.key === 'Enter') {
         // The focused input handles its own Enter (and calls preventDefault).
         // Without this guard the same keystroke is processed twice: the input
@@ -240,7 +247,7 @@ export function ExerciseRunner({
         ) : (
           task && (
             <div className="fade-in">
-              <ExerciseView task={task} answer={answer} onAnswer={setAnswer} result={result} onSubmit={() => submit()} />
+              <ExerciseView task={task} answer={answer} onAnswer={setAnswer} result={result} onSubmit={(latest) => submit(false, latest)} />
               {result && (
                 <div className={`feedback ${result.outcome}`}>
                   <strong>{result.feedback}</strong>
