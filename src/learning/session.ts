@@ -11,7 +11,7 @@
  * (`tasks.ts`), which picks a task shape matching the automaticity level the
  * ability has reached.
  */
-import type { Exercise } from '../data/schema';
+import type { Exercise, Lesson } from '../data/schema';
 import {
   allVocab,
   audioByTarget,
@@ -19,7 +19,6 @@ import {
   exercisesForGrammar,
   exercisesForLessons,
   grammarById,
-  lessonById,
   lessons,
   scenarioById,
   vocabById,
@@ -29,6 +28,8 @@ import {
 import { generate, type GeneratedInstance } from './generators';
 import { isDue, isWeak, makeSrsId, sortForReview, type AutomaticityLevel, type SrsItem, type SrsKind } from './srs';
 import { mistakeSessionItems, mistakeTask, openMistakes } from './mistakes';
+import { courseProgress, lessonTargets, nextLesson, studiedLessons, type CourseProgress } from './progression';
+import { inCooldown, isMastered } from './targets';
 import { type AppState } from './state';
 import { sample, shuffle } from '../utilities/random';
 import {
@@ -71,20 +72,22 @@ export const REVIEW_MODES: { id: ReviewMode; label: string; description: string;
 /* Where the learner is                                                */
 /* ------------------------------------------------------------------ */
 
+/**
+ * The lesson the learner is working on, as a number.
+ *
+ * Delegates to `progression.nextLesson` so every surface agrees. It used to
+ * be "the highest lesson ever opened", which let a single curious visit to
+ * Bài 12 declare the whole course studied.
+ */
 export function currentLesson(state: AppState): number {
-  let best = 0;
-  for (const [id, p] of Object.entries(state.lessons)) {
-    const l = lessonById.get(id);
-    if (!l) continue;
-    if (p.completed || p.visited) best = Math.max(best, p.completed ? l.number + 1 : l.number);
-  }
+  const next = nextLesson(state);
   const maxLesson = lessons.length ? Math.max(...lessons.map((l) => l.number)) : 1;
-  return Math.max(1, Math.min(best || 1, maxLesson));
+  return next ? next.number : maxLesson;
 }
 
+/** Lessons whose material may be reviewed: completed ones plus the current one. */
 export function studiedLessonNumbers(state: AppState): number[] {
-  const cur = currentLesson(state);
-  return lessons.map((l) => l.number).filter((n) => n <= cur);
+  return studiedLessons(state).map((l) => l.number);
 }
 
 /* ------------------------------------------------------------------ */
@@ -291,6 +294,133 @@ function freePhase(state: AppState, pools: ReturnType<typeof poolsFor>, limit: n
 }
 
 /* ------------------------------------------------------------------ */
+/* Course-first daily plan                                              */
+/* ------------------------------------------------------------------ */
+
+/** How many tasks a daily session aims for. */
+export const DAILY_TASKS = 12;
+/**
+ * The most review a normal daily session may contain, however big the backlog.
+ * A 200-item backlog must not turn the course into a treadmill: the rest
+ * simply waits for tomorrow. Roughly two thirds of the session stays forward
+ * material, which is the proportion the course is meant to feel like.
+ */
+export const DAILY_REVIEW_CAP = 3;
+export const DAILY_MISTAKE_CAP = 1;
+
+/** The scheduled ability a session item is practising, for de-duplication. */
+function refOf(item: SessionItem): string {
+  if (item.kind === 'task') return `${item.task.srsKind}:${item.task.srsRef}`;
+  if (item.kind === 'exercise') return `exercise:${item.exercise.id}`;
+  return `generated:${item.instance.generator}`;
+}
+
+/**
+ * Keeps one session free of repeats and, through the cooldown, keeps
+ * consecutive sessions from re-serving what was just answered.
+ */
+class Picker {
+  private readonly used = new Set<string>();
+  constructor(private readonly state: AppState, private readonly now: number) {}
+
+  /** Already in this session? */
+  taken(ref: string): boolean {
+    return this.used.has(ref);
+  }
+
+  /** Answered within the cooldown window, so not worth showing again yet. */
+  resting(kind: SrsKind, ref: string): boolean {
+    return inCooldown(this.state.srs[makeSrsId(kind, ref)], this.now);
+  }
+
+  /** Accept the items that are not duplicates, recording what was taken. */
+  accept(items: SessionItem[], limit: number): SessionItem[] {
+    const out: SessionItem[] = [];
+    for (const it of items) {
+      if (out.length >= limit) break;
+      const ref = refOf(it);
+      if (this.used.has(ref)) continue;
+      this.used.add(ref);
+      out.push(it);
+    }
+    return out;
+  }
+}
+
+/**
+ * The next lesson's own material — the forward half of the course.
+ *
+ * Targets that have already had their three demonstrations are skipped: they
+ * are finished for now. Never-seen targets come first, then part-learned ones,
+ * so a session opens on genuinely new ground rather than re-testing what was
+ * just covered.
+ */
+function newMaterialPhase(state: AppState, lesson: Lesson, limit: number, picker: Picker): SessionItem[] {
+  const targets = lessonTargets(lesson)
+    .filter((t) => !isMastered(state.srs[makeSrsId(t.kind, t.ref)]))
+    .filter((t) => !picker.resting(t.kind, t.ref))
+    .map((t) => ({ ...t, item: state.srs[makeSrsId(t.kind, t.ref)] }))
+    .sort((a, b) => (a.item?.successes ?? -1) - (b.item?.successes ?? -1));
+
+  const built: SessionItem[] = [];
+  // Alternate vocabulary and grammar so a lesson's session is not one long
+  // word drill followed by one long grammar drill.
+  const vocabQ = targets.filter((t) => t.kind === 'vocab-active');
+  const grammarQ = targets.filter((t) => t.kind === 'grammar');
+  for (let i = 0; built.length < limit * 2 && (i < vocabQ.length || i < grammarQ.length); i++) {
+    for (const t of [vocabQ[i], grammarQ[i]]) {
+      if (!t) continue;
+      const level = levelOf(t.item);
+      const task =
+        t.kind === 'vocab-active'
+          ? (() => {
+              const v = vocabById.get(t.ref);
+              return v ? vocabActiveTask(v, level, 'warmup') : null;
+            })()
+          : (() => {
+              const g = grammarById.get(t.ref);
+              return g ? grammarTask(g, level, 'grammar') : null;
+            })();
+      if (task) built.push({ kind: 'task', task });
+    }
+  }
+
+  // Round the lesson out with its communicative material once the targets run
+  // short, so new lessons that are mostly mastered still produce a session.
+  const accepted = picker.accept(built, limit);
+  if (accepted.length < limit) {
+    const pools = poolsFor([lesson.number]);
+    const extra: SessionItem[] = [
+      ...sample(pools.scenarios, limit).map((sc) => ({ kind: 'task' as const, task: scenarioTask(sc, levelOf(state.srs[makeSrsId('sentence', sc.id)]), 'free') })),
+      ...asItems(
+        sample(pools.dialogues, limit).map(({ dialogue, lineIndex }) =>
+          dialogueTask(dialogue, lineIndex, levelOf(state.srs[makeSrsId('dialogue', `${dialogue.id}#${lineIndex}`)]), 'conversation'),
+        ),
+      ),
+    ];
+    accepted.push(...picker.accept(extra, limit - accepted.length));
+  }
+  return accepted;
+}
+
+/**
+ * Supportive review: only what is genuinely due, capped, cooled down and
+ * de-duplicated against the rest of the session.
+ */
+function reviewPhase(state: AppState, limit: number, now: number, picker: Picker): SessionItem[] {
+  const due = dueItems(state, ['vocab-active', 'grammar', 'sentence', 'dialogue'], now).filter((i) => !inCooldown(i, now));
+  const built = asItems(due.map((i) => taskForDueItem(i, 'retrieval')));
+  return picker.accept(built, limit);
+}
+
+export interface DailyPlan extends SessionPlan {
+  course: CourseProgress;
+  /** Tasks drawn from the lesson currently being learned. */
+  newCount: number;
+  reviewCount: number;
+}
+
+/* ------------------------------------------------------------------ */
 /* Session assembly                                                     */
 /* ------------------------------------------------------------------ */
 
@@ -345,30 +475,48 @@ function summarise(mode: ReviewMode, items: SessionItem[]): SessionPlan {
   };
 }
 
-export function buildSession(state: AppState, mode: ReviewMode, now = Date.now()): SessionPlan {
+export function buildSession(state: AppState, mode: ReviewMode, now = Date.now()): SessionPlan | DailyPlan {
   const studied = studiedLessonNumbers(state);
   const pools = poolsFor(studied);
 
   switch (mode) {
     case 'today': {
-      // Daily workout, ~12 tasks, mixed roughly to the intended proportions:
-      // 25% PL→VN production, 20% contextual vocabulary, 20% grammar in
-      // sentences, 15% dialogue, 10% mistakes, 10% freer production, plus a
-      // spoken task when there is something worth saying aloud.
-      const items = [
-        ...contextVocabPhase(state, pools, 2),      // ~20% contextual vocabulary
-        ...retrievalPhase(state, pools, 3, now),    // ~25% PL → VN production
-        ...grammarPhase(state, pools, 2, now),      // ~20% grammar in use
-        ...conversationPhase(state, pools, 2, now), // ~15% dialogue response
-        ...mistakesPhase(state, 1),                 // ~10% old mistakes
-        ...listeningPhase(state, pools, 1),         // only when audio exists
-        ...speakingPhase(state, pools, 1),          // spoken, never first
-        ...freePhase(state, pools, 1),              // ~10% freer production
-      ];
-      return summarise(mode, interleave(items));
+      /*
+       * A course session, not a review queue. Forward material leads; review
+       * supports it and is capped so a backlog can never crowd it out.
+       *
+       *   ~8 tasks   the lesson currently being learned (skipping targets that
+       *              already have their three demonstrations)
+       *   ≤3 tasks   genuinely due review, cooled down and de-duplicated
+       *   ≤1 task    a recent mistake
+       *
+       * Once every lesson is finished there is no forward material left, and
+       * only then does the session become review-shaped.
+       */
+      const picker = new Picker(state, now);
+      const course = courseProgress(state);
+      const items: SessionItem[] = [];
+      if (course.next) {
+        items.push(...newMaterialPhase(state, course.next, DAILY_TASKS - DAILY_REVIEW_CAP - DAILY_MISTAKE_CAP, picker));
+      }
+      const newCount = items.length;
+      items.push(...reviewPhase(state, DAILY_REVIEW_CAP, now, picker));
+      const reviewCount = items.length - newCount;
+      items.push(...picker.accept(mistakesPhase(state, DAILY_MISTAKE_CAP), DAILY_MISTAKE_CAP));
+
+      if (course.courseComplete) {
+        // Course finished: consolidate instead of standing still.
+        items.push(...picker.accept(conversationPhase(state, pools, 4, now), 4));
+        items.push(...picker.accept(freePhase(state, pools, 2), 2));
+        items.push(...picker.accept(speakingPhase(state, pools, 1), 1));
+      } else if (items.length < DAILY_TASKS) {
+        items.push(...picker.accept(freePhase(state, pools, 1), 1));
+        items.push(...picker.accept(speakingPhase(state, pools, 1), 1));
+      }
+      return { ...summarise(mode, interleave(items.slice(0, DAILY_TASKS))), course, newCount, reviewCount };
     }
     case 'production': {
-      const items = [...retrievalPhase(state, pools, 8, now), ...freePhase(state, pools, 2)];
+      const items = [...contextVocabPhase(state, pools, 2), ...retrievalPhase(state, pools, 8, now), ...freePhase(state, pools, 2)];
       return summarise(mode, items);
     }
     case 'conversation': {

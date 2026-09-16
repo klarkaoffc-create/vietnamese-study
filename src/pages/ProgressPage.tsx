@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../learning/store';
-import { allGrammar, lessonById, lessons, lessonLabel } from '../data/content';
-import { completedLessonNumbers, exportState, parseImport } from '../learning/state';
+import { allGrammar, lessons, lessonLabel } from '../data/content';
+import { exportState, parseImport } from '../learning/state';
+import { completedLessonNumbers, lessonStatus } from '../learning/progression';
 import { makeSrsId, mastery } from '../learning/srs';
 import { skillScores } from '../learning/skills';
 import { estimateCefr } from '../learning/cefr';
@@ -16,7 +17,7 @@ export function ProgressPage() {
   const [msg, setMsg] = useState<string | null>(null);
   const [cefrOpen, setCefrOpen] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
-  const completed = completedLessonNumbers(state, (id) => lessonById.get(id)?.number);
+  const completed = completedLessonNumbers(state);
   const skills = skillScores(state);
   // Read-only: the estimate never writes to progress.
   const cefr = estimateCefr(state);
@@ -114,7 +115,12 @@ export function ProgressPage() {
                 return (
                   <tr key={l.id}>
                     <td><Link to={`/lekcje/${l.id}`}>{lessonLabel(l.number)} {l.title}</Link></td>
-                    <td>{lp?.completed ? <Pill tone="ok">ukończona {formatDate(lp.completed)}</Pill> : lp?.visited ? <Pill tone="primary">w trakcie</Pill> : <Pill>nie otwarto</Pill>}</td>
+                    <td>{(() => {
+                      const st = lessonStatus(state, l);
+                      if (st.complete) return <Pill tone="ok">ukończona{lp?.completed ? ` ${formatDate(lp.completed)}` : ''}</Pill>;
+                      if (st.viewed || st.mastered > 0) return <Pill tone="primary">w trakcie · {st.mastered}/{st.total}</Pill>;
+                      return <Pill>nie otwarto</Pill>;
+                    })()}</td>
                     <td style={{ minWidth: 120 }}><Progress value={avg} thin /><span className="muted tiny">{avg}%</span></td>
                     <td className="small">{lp?.checkpoints?.length ? lp.checkpoints.slice(-5).map((c, i) => <Pill key={i} tone={c.score / c.total >= 0.8 ? 'ok' : 'warn'}>{Math.round((c.score / c.total) * 100)}%</Pill>) : <span className="muted">—</span>}</td>
                   </tr>

@@ -74,6 +74,14 @@ export interface SrsItem {
   level: AutomaticityLevel;
 }
 
+/**
+ * Successful demonstrations that finish the learning phase for a target, and
+ * the rest it earns afterwards. Defined here because the scheduler acts on
+ * them; `learning/targets.ts` re-exports them as the course-level vocabulary.
+ */
+export const MASTERY_SUCCESSES = 3;
+export const MAINTENANCE_MIN_DAYS = 10;
+
 export const MIN_EASE = 1.3;
 export const DEFAULT_EASE = 2.5;
 /** Failed cards come back after this many minutes within the session. */
@@ -132,6 +140,13 @@ export function schedule(item: SrsItem, grade: SrsGrade, now = Date.now()): SrsI
       next.interval = item.interval === 0 ? 3 : Math.round(item.interval * item.ease * 1.3);
       next.ease = item.ease + 0.15;
       break;
+  }
+  // The demonstration that completes the learning phase sends the target to
+  // maintenance immediately. Without this jump the 1 → 3 → 7 climb put a
+  // target you had just proved three times back in tomorrow's queue, which is
+  // how a week of study could end up drilling the same material.
+  if (grade >= 2 && next.successes >= MASTERY_SUCCESSES && next.lapses === 0) {
+    next.interval = Math.max(next.interval, MAINTENANCE_MIN_DAYS);
   }
   next.interval = Math.min(next.interval, 365);
   next.due = now + next.interval * DAY_MS;

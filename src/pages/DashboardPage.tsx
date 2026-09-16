@@ -1,11 +1,12 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../learning/store';
-import { blocks, lessonById, lessonByNumber, lessons, lessonLabel, vocabById } from '../data/content';
+import { blocks, lessonByNumber, lessons, lessonLabel, vocabById } from '../data/content';
 import { buildSession, currentLesson, dashboardCounts, REVIEW_MODES } from '../learning/session';
 import { useNowForDay, useToday } from '../learning/today';
+import { completedLessonNumbers, courseProgress } from '../learning/progression';
 import { phaseLabel } from '../learning/tasks';
-import { completedLessonNumbers, unresolvedMistakes } from '../learning/state';
+import { unresolvedMistakes } from '../learning/state';
 import { isWeak, mastery } from '../learning/srs';
 import { passiveOnlyVocab, skillScores } from '../learning/skills';
 import { Card, PageHeader, Pill, Progress, Stat, Vi } from '../components/ui';
@@ -29,8 +30,9 @@ export function DashboardPage() {
   const now = useNowForDay();
   const counts = dashboardCounts(state, now);
   const cur = currentLesson(state);
+  const course = courseProgress(state);
   const lesson = lessonByNumber.get(cur) ?? lessons[0];
-  const completed = completedLessonNumbers(state, (id) => lessonById.get(id)?.number);
+  const completed = completedLessonNumbers(state);
   const block = blocks.find((b) => cur >= b.fromLesson && cur <= b.toLesson) ?? blocks[0];
   const blockDone = block ? block.lessons.filter((n) => completed.has(n)).length : 0;
   const lastExam = state.exams[0];
@@ -61,23 +63,52 @@ export function DashboardPage() {
         </p>
       </PageHeader>
 
+      {/* Progress first: the new lesson is the main path forward, review is
+          offered beside it rather than in front of it. */}
       <div className="card" style={{ background: 'var(--primary-soft)', borderColor: 'transparent' }}>
         <div className="row between">
           <div style={{ minWidth: 0 }}>
-            <h2 style={{ marginBottom: '0.2rem' }}>Dzisiejsza sesja</h2>
+            <div className="eyebrow muted tiny" style={{ textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              {course.next ? 'Nowa lekcja' : 'Kurs ukończony'}
+            </div>
+            <h2 style={{ marginBottom: '0.2rem' }}>
+              {course.next ? `${lessonLabel(course.next.number)} — ${course.next.title}` : 'Ukończyłaś wszystkie dostępne lekcje.'}
+            </h2>
             <p className="muted small" style={{ margin: '0 0 0.5rem' }}>
-              Mieszany trening: rozgrzewka, przypominanie zdań, rozmowa, gramatyka w użyciu, twoje błędy i swobodna wypowiedź.
+              {course.next ? course.next.summary : 'Czas na powtórki kumulatywne, egzamin, dialogi i słabe miejsca.'}
             </p>
             <div className="row">
-              {plan.phases.map((p) => (
-                <Pill key={p.phase}>{phaseLabel(p.phase)} · {p.count}</Pill>
-              ))}
+              <Pill tone="primary">{course.completed}/{course.total} lekcji</Pill>
+              {course.next && <Pill>{course.next.vocabulary.length} słówek</Pill>}
             </div>
           </div>
-          <Link to="/powtorki/today" className="btn primary big">
-            Zacznij dzisiejszą sesję →
-          </Link>
+          {course.next ? (
+            <Link to={`/lekcje/${course.next.id}`} className="btn primary big">Ucz się {lessonLabel(course.next.number)} →</Link>
+          ) : (
+            <Link to="/egzaminy" className="btn primary big">Egzamin →</Link>
+          )}
         </div>
+      </div>
+
+      <div className="grid two mt">
+        <Card>
+          <div className="eyebrow muted tiny" style={{ textTransform: 'uppercase', letterSpacing: '0.06em' }}>Krótka powtórka</div>
+          <div className="card-title">{plan.items.length} zadań · ~{plan.estimatedMinutes} min</div>
+          <div className="row">
+            {plan.phases.map((p) => (
+              <Pill key={p.phase}>{phaseLabel(p.phase)} · {p.count}</Pill>
+            ))}
+          </div>
+          <Link to="/powtorki/today" className="btn mt">Zrób krótką powtórkę</Link>
+        </Card>
+        <Card>
+          <div className="eyebrow muted tiny" style={{ textTransform: 'uppercase', letterSpacing: '0.06em' }}>Błędy</div>
+          <div className="card-title">{counts.mistakes} do przećwiczenia</div>
+          <p className="muted small" style={{ margin: 0 }}>
+            {counts.mistakes ? 'Zadania odtworzone z tego, co ostatnio nie wyszło.' : 'Nic nie czeka — brawo.'}
+          </p>
+          {counts.mistakes > 0 && <Link to="/powtorki/mistakes" className="btn mt">Ćwicz błędy</Link>}
+        </Card>
       </div>
 
       <div className="stat-grid mt">
@@ -90,7 +121,7 @@ export function DashboardPage() {
       <div className="grid two mt">
         {lesson && (
           <Card to={`/lekcje/${lesson.id}`}>
-            <div className="eyebrow muted tiny" style={{ textTransform: 'uppercase', letterSpacing: '0.06em' }}>Bieżąca lekcja</div>
+            <div className="eyebrow muted tiny" style={{ textTransform: 'uppercase', letterSpacing: '0.06em' }}>{completed.has(lesson.number) ? 'Powtórka z lekcji' : 'Bieżąca lekcja'}</div>
             <div className="card-title">
               <span className="card-icon">{lesson.icon}</span>
               {lessonLabel(lesson.number)} · {lesson.title}

@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { blocks, examBlueprints, exerciseById, lessonById, lessonLabel, lessonsInBlock, reviews, allExercises } from '../data/content';
 import { useStore } from '../learning/store';
-import { completedLessonNumbers, type ExamAnswerRecord, type ExamAttempt } from '../learning/state';
+import { type ExamAnswerRecord, type ExamAttempt } from '../learning/state';
+import { completedLessonNumbers } from '../learning/progression';
 import { sampleExam, MASTERY_THRESHOLD, type ExamQuestion } from '../learning/exam';
 import { grade as gradeTask, type GradeResult, type UserAnswer } from '../learning/grading';
 import { ExerciseView, answerToText, taskPrompt, type Task } from '../exercises/ExerciseView';
@@ -20,7 +21,7 @@ import { OriginalBlockView } from './LessonPage';
 
 export function ExamsPage() {
   const { state } = useStore();
-  const completed = completedLessonNumbers(state, (id) => lessonById.get(id)?.number);
+  const completed = completedLessonNumbers(state);
   return (
     <div className="container">
       <PageHeader eyebrow="Egzaminy" title="Powtórki i egzaminy blokowe">

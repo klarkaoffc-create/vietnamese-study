@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
-import { blocks, lessonById, lessonsInBlock, lessonLabel } from '../data/content';
+import { blocks, lessonsInBlock, lessonLabel } from '../data/content';
 import { useStore } from '../learning/store';
-import { completedLessonNumbers } from '../learning/state';
+import { completedLessonNumbers } from '../learning/progression';
 import { Card, PageHeader, Pill, Progress } from '../components/ui';
 import { makeSrsId, mastery } from '../learning/srs';
 
 export function LessonsPage() {
   const { state } = useStore();
-  const completed = completedLessonNumbers(state, (id) => lessonById.get(id)?.number);
+  const completed = completedLessonNumbers(state);
   return (
     <div className="container">
       <PageHeader eyebrow="Lekcje" title="Kurs w blokach po pięć lekcji">

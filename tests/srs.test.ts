@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { DAY_MS } from '../src/utilities/dates';
-import { isDue, isWeak, mastery, masteryLevel, newSrsItem, schedule, sortForReview } from '../src/learning/srs';
+import { MAINTENANCE_MIN_DAYS, MASTERY_SUCCESSES, isDue, isWeak, mastery, masteryLevel, newSrsItem, schedule, sortForReview } from '../src/learning/srs';
 
 const T0 = Date.UTC(2026, 8, 6, 10, 0, 0);
 
 describe('SRS scheduling', () => {
-  it('grows intervals 1 → 3 → ease-based on "good"', () => {
+  it('grows 1 → 3 days while learning, then rests at maintenance', () => {
     let it = newSrsItem('vocab-active', 'v-bai-01-xin-chao', 'bai-01', T0);
     expect(isDue(it, T0)).toBe(true);
     it = schedule(it, 2, T0);
@@ -15,9 +15,15 @@ describe('SRS scheduling', () => {
     expect(isDue(it, T0 + DAY_MS)).toBe(true);
     it = schedule(it, 2, T0 + DAY_MS);
     expect(it.interval).toBe(3);
+    // Third success ends the learning phase: instead of the SM-2 step to 8
+    // days the target goes straight to maintenance and stops being offered.
     it = schedule(it, 2, T0 + 4 * DAY_MS);
-    expect(it.interval).toBe(Math.round(3 * 2.5));
-    expect(it.successes).toBe(3);
+    expect(it.successes).toBe(MASTERY_SUCCESSES);
+    expect(it.interval).toBe(MAINTENANCE_MIN_DAYS);
+    expect(isDue(it, T0 + 5 * DAY_MS)).toBe(false);
+    // …and keeps growing from there, rather than being pinned at 10 days.
+    it = schedule(it, 2, it.due);
+    expect(it.interval).toBeGreaterThan(MAINTENANCE_MIN_DAYS);
   });
   it('resets on failure and comes back within the session', () => {
     let it = newSrsItem('vocab-passive', 'v', 'bai-01', T0);

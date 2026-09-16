@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { grammarById, lessonById, lessonByNumber, lessonLabel, lessons } from '../data/content';
 import type { Exercise, OriginalBlock } from '../data/schema';
 import { useStore } from '../learning/store';
+import { lessonStatus, nextLesson } from '../learning/progression';
 import { makeSrsId, mastery, masteryLevel } from '../learning/srs';
 import { Callout, PageHeader, Pill, Progress, StatusTag, Vi } from '../components/ui';
 import { DialogueView, type DialogueMode } from '../components/DialogueView';
@@ -45,7 +46,10 @@ export function LessonPage() {
     );
   }
   const lp = state.lessons[lesson.id];
-  const completed = !!lp?.completed;
+  // Same definition the dashboard and the daily plan use.
+  const status = lessonStatus(state, lesson);
+  const completed = status.complete;
+  const upNext = nextLesson(state);
   const prev = lessonByNumber.get(lesson.number - 1);
   const next = lessonByNumber.get(lesson.number + 1);
   const generatorExercises = lesson.exercises.filter((e) => e.type === 'generator');
@@ -312,9 +316,34 @@ export function LessonPage() {
                   </div>
                 ) : null}
               </div>
-              <Link to={`/cwicz?lesson=${lesson.id}&set=checkpoint`} className="btn primary big">Rozpocznij checkpoint</Link>
+              <Link to={`/cwicz?lesson=${lesson.id}&set=checkpoint`} className={`btn big ${completed ? '' : 'primary'}`.trim()}>Rozpocznij checkpoint</Link>
             </div>
           </section>
+
+          {/* Finished: the course keeps moving. The next lesson is the primary
+              path; a short review is offered beside it, never in front of it. */}
+          {completed && (
+            <section className="lesson-section card" style={{ background: 'var(--primary-soft)', borderColor: 'transparent' }}>
+              <div className="row between">
+                <div>
+                  <h2 style={{ marginBottom: '0.2rem' }}>
+                    {upNext ? `Świetnie. Następna: ${lessonLabel(upNext.number)}` : 'Świetnie — to była ostatnia lekcja kursu.'}
+                  </h2>
+                  <p className="muted small" style={{ margin: 0 }}>
+                    {upNext ? upNext.title : 'Możesz teraz powtarzać kumulatywnie albo podejść do egzaminu.'}
+                  </p>
+                </div>
+                <div className="row">
+                  <Link to="/powtorki/today" className="btn">Zrób krótką powtórkę</Link>
+                  {upNext ? (
+                    <Link to={`/lekcje/${upNext.id}`} className="btn primary big">Przejdź do {lessonLabel(upNext.number)} →</Link>
+                  ) : (
+                    <Link to="/egzaminy" className="btn primary big">Egzamin →</Link>
+                  )}
+                </div>
+              </div>
+            </section>
+          )}
 
           {lesson.reviewLinks.length > 0 && (
             <section id="powtorka" className="lesson-section card">
