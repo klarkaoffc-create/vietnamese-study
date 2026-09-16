@@ -289,11 +289,14 @@ export function ExerciseRunner({
 export function RunnerSummaryView({
   summary,
   onRepeatMistakes,
+  onContinue,
   onClose,
   closeLabel = 'Zakończ',
 }: {
   summary: RunnerSummary;
   onRepeatMistakes?: () => void;
+  /** Start another mixed session straight away, with the frontier as it now stands. */
+  onContinue?: () => void;
   onClose: () => void;
   closeLabel?: string;
 }) {
@@ -314,9 +317,16 @@ export function RunnerSummaryView({
               Powtórz trudne ({wrong.length})
             </button>
           )}
-          <button type="button" className="btn primary" onClick={onClose}>
+          <button type="button" className={`btn ${onContinue ? '' : 'primary'}`.trim()} onClick={onClose}>
             {closeLabel}
           </button>
+          {/* The course does not stop at the end of a session: carrying on
+              rebuilds the queue from wherever the frontier has reached. */}
+          {onContinue && (
+            <button type="button" className="btn primary" onClick={onContinue}>
+              Ucz się dalej →
+            </button>
+          )}
         </div>
       </div>
       {wrong.length > 0 && (

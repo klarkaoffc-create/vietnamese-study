@@ -63,53 +63,35 @@ export function DashboardPage() {
         </p>
       </PageHeader>
 
-      {/* Progress first: the new lesson is the main path forward, review is
-          offered beside it rather than in front of it. */}
+      {/* The mixed session is the course. New material is drawn from the
+          frontier each time it is generated, so the label below is information
+          about what is coming up — not a lesson assigned to today. */}
       <div className="card" style={{ background: 'var(--primary-soft)', borderColor: 'transparent' }}>
         <div className="row between">
           <div style={{ minWidth: 0 }}>
-            <div className="eyebrow muted tiny" style={{ textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-              {course.next ? 'Nowa lekcja' : 'Kurs ukończony'}
-            </div>
-            <h2 style={{ marginBottom: '0.2rem' }}>
-              {course.next ? `${lessonLabel(course.next.number)} — ${course.next.title}` : 'Ukończyłaś wszystkie dostępne lekcje.'}
-            </h2>
+            <h2 style={{ marginBottom: '0.2rem' }}>Dzisiejsza nauka</h2>
             <p className="muted small" style={{ margin: '0 0 0.5rem' }}>
-              {course.next ? course.next.summary : 'Czas na powtórki kumulatywne, egzamin, dialogi i słabe miejsca.'}
+              Mieszana sesja: nowy materiał, przypominanie zdań, rozmowa, gramatyka w użyciu, twoje błędy i swobodna wypowiedź.
             </p>
             <div className="row">
-              <Pill tone="primary">{course.completed}/{course.total} lekcji</Pill>
-              {course.next && <Pill>{course.next.vocabulary.length} słówek</Pill>}
+              {course.next && <Pill tone="primary">Nowy materiał: {lessonLabel(course.next.number)}</Pill>}
+              {plan.phases.map((p) => (
+                <Pill key={p.phase}>{phaseLabel(p.phase)} · {p.count}</Pill>
+              ))}
+              <Pill>~{plan.estimatedMinutes} min</Pill>
             </div>
           </div>
-          {course.next ? (
-            <Link to={`/lekcje/${course.next.id}`} className="btn primary big">Ucz się {lessonLabel(course.next.number)} →</Link>
-          ) : (
-            <Link to="/egzaminy" className="btn primary big">Egzamin →</Link>
-          )}
+          <Link to="/powtorki/today" className="btn primary big">
+            {course.completed > 0 ? 'Kontynuuj naukę →' : 'Zacznij naukę →'}
+          </Link>
         </div>
       </div>
 
-      <div className="grid two mt">
-        <Card>
-          <div className="eyebrow muted tiny" style={{ textTransform: 'uppercase', letterSpacing: '0.06em' }}>Krótka powtórka</div>
-          <div className="card-title">{plan.items.length} zadań · ~{plan.estimatedMinutes} min</div>
-          <div className="row">
-            {plan.phases.map((p) => (
-              <Pill key={p.phase}>{phaseLabel(p.phase)} · {p.count}</Pill>
-            ))}
-          </div>
-          <Link to="/powtorki/today" className="btn mt">Zrób krótką powtórkę</Link>
-        </Card>
-        <Card>
-          <div className="eyebrow muted tiny" style={{ textTransform: 'uppercase', letterSpacing: '0.06em' }}>Błędy</div>
-          <div className="card-title">{counts.mistakes} do przećwiczenia</div>
-          <p className="muted small" style={{ margin: 0 }}>
-            {counts.mistakes ? 'Zadania odtworzone z tego, co ostatnio nie wyszło.' : 'Nic nie czeka — brawo.'}
-          </p>
-          {counts.mistakes > 0 && <Link to="/powtorki/mistakes" className="btn mt">Ćwicz błędy</Link>}
-        </Card>
-      </div>
+      {course.next && (
+        <p className="muted tiny mt" style={{ marginBottom: 0 }}>
+          Kurs: {course.completed}/{course.total} lekcji opanowanych. Nowy materiał pojawia się w sesjach automatycznie — nie musisz otwierać kolejnych lekcji ręcznie.
+        </p>
+      )}
 
       <div className="stat-grid mt">
         <Stat value={`${active.percent}%`} label="słownictwo aktywne (potrafię użyć)" tone="primary" />

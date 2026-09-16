@@ -320,26 +320,23 @@ export function LessonPage() {
             </div>
           </section>
 
-          {/* Finished: the course keeps moving. The next lesson is the primary
-              path; a short review is offered beside it, never in front of it. */}
+          {/* Finished. The course carries on inside the mixed session, so
+              that is the primary way onward; the next lesson page is offered
+              beside it for anyone who prefers to browse. */}
           {completed && (
             <section className="lesson-section card" style={{ background: 'var(--primary-soft)', borderColor: 'transparent' }}>
               <div className="row between">
                 <div>
-                  <h2 style={{ marginBottom: '0.2rem' }}>
-                    {upNext ? `Świetnie. Następna: ${lessonLabel(upNext.number)}` : 'Świetnie — to była ostatnia lekcja kursu.'}
-                  </h2>
+                  <h2 style={{ marginBottom: '0.2rem' }}>Świetnie — ta lekcja jest opanowana.</h2>
                   <p className="muted small" style={{ margin: 0 }}>
-                    {upNext ? upNext.title : 'Możesz teraz powtarzać kumulatywnie albo podejść do egzaminu.'}
+                    {upNext
+                      ? `Nowy materiał (${lessonLabel(upNext.number)}) pojawi się sam w kolejnych sesjach.`
+                      : 'Ukończyłaś wszystkie dostępne lekcje — czas na powtórki kumulatywne i egzamin.'}
                   </p>
                 </div>
                 <div className="row">
-                  <Link to="/powtorki/today" className="btn">Zrób krótką powtórkę</Link>
-                  {upNext ? (
-                    <Link to={`/lekcje/${upNext.id}`} className="btn primary big">Przejdź do {lessonLabel(upNext.number)} →</Link>
-                  ) : (
-                    <Link to="/egzaminy" className="btn primary big">Egzamin →</Link>
-                  )}
+                  {upNext && <Link to={`/lekcje/${upNext.id}`} className="btn">Zobacz {lessonLabel(upNext.number)}</Link>}
+                  <Link to="/powtorki/today" className="btn primary big">Ucz się dalej →</Link>
                 </div>
               </div>
             </section>

@@ -74,6 +74,9 @@ export function ReviewSessionPage() {
   const [summary, setSummary] = useState<RunnerSummary | null>(null);
   const [retry, setRetry] = useState<SessionItem[] | null>(null);
   const [round, setRound] = useState(0);
+  // Bumped by "Ucz się dalej": forces a fresh build, which re-reads the
+  // frontier and so introduces whatever lesson the learner has just reached.
+  const [sessionNo, setSessionNo] = useState(0);
   const reviewMode = (REVIEW_MODES.some((m) => m.id === mode) ? mode : 'today') as ReviewMode;
   const today = useToday();
 
@@ -89,7 +92,7 @@ export function ReviewSessionPage() {
    * switch to the new day immediately, independently of this.
    */
   const [queueDay, setQueueDay] = useState(today);
-  const plan = useMemo(() => buildSession(state, reviewMode), [reviewMode, queueDay]); // eslint-disable-line react-hooks/exhaustive-deps
+  const plan = useMemo(() => buildSession(state, reviewMode), [reviewMode, queueDay, sessionNo]); // eslint-disable-line react-hooks/exhaustive-deps
   const info = REVIEW_MODES.find((m) => m.id === reviewMode)!;
 
   useEffect(() => {
@@ -101,6 +104,7 @@ export function ReviewSessionPage() {
     setSummary(null);
     setRetry(null);
     setRound(0);
+    setSessionNo(0);
     setQueueDay(today);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reviewMode]);
@@ -131,6 +135,7 @@ export function ReviewSessionPage() {
         <RunnerSummaryView
           summary={summary}
           onRepeatMistakes={wrong.length ? () => { setRetry(wrong); setSummary(null); setRound((r) => r + 1); } : undefined}
+          onContinue={() => { setRetry(null); setSummary(null); setSessionNo((n) => n + 1); setRound((r) => r + 1); }}
           onClose={() => navigate('/')}
           closeLabel="Wróć do pulpitu"
         />

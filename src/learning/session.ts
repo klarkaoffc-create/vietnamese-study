@@ -28,7 +28,7 @@ import {
 import { generate, type GeneratedInstance } from './generators';
 import { isDue, isWeak, makeSrsId, sortForReview, type AutomaticityLevel, type SrsItem, type SrsKind } from './srs';
 import { mistakeSessionItems, mistakeTask, openMistakes } from './mistakes';
-import { courseProgress, lessonTargets, nextLesson, studiedLessons, type CourseProgress } from './progression';
+import { courseProgress, isLessonComplete, lessonTargets, nextLesson, studiedLessons, type CourseProgress } from './progression';
 import { inCooldown, isMastered } from './targets';
 import { type AppState } from './state';
 import { sample, shuffle } from '../utilities/random';
@@ -348,59 +348,91 @@ class Picker {
 }
 
 /**
- * The next lesson's own material — the forward half of the course.
+ * The course frontier: every lesson still carrying unlearned material, in
+ * course order.
  *
- * Targets that have already had their three demonstrations are skipped: they
- * are finished for now. Never-seen targets come first, then part-learned ones,
- * so a session opens on genuinely new ground rather than re-testing what was
- * just covered.
+ * This is NOT "today's lesson". It is simply where new material comes from
+ * next, and it moves the moment enough of a lesson is demonstrated — mid
+ * session, mid morning, whenever. The calendar has no vote.
+ *
+ * Returning the whole tail rather than one lesson is what lets a single
+ * session walk off the end of Bài 5 and start introducing Bài 6 in its last
+ * few slots, and what makes the very next session pick up from wherever the
+ * learner actually stopped.
  */
-function newMaterialPhase(state: AppState, lesson: Lesson, limit: number, picker: Picker): SessionItem[] {
-  const targets = lessonTargets(lesson)
-    .filter((t) => !isMastered(state.srs[makeSrsId(t.kind, t.ref)]))
-    .filter((t) => !picker.resting(t.kind, t.ref))
-    .map((t) => ({ ...t, item: state.srs[makeSrsId(t.kind, t.ref)] }))
-    .sort((a, b) => (a.item?.successes ?? -1) - (b.item?.successes ?? -1));
+export function frontierLessons(state: AppState): Lesson[] {
+  return [...lessons].sort((a, b) => a.number - b.number).filter((l) => !isLessonComplete(state, l));
+}
 
-  const built: SessionItem[] = [];
-  // Alternate vocabulary and grammar so a lesson's session is not one long
-  // word drill followed by one long grammar drill.
-  const vocabQ = targets.filter((t) => t.kind === 'vocab-active');
-  const grammarQ = targets.filter((t) => t.kind === 'grammar');
-  for (let i = 0; built.length < limit * 2 && (i < vocabQ.length || i < grammarQ.length); i++) {
-    for (const t of [vocabQ[i], grammarQ[i]]) {
-      if (!t) continue;
-      const level = levelOf(t.item);
-      const task =
-        t.kind === 'vocab-active'
-          ? (() => {
-              const v = vocabById.get(t.ref);
-              return v ? vocabActiveTask(v, level, 'warmup') : null;
-            })()
-          : (() => {
-              const g = grammarById.get(t.ref);
-              return g ? grammarTask(g, level, 'grammar') : null;
-            })();
-      if (task) built.push({ kind: 'task', task });
-    }
+/** Unlearned targets along the frontier, nearest lesson first. */
+function frontierTargets(state: AppState, frontier: Lesson[], kind: 'vocab-active' | 'grammar', picker: Picker) {
+  const out: { ref: string; lesson: Lesson; item: SrsItem | undefined }[] = [];
+  for (const lesson of frontier) {
+    const here = lessonTargets(lesson)
+      .filter((t) => t.kind === kind)
+      .filter((t) => !isMastered(state.srs[makeSrsId(t.kind, t.ref)]))
+      .filter((t) => !picker.resting(t.kind, t.ref))
+      .map((t) => ({ ref: t.ref, lesson, item: state.srs[makeSrsId(t.kind, t.ref)] }))
+      // Part-learned before brand-new, so a lesson gets finished rather than
+      // endlessly broadened — which is what advances the frontier.
+      .sort((a, b) => (b.item?.successes ?? -1) - (a.item?.successes ?? -1));
+    out.push(...here);
   }
+  return out;
+}
 
-  // Round the lesson out with its communicative material once the targets run
-  // short, so new lessons that are mostly mastered still produce a session.
-  const accepted = picker.accept(built, limit);
-  if (accepted.length < limit) {
+/** New vocabulary from the frontier, as production rather than recognition. */
+function frontierVocabPhase(state: AppState, frontier: Lesson[], limit: number, picker: Picker): SessionItem[] {
+  const built = frontierTargets(state, frontier, 'vocab-active', picker)
+    .map(({ ref, item }) => {
+      const v = vocabById.get(ref);
+      return v ? vocabActiveTask(v, levelOf(item), 'retrieval') : null;
+    })
+    .filter((t): t is LearningTask => !!t)
+    .map((task) => ({ kind: 'task' as const, task }));
+  return picker.accept(built, limit);
+}
+
+/** New grammar from the frontier, practised inside live sentences. */
+function frontierGrammarPhase(state: AppState, frontier: Lesson[], limit: number, picker: Picker): SessionItem[] {
+  const built = frontierTargets(state, frontier, 'grammar', picker)
+    .map(({ ref, item }) => {
+      const g = grammarById.get(ref);
+      return g ? grammarTask(g, levelOf(item), 'grammar') : null;
+    })
+    .filter((t): t is LearningTask => !!t)
+    .map((task) => ({ kind: 'task' as const, task }));
+  return picker.accept(built, limit);
+}
+
+/**
+ * The communicative half of new material: the frontier lesson's dialogue turns
+ * and its scenarios. Without this a session of new material would be nothing
+ * but word and grammar drills.
+ */
+function frontierTalkPhase(state: AppState, frontier: Lesson[], limit: number, picker: Picker): SessionItem[] {
+  const out: SessionItem[] = [];
+  // Strictly lesson by lesson. Shuffling across the whole frontier would drop
+  // Bài 7 dialogue into a session whose learner is still on Bài 5 — material
+  // they have not met. Each lesson is shuffled internally for variety, but a
+  // later one is only reached once the earlier ones have nothing left to give.
+  for (const lesson of frontier) {
+    if (out.length >= limit) break;
     const pools = poolsFor([lesson.number]);
-    const extra: SessionItem[] = [
-      ...sample(pools.scenarios, limit).map((sc) => ({ kind: 'task' as const, task: scenarioTask(sc, levelOf(state.srs[makeSrsId('sentence', sc.id)]), 'free') })),
-      ...asItems(
-        sample(pools.dialogues, limit).map(({ dialogue, lineIndex }) =>
-          dialogueTask(dialogue, lineIndex, levelOf(state.srs[makeSrsId('dialogue', `${dialogue.id}#${lineIndex}`)]), 'conversation'),
-        ),
-      ),
-    ];
-    accepted.push(...picker.accept(extra, limit - accepted.length));
+    const here: SessionItem[] = [];
+    for (const sc of pools.scenarios) {
+      if (isMastered(state.srs[makeSrsId('sentence', sc.id)]) || picker.resting('sentence', sc.id)) continue;
+      here.push({ kind: 'task', task: scenarioTask(sc, levelOf(state.srs[makeSrsId('sentence', sc.id)]), 'conversation') });
+    }
+    for (const { dialogue, lineIndex } of pools.dialogues) {
+      const ref = `${dialogue.id}#${lineIndex}`;
+      if (isMastered(state.srs[makeSrsId('dialogue', ref)]) || picker.resting('dialogue', ref)) continue;
+      const t = dialogueTask(dialogue, lineIndex, levelOf(state.srs[makeSrsId('dialogue', ref)]), 'conversation');
+      if (t) here.push({ kind: 'task', task: t });
+    }
+    out.push(...picker.accept(shuffle(here), limit - out.length));
   }
-  return accepted;
+  return out;
 }
 
 /**
@@ -411,6 +443,24 @@ function reviewPhase(state: AppState, limit: number, now: number, picker: Picker
   const due = dueItems(state, ['vocab-active', 'grammar', 'sentence', 'dialogue'], now).filter((i) => !inCooldown(i, now));
   const built = asItems(due.map((i) => taskForDueItem(i, 'retrieval')));
   return picker.accept(built, limit);
+}
+
+/**
+ * Lay the buckets out so the session reads as one mixed lesson rather than a
+ * block of new material followed by a block of review: take from the largest
+ * remaining bucket each time, so new and old alternate naturally.
+ */
+function weave(buckets: SessionItem[][]): SessionItem[] {
+  const queues = buckets.map((b) => [...b]).filter((b) => b.length);
+  const out: SessionItem[] = [];
+  while (queues.some((q) => q.length)) {
+    queues.sort((a, b) => b.length - a.length);
+    for (const q of queues) {
+      const next = q.shift();
+      if (next) out.push(next);
+    }
+  }
+  return out;
 }
 
 export interface DailyPlan extends SessionPlan {
@@ -482,38 +532,56 @@ export function buildSession(state: AppState, mode: ReviewMode, now = Date.now()
   switch (mode) {
     case 'today': {
       /*
-       * A course session, not a review queue. Forward material leads; review
-       * supports it and is capped so a backlog can never crowd it out.
+       * ONE mixed study session — the shape the course is actually delivered
+       * in. It is not "today's lesson plus a bit of review": vocabulary,
+       * grammar, dialogue, scenarios, old mistakes and maintenance are woven
+       * together so the session feels varied.
        *
-       *   ~8 tasks   the lesson currently being learned (skipping targets that
-       *              already have their three demonstrations)
-       *   ≤3 tasks   genuinely due review, cooled down and de-duplicated
-       *   ≤1 task    a recent mistake
+       * What changed is only WHERE the new material comes from. It is drawn
+       * from the course frontier — every lesson still carrying unlearned
+       * targets, nearest first — which moves the instant enough of a lesson
+       * is demonstrated. Nothing here reads the calendar, so a second session
+       * half an hour later already draws on the lesson the learner just
+       * reached, and a session that exhausts Bài 5 mid-way starts introducing
+       * Bài 6 in its remaining slots.
        *
-       * Once every lesson is finished there is no forward material left, and
-       * only then does the session become review-shaped.
+       * Roughly two thirds forward material, one third review and mistakes,
+       * with review hard-capped so a backlog can never crowd the course out.
        */
       const picker = new Picker(state, now);
+      const frontier = frontierLessons(state);
       const course = courseProgress(state);
-      const items: SessionItem[] = [];
-      if (course.next) {
-        items.push(...newMaterialPhase(state, course.next, DAILY_TASKS - DAILY_REVIEW_CAP - DAILY_MISTAKE_CAP, picker));
-      }
-      const newCount = items.length;
-      items.push(...reviewPhase(state, DAILY_REVIEW_CAP, now, picker));
-      const reviewCount = items.length - newCount;
-      items.push(...picker.accept(mistakesPhase(state, DAILY_MISTAKE_CAP), DAILY_MISTAKE_CAP));
 
-      if (course.courseComplete) {
-        // Course finished: consolidate instead of standing still.
-        items.push(...picker.accept(conversationPhase(state, pools, 4, now), 4));
-        items.push(...picker.accept(freePhase(state, pools, 2), 2));
-        items.push(...picker.accept(speakingPhase(state, pools, 1), 1));
-      } else if (items.length < DAILY_TASKS) {
-        items.push(...picker.accept(freePhase(state, pools, 1), 1));
-        items.push(...picker.accept(speakingPhase(state, pools, 1), 1));
+      const newVocab = frontierVocabPhase(state, frontier, 3, picker);
+      const newGrammar = frontierGrammarPhase(state, frontier, 2, picker);
+      const newTalk = frontierTalkPhase(state, frontier, 3, picker);
+      const review = reviewPhase(state, DAILY_REVIEW_CAP, now, picker);
+      const mistakes = picker.accept(mistakesPhase(state, DAILY_MISTAKE_CAP), DAILY_MISTAKE_CAP);
+
+      const forward = [...newVocab, ...newGrammar, ...newTalk];
+      const older = [...review, ...mistakes];
+      let items = weave([forward, older]);
+
+      // Top up from the studied pool so a thin frontier still yields a full,
+      // varied session — and so the course-complete case stays interesting.
+      if (items.length < DAILY_TASKS) {
+        const filler = [
+          ...picker.accept(conversationPhase(state, pools, 2, now), 2),
+          ...picker.accept(retrievalPhase(state, pools, 2, now), 2),
+          ...picker.accept(speakingPhase(state, pools, 1), 1),
+          ...picker.accept(freePhase(state, pools, 1), 1),
+        ];
+        items = [...items, ...filler];
       }
-      return { ...summarise(mode, interleave(items.slice(0, DAILY_TASKS))), course, newCount, reviewCount };
+
+      const final = interleave(items.slice(0, DAILY_TASKS));
+      const forwardRefs = new Set(forward.map((i) => refOf(i)));
+      return {
+        ...summarise(mode, final),
+        course,
+        newCount: final.filter((i) => forwardRefs.has(refOf(i))).length,
+        reviewCount: final.filter((i) => !forwardRefs.has(refOf(i))).length,
+      };
     }
     case 'production': {
       const items = [...contextVocabPhase(state, pools, 2), ...retrievalPhase(state, pools, 8, now), ...freePhase(state, pools, 2)];

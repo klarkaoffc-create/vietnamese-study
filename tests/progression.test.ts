@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { lessons } from '../src/data/content';
 import { initialState, reducer, type AppState } from '../src/learning/state';
-import { buildSession, currentLesson, DAILY_REVIEW_CAP, DAILY_TASKS, studiedLessonNumbers, type DailyPlan, type SessionItem } from '../src/learning/session';
+import { buildSession, currentLesson, DAILY_MISTAKE_CAP, DAILY_REVIEW_CAP, DAILY_TASKS, studiedLessonNumbers, type DailyPlan, type SessionItem } from '../src/learning/session';
 import { completedLessons, lessonStatus, lessonTargets, lessonsToMarkComplete, nextLesson } from '../src/learning/progression';
+import { frontierLessons } from '../src/learning/session';
 import { MAINTENANCE_MIN_DAYS, MASTERY_SUCCESSES, isMastered, targetPhase } from '../src/learning/targets';
 import { makeSrsId } from '../src/learning/srs';
 import { DAY_MS } from '../src/utilities/dates';
@@ -172,7 +173,8 @@ describe('CASE D: 50 due reviews', () => {
   it('caps review so forward material keeps the majority of the session', () => {
     const s = backlog();
     const plan = buildSession(s, 'today', T0 + DAY_MS) as DailyPlan;
-    expect(plan.reviewCount).toBeLessThanOrEqual(DAILY_REVIEW_CAP);
+    // `reviewCount` is the whole supporting half: due review plus mistakes.
+    expect(plan.reviewCount).toBeLessThanOrEqual(DAILY_REVIEW_CAP + DAILY_MISTAKE_CAP);
     expect(plan.items.length).toBeLessThanOrEqual(DAILY_TASKS);
     expect(plan.newCount).toBeGreaterThan(plan.reviewCount);
     // Comfortably more than half the session is forward material.
@@ -290,5 +292,114 @@ describe('existing progress', () => {
     nextLesson(s);
     completedLessons(s);
     expect(JSON.stringify(s)).toBe(before);
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/* The course frontier: continuous, and blind to the calendar          */
+/* ------------------------------------------------------------------ */
+
+/** Lesson numbers the new-material half of a session drew on. */
+const frontierNumbersIn = (plan: { items: SessionItem[] }) =>
+  new Set(
+    plan.items
+      .map((i) => (i.kind === 'task' ? i.task.lesson : i.lesson))
+      .map((id) => lessons.find((l) => l.id === id)?.number)
+      .filter((n): n is number => n !== undefined),
+  );
+
+describe('the mixed session', () => {
+  it('contains both frontier material and older review', () => {
+    let s = initialState(T0);
+    for (const n of [1, 2, 3, 4]) s = completeLesson(s, n, T0);
+    const plan = buildSession(s, 'today', T0 + DAY_MS) as DailyPlan;
+    expect(plan.newCount).toBeGreaterThan(0);
+    expect(plan.reviewCount).toBeGreaterThan(0);
+    // Not "all Bài 5": older lessons are represented too.
+    const numbers = frontierNumbersIn(plan);
+    expect(numbers.has(5)).toBe(true);
+    expect([...numbers].some((n) => n < 5)).toBe(true);
+  });
+
+  it('mixes several kinds of task rather than one drill', () => {
+    let s = initialState(T0);
+    for (const n of [1, 2, 3, 4]) s = completeLesson(s, n, T0);
+    const plan = buildSession(s, 'today', T0 + DAY_MS);
+    const phases = new Set(plan.items.filter((i) => i.kind === 'task').map((i) => (i as { task: { phase: string } }).task.phase));
+    expect(phases.size).toBeGreaterThanOrEqual(2);
+  });
+});
+
+describe('the frontier advances continuously, never by the clock', () => {
+  it('moves the instant the current lesson is demonstrated — same day, same minute', () => {
+    let s = initialState(T0);
+    for (const n of [1, 2, 3, 4]) s = completeLesson(s, n, T0);
+    expect(frontierLessons(s)[0].number).toBe(5);
+    expect(frontierNumbersIn(buildSession(s, 'today', T0)).has(5)).toBe(true);
+
+    // Learn Bài 5 at 09:30, no date change at all.
+    s = completeLesson(s, 5, T0);
+    expect(frontierLessons(s)[0].number).toBe(6);
+    const second = buildSession(s, 'today', T0 + 30 * 60 * 1000) as DailyPlan;
+    expect(second.course.next!.number).toBe(6);
+    expect(frontierNumbersIn(second).has(6)).toBe(true);
+
+    // And again, still the same day.
+    s = completeLesson(s, 6, T0);
+    const third = buildSession(s, 'today', T0 + 60 * 60 * 1000) as DailyPlan;
+    expect(third.course.next!.number).toBe(7);
+    expect(frontierNumbersIn(third).has(7)).toBe(true);
+  });
+
+  it('reaches Bài 8 after three lessons in one day', () => {
+    let s = initialState(T0);
+    for (const n of [1, 2, 3, 4]) s = completeLesson(s, n, T0);
+    for (const n of [5, 6, 7]) s = completeLesson(s, n, T0);
+    expect(frontierLessons(s)[0].number).toBe(8);
+  });
+
+  it('is not advanced by midnight on its own', () => {
+    let s = initialState(T0);
+    for (const n of [1, 2, 3, 4]) s = completeLesson(s, n, T0);
+    const before = frontierLessons(s)[0].number;
+    // Several days pass with no study at all.
+    for (const day of [1, 2, 5, 30]) {
+      expect(frontierLessons(s)[0].number, `after ${day} days`).toBe(before);
+      expect((buildSession(s, 'today', T0 + day * DAY_MS) as DailyPlan).course.next!.number).toBe(before);
+    }
+  });
+
+  it('keeps the frontier the learner actually reached across a new day', () => {
+    let s = initialState(T0);
+    for (const n of [1, 2, 3, 4, 5, 6]) s = completeLesson(s, n, T0);
+    expect(frontierLessons(s)[0].number).toBe(7);
+    // Tomorrow: still 7, neither advanced nor rolled back.
+    expect((buildSession(s, 'today', T0 + DAY_MS) as DailyPlan).course.next!.number).toBe(7);
+  });
+
+  it('does not move when a later lesson is merely opened', () => {
+    let s = initialState(T0);
+    for (const n of [1, 2, 3, 4]) s = completeLesson(s, n, T0);
+    s = reducer(s, { type: 'visit-lesson', lesson: byNumber(11).id, now: T0 });
+    expect(frontierLessons(s)[0].number).toBe(5);
+    expect((buildSession(s, 'today', T0) as DailyPlan).course.next!.number).toBe(5);
+  });
+
+  it('never reaches past the next lesson while the current one still has material', () => {
+    let s = initialState(T0);
+    for (const n of [1, 2, 3, 4]) s = completeLesson(s, n, T0);
+    // Frontier is Bài 5 and it is untouched, so nothing from Bài 7+ may appear.
+    const numbers = [...frontierNumbersIn(buildSession(s, 'today', T0))];
+    expect(Math.max(...numbers)).toBeLessThanOrEqual(6);
+  });
+
+  it('spills into the next lesson once the current one runs out mid-session', () => {
+    // Bài 5 all but finished: its last targets plus Bài 6 should both appear.
+    let s = initialState(T0);
+    for (const n of [1, 2, 3, 4]) s = completeLesson(s, n, T0);
+    const l5 = lessonTargets(byNumber(5));
+    for (const t of l5.slice(0, l5.length - 1)) s = demonstrate(s, t.kind, t.ref, byNumber(5).id, MASTERY_SUCCESSES, 2, T0);
+    const numbers = frontierNumbersIn(buildSession(s, 'today', T0 + 4 * DAY_MS));
+    expect(numbers.has(6), 'session never reached into Bài 6').toBe(true);
   });
 });
