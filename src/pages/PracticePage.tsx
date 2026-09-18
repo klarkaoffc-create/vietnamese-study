@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { exerciseById, exercisesForVocab, grammarById, lessonById, vocabById, allExercises } from '../data/content';
+import { exerciseById, exercisesForVocab, grammarById, lessonById, vocabById } from '../data/content';
 import { buildLessonSession, buildVocabSession, expandExercise, grammarPracticeItems, type SessionItem } from '../learning/session';
 import { useStore } from '../learning/store';
 import { ExerciseRunner, RunnerSummaryView, type RunnerSummary } from '../exercises/ExerciseRunner';
@@ -62,8 +62,10 @@ export function PracticePage() {
           checkpointLesson = l.id;
           items = l.checkpoint.map((id) => exerciseById.get(id)).filter((e): e is NonNullable<typeof e> => !!e).flatMap((e) => expandExercise(e, 3));
         } else {
+          // Generated afresh each visit: a varied mix weighted towards what
+          // still needs work, rather than the same fixed worksheet every time.
           title = `Ćwiczenia – Bài ${l.number}`;
-          items = allExercises.filter((e) => e.ownerId === l.id).flatMap((e) => expandExercise(e, 2));
+          items = buildLessonSession(state, l.number, 14);
         }
       }
     }

@@ -55,8 +55,6 @@ export function LessonPage() {
   const generatorExercises = lesson.exercises.filter((e) => e.type === 'generator');
   const otherExercises = lesson.exercises.filter((e) => e.type !== 'generator');
   const lastCp = lp?.checkpoints?.[lp.checkpoints.length - 1];
-  const vocabMastery = lesson.vocabulary.filter((v) => v.srs).map((v) => mastery(state.srs[makeSrsId('vocab-active', v.id)] ?? { successes: 0, failures: 0, interval: 0, lapses: 0 } as never));
-  const avg = vocabMastery.length ? Math.round(vocabMastery.reduce((a, b) => a + b, 0) / vocabMastery.length) : 0;
 
   const toc = [
     ['cele', 'Cele'],
@@ -76,8 +74,8 @@ export function LessonPage() {
       <PageHeader eyebrow={`${lessonLabel(lesson.number)} · ${lesson.sourceFile}`} title={<>{lesson.icon} {lesson.title}</>}>
         <p>{lesson.summary}</p>
         <div className="row">
-          <Pill tone={completed ? 'ok' : 'primary'}>{completed ? '✓ ukończona' : 'w trakcie'}</Pill>
-          <Pill>{lesson.vocabulary.length} słówek · {avg}% opanowania</Pill>
+          <Pill tone={completed ? 'ok' : 'primary'}>{completed ? '✓ ukończona' : status.percent > 0 ? 'w trakcie' : 'nowa'}</Pill>
+          <Pill>{lesson.vocabulary.length} słówek · {status.percent}% opanowania ({status.mastered}/{status.total} celów)</Pill>
           {lastCp && <Pill tone={lastCp.score / lastCp.total >= 0.8 ? 'ok' : 'warn'}>ostatni checkpoint {Math.round((lastCp.score / lastCp.total) * 100)}%</Pill>}
           {lesson.draft && <Pill tone="warn">szkic – do przejrzenia</Pill>}
           <span className="spacer" />

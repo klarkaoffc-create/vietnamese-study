@@ -28,8 +28,9 @@ import {
 import { generate, type GeneratedInstance } from './generators';
 import { isDue, isWeak, makeSrsId, sortForReview, type AutomaticityLevel, type SrsItem, type SrsKind } from './srs';
 import { mistakeSessionItems, mistakeTask, openMistakes } from './mistakes';
-import { courseProgress, lessonReadyToAdvance, lessonTargets, nextLesson, studiedLessons, type CourseProgress } from './progression';
+import { courseProgress, lessonTargets, nextLesson, studiedLessons, type CourseProgress } from './progression';
 import { inCooldown, isMastered } from './targets';
+import { eligibilityFilter, frontierNumber } from './eligibility';
 import { type AppState } from './state';
 import { sample, shuffle } from '../utilities/random';
 import {
@@ -96,12 +97,20 @@ export function studiedLessonNumbers(state: AppState): number[] {
 
 const itemsOfKind = (state: AppState, kinds: SrsKind[]) => Object.values(state.srs).filter((i) => kinds.includes(i.kind));
 
+/**
+ * Due abilities the learner may legitimately meet.
+ *
+ * Filtered by eligibility, so a stray record from a lesson the course has not
+ * reached cannot surface in review just because it exists.
+ */
 export function dueItems(state: AppState, kinds: SrsKind[], now = Date.now()): SrsItem[] {
-  return sortForReview(itemsOfKind(state, kinds).filter((i) => isDue(i, now)), now);
+  const eligible = eligibilityFilter(state);
+  return sortForReview(itemsOfKind(state, kinds).filter((i) => isDue(i, now) && eligible(i)), now);
 }
 
 export function weakAbilities(state: AppState): SrsItem[] {
-  return Object.values(state.srs).filter(isWeak);
+  const eligible = eligibilityFilter(state);
+  return Object.values(state.srs).filter((i) => isWeak(i) && eligible(i));
 }
 
 const levelOf = (item: SrsItem | undefined): AutomaticityLevel => (item?.level ?? 1) as AutomaticityLevel;
@@ -361,13 +370,17 @@ class Picker {
  * learner actually stopped.
  */
 export function frontierLessons(state: AppState): Lesson[] {
-  // The advance rule, not formal completion: a lesson practised through stops
-  // supplying new material even though the learner never formally closed it.
-  return [...lessons].sort((a, b) => a.number - b.number).filter((l) => !lessonReadyToAdvance(state, l));
+  // Exactly one lesson: the course teaches the current lesson in full before
+  // it introduces anything from the next. A session that runs out of Bài 2
+  // material tops up with review rather than reaching into Bài 3 — the
+  // frontier moves only when Bài 2 genuinely satisfies the advance rule, at
+  // which point the very next session picks Bài 3 up.
+  const frontier = frontierNumber(state);
+  return [...lessons].sort((a, b) => a.number - b.number).filter((l) => l.number === frontier);
 }
 
 /** Unlearned targets along the frontier, nearest lesson first. */
-function frontierTargets(state: AppState, frontier: Lesson[], kind: 'vocab-active' | 'grammar', picker: Picker) {
+function frontierTargets(state: AppState, frontier: Lesson[], kind: SrsKind, picker: Picker) {
   const out: { ref: string; lesson: Lesson; item: SrsItem | undefined }[] = [];
   for (const lesson of frontier) {
     const here = lessonTargets(lesson)
@@ -618,25 +631,90 @@ export function buildSession(state: AppState, mode: ReviewMode, now = Date.now()
 }
 
 /** Practice a single lesson: production-first, using its own material. */
-export function buildLessonSession(state: AppState, lessonNumber: number): SessionItem[] {
+/**
+ * Lesson practice: a generator, not a fixed worksheet.
+ *
+ * The old version took the first N of each pool and shuffled them, so every
+ * visit produced the same tasks in a new order. This picks from the lesson's
+ * whole target set each time, weighted by how much the target still needs
+ * work, and asks for a different TASK VARIANT on each pass — the automaticity
+ * ladder turns one target into recognition, cloze, PL→VN production or free
+ * use, so a target may legitimately return without the prompt repeating.
+ *
+ * Priority: unmastered and weak first, then not-seen-recently, and only
+ * occasionally something already at three demonstrations.
+ */
+export function buildLessonSession(state: AppState, lessonNumber: number, limit = 12, now = Date.now()): SessionItem[] {
+  const lesson = lessons.find((l) => l.number === lessonNumber);
+  if (!lesson) return [];
   const pools = poolsFor([lessonNumber]);
-  const items: SessionItem[] = [];
-  for (const v of contextualVocab(pools.vocab).slice(0, 8)) {
-    const t = vocabActiveTask(v, levelOf(state.srs[makeSrsId('vocab-active', v.id)]), 'retrieval');
-    if (t) items.push({ kind: 'task', task: t });
+  const picker = new Picker(state, now);
+
+  /** Higher wins. Randomised so repeated visits do not produce one fixed order. */
+  const weightOf = (item: SrsItem | undefined): number => {
+    let w = 1;
+    if (!item || item.successes + item.failures === 0) w = 6; // never met
+    else if (isWeak(item)) w = 7; // shaky — most worth the time
+    else if (!isMastered(item)) w = 5; // part-way
+    else w = 1; // mastered: an occasional refresher only
+    if (item && inCooldown(item, now)) w *= 0.25; // just seen
+    return w * (0.6 + Math.random() * 0.8);
+  };
+
+  /** One target, rendered at a level near — but rarely equal to — its current one. */
+  const variantLevel = (item: SrsItem | undefined): AutomaticityLevel => {
+    const base = levelOf(item);
+    const options = [Math.max(1, base - 1), base, Math.min(5, base + 1)] as AutomaticityLevel[];
+    return options[Math.floor(Math.random() * options.length)];
+  };
+
+  const candidates: { weight: number; build: () => SessionItem | null }[] = [];
+  for (const v of pools.vocab) {
+    const item = state.srs[makeSrsId('vocab-active', v.id)];
+    candidates.push({
+      weight: weightOf(item),
+      build: () => {
+        const t = vocabActiveTask(v, variantLevel(item), 'retrieval');
+        return t ? { kind: 'task', task: t } : null;
+      },
+    });
   }
-  for (const g of pools.grammar.slice(0, 4)) {
-    const t = grammarTask(g, levelOf(state.srs[makeSrsId('grammar', g.id)]), 'grammar');
-    if (t) items.push({ kind: 'task', task: t });
+  for (const g of pools.grammar) {
+    const item = state.srs[makeSrsId('grammar', g.id)];
+    candidates.push({
+      weight: weightOf(item),
+      build: () => {
+        const t = grammarTask(g, variantLevel(item), 'grammar');
+        return t ? { kind: 'task', task: t } : null;
+      },
+    });
   }
-  for (const { dialogue, lineIndex } of pools.dialogues.slice(0, 3)) {
-    const t = dialogueTask(dialogue, lineIndex, levelOf(state.srs[makeSrsId('dialogue', `${dialogue.id}#${lineIndex}`)]), 'conversation');
-    if (t) items.push({ kind: 'task', task: t });
+  for (const { dialogue, lineIndex } of pools.dialogues) {
+    const item = state.srs[makeSrsId('dialogue', `${dialogue.id}#${lineIndex}`)];
+    candidates.push({
+      weight: weightOf(item),
+      build: () => {
+        const t = dialogueTask(dialogue, lineIndex, variantLevel(item), 'conversation');
+        return t ? { kind: 'task', task: t } : null;
+      },
+    });
   }
-  for (const s of pools.scenarios.slice(0, 3)) {
-    items.push({ kind: 'task', task: scenarioTask(s, levelOf(state.srs[makeSrsId('sentence', s.id)]), 'free') });
+  for (const sc of pools.scenarios) {
+    const item = state.srs[makeSrsId('sentence', sc.id)];
+    candidates.push({ weight: weightOf(item), build: () => ({ kind: 'task', task: scenarioTask(sc, variantLevel(item), 'free') }) });
   }
-  return shuffle(items);
+  // The lesson's own authored exercises — error correction, ordering,
+  // diacritics, reading questions — sampled rather than all served every time.
+  for (const e of exercisesForLessons([lessonNumber])) {
+    if (e.exercise.status === 'flagged' || e.exercise.type === 'generator' || e.exercise.type === 'speaking') continue;
+    candidates.push({ weight: 2 * (0.6 + Math.random() * 0.8), build: () => ({ kind: 'exercise', exercise: e.exercise, lesson: e.ownerId }) });
+  }
+
+  const built = candidates
+    .sort((a, b) => b.weight - a.weight)
+    .map((c) => c.build())
+    .filter((x): x is SessionItem => !!x);
+  return interleave(picker.accept(built, limit));
 }
 
 /** Practise one vocabulary item across changing contexts. */

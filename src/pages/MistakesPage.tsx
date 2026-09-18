@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useStore } from '../learning/store';
 import { lessonById, lessonLabel } from '../data/content';
 import type { MistakeCategory } from '../learning/grading';
-import { mistakePracticeHref, openMistakes, orphanedMistakes, resolvedMistakes } from '../learning/mistakes';
+import { deferredMistakes, mistakePracticeHref, openMistakes, orphanedMistakes, resolvedMistakes } from '../learning/mistakes';
 import { Callout, PageHeader, Pill, Stat, Vi } from '../components/ui';
 import { formatDateTime } from '../utilities/dates';
 
@@ -27,21 +27,23 @@ export const CATEGORY_LABEL: Record<MistakeCategory, string> = {
 export function MistakesPage() {
   const { state, dispatch } = useStore();
   const [filter, setFilter] = useState<string>('all');
-  const [view, setView] = useState<'open' | 'resolved' | 'unavailable'>('open');
+  const [view, setView] = useState<'open' | 'resolved' | 'unavailable' | 'deferred'>('open');
   // All three lists come from learning/mistakes.ts, the same module the
   // practice-session builder uses, so the number on the button is always the
   // number of tasks the session will actually contain.
   const open = openMistakes(state);
   const resolved = resolvedMistakes(state);
   const orphaned = orphanedMistakes(state);
+  // Logged when an earlier version let future lessons leak into sessions.
+  const deferred = deferredMistakes(state);
   const byCat = useMemo(() => {
     const out = new Map<string, number>();
     for (const m of open) out.set(m.category, (out.get(m.category) ?? 0) + 1);
     return Array.from(out.entries()).sort((a, b) => b[1] - a[1]);
   }, [open]);
-  const shown = view === 'resolved' ? resolved : view === 'unavailable' ? orphaned : open;
+  const shown = view === 'resolved' ? resolved : view === 'unavailable' ? orphaned : view === 'deferred' ? deferred : open;
   const list = shown.filter((m) => filter === 'all' || m.category === filter);
-  const emptyLabel = view === 'resolved' ? 'rozwiązanych' : view === 'unavailable' ? 'nieaktualnych' : 'otwartych';
+  const emptyLabel = view === 'resolved' ? 'rozwiązanych' : view === 'unavailable' ? 'nieaktualnych' : view === 'deferred' ? 'odłożonych' : 'otwartych';
 
   return (
     <div className="container">
@@ -63,8 +65,17 @@ export function MistakesPage() {
         {orphaned.length > 0 && (
           <button type="button" className={`btn sm ${view === 'unavailable' ? 'primary' : ''}`.trim()} onClick={() => setView('unavailable')}>Nieaktualne ({orphaned.length})</button>
         )}
+        {deferred.length > 0 && (
+          <button type="button" className={`btn sm ${view === 'deferred' ? 'primary' : ''}`.trim()} onClick={() => setView('deferred')}>Z przyszłych lekcji ({deferred.length})</button>
+        )}
         {resolved.length > 0 && <button type="button" className="btn sm ghost" onClick={() => dispatch({ type: 'clear-resolved-mistakes' })}>Wyczyść rozwiązane</button>}
       </div>
+      {view === 'deferred' && (
+        <Callout tone="warn">
+          Te błędy pochodzą z lekcji, do których kurs jeszcze nie dotarł — zapisały się, gdy wcześniejsza wersja aplikacji pokazywała materiał z wyprzedzeniem.
+          Zostają w historii, ale nie liczą się do otwartych błędów i nie wracają w ćwiczeniach. Wrócą naturalnie, gdy zaczniesz tę lekcję.
+        </Callout>
+      )}
       {view === 'unavailable' && (
         <Callout tone="warn">
           Te błędy zostały zapisane przy starszej wersji materiału i nie da się ich dziś odtworzyć jako zadania. Zostają w historii, ale nie liczą się do „otwartych do przećwiczenia”.
@@ -114,7 +125,7 @@ export function MistakesPage() {
                     <td>
                       {!m.resolved && (
                         <div className="row" style={{ gap: '0.3rem' }}>
-                          {view !== 'unavailable' && <Link className="btn sm" to={mistakePracticeHref(m)}>Ćwicz</Link>}
+                          {view === 'open' && <Link className="btn sm" to={mistakePracticeHref(m)}>Ćwicz</Link>}
                           <button type="button" className="btn sm ghost" title="Oznacz jako rozwiązany" onClick={() => dispatch({ type: 'resolve-mistake', id: m.id })}>✓</button>
                         </div>
                       )}

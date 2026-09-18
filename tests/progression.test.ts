@@ -5,20 +5,20 @@ import { buildSession, currentLesson, DAILY_MISTAKE_CAP, DAILY_REVIEW_CAP, DAILY
 import { completedLessonNumbers, completedLessons, lessonReadyToAdvance, lessonStatus, lessonTargets, nextLesson } from '../src/learning/progression';
 import { frontierLessons } from '../src/learning/session';
 import { MAINTENANCE_MIN_DAYS, MASTERY_SUCCESSES, isMastered, targetPhase } from '../src/learning/targets';
-import { makeSrsId } from '../src/learning/srs';
+import { makeSrsId, type SrsKind } from '../src/learning/srs';
 import { DAY_MS } from '../src/utilities/dates';
 
 const T0 = Date.UTC(2026, 8, 16, 9, 0, 0);
 const byNumber = (n: number) => lessons.find((l) => l.number === n)!;
 
 /** Demonstrate one target `times` times, each a day apart. */
-function demonstrate(state: AppState, kind: 'vocab-active' | 'grammar', ref: string, lesson: string, times: number, grade: 0 | 1 | 2 | 3 = 2, start = T0): AppState {
+function demonstrate(state: AppState, kind: SrsKind, ref: string, lesson: string, times: number, grade: 0 | 1 | 2 | 3 = 2, start = T0): AppState {
   let s = state;
   for (let i = 0; i < times; i++) s = reducer(s, { type: 'review', kind, ref, lesson, grade, now: start + i * DAY_MS });
   return s;
 }
 
-/** Take a lesson to completion the way a learner would: demonstrate its targets. */
+/** Take a lesson to full mastery — every required target, three demonstrations. */
 function completeLesson(state: AppState, n: number, start = T0): AppState {
   const l = byNumber(n);
   let s = reducer(state, { type: 'visit-lesson', lesson: l.id, now: start });
@@ -240,10 +240,14 @@ describe('CASE F: variety and cooldown', () => {
 /* ------------------------------------------------------------------ */
 
 describe('existing progress', () => {
-  it('honours a lesson marked complete the old way, with no SRS evidence', () => {
+  it('does not let old completion flags skip lessons that were never learned', () => {
+    // Flags from an earlier version are kept in history but grant nothing:
+    // the course still starts where the evidence says it should.
     let s = initialState(T0);
     for (const n of [1, 2, 3]) s = reducer(s, { type: 'complete-lesson', lesson: byNumber(n).id, completed: true, now: T0 });
-    expect(nextLesson(s)!.number).toBe(4);
+    expect(lessonStatus(s, byNumber(1)).markedComplete).toBe(true);
+    expect(nextLesson(s)!.number).toBe(1);
+    expect(completedLessons(s)).toEqual([]);
   });
 
   it('does not send a learner back to old lessons because SRS is full', () => {
@@ -263,25 +267,26 @@ describe('existing progress', () => {
     for (const n of [1, 2, 3, 4]) s = completeLesson(s, n, T0);
     expect(nextLesson(s)!.number).toBe(5);
 
-    // Failing several Bài 3 targets later changes nothing about progression:
-    // `successes` never decreases, so the frontier cannot walk backwards.
+    // A couple of Bài 3 targets go shaky later. Coverage is untouched and the
+    // 90 % bar still holds, so the course does not march backwards.
     const l3 = byNumber(3);
-    for (const t of lessonTargets(l3).slice(0, 8)) s = demonstrate(s, t.kind, t.ref, l3.id, 1, 0, T0 + 40 * DAY_MS);
+    for (const t of lessonTargets(l3).slice(0, 2)) s = demonstrate(s, t.kind, t.ref, l3.id, 1, 0, T0 + 40 * DAY_MS);
     expect(lessonReadyToAdvance(s, l3)).toBe(true);
     expect(nextLesson(s)!.number).toBe(5);
     const plan = buildSession(s, 'today', T0 + 41 * DAY_MS) as DailyPlan;
     expect(plan.course.next!.number).toBe(5);
   });
 
-  it('keeps a checkpoint pass as a permanent fact', () => {
+  it('keeps checkpoint history without letting it stand in for mastery', () => {
     let s = initialState(T0);
     const l = byNumber(1);
     s = reducer(s, { type: 'checkpoint', lesson: l.id, score: 9, total: 10, now: T0 });
     expect(lessonStatus(s, l).checkpointPassed).toBe(true);
+    expect(lessonStatus(s, l).complete).toBe(false);
+    // Mastering the material is what finishes it.
+    s = completeLesson(s, 1, T0);
     expect(lessonStatus(s, l).complete).toBe(true);
-    // Un-marking by hand does not erase the checkpoint history.
-    s = reducer(s, { type: 'complete-lesson', lesson: l.id, completed: false, now: T0 });
-    expect(lessonStatus(s, l).complete).toBe(true);
+    expect(lessonStatus(s, l).checkpointPassed).toBe(true);
   });
 
   it('never mutates the state it is given', () => {
@@ -392,14 +397,14 @@ describe('the frontier advances continuously, never by the clock', () => {
     expect(Math.max(...numbers)).toBeLessThanOrEqual(6);
   });
 
-  it('spills into the next lesson once the current one runs out mid-session', () => {
-    // Bài 5 all but finished: its last targets plus Bài 6 should both appear.
+  it('never reaches into the next lesson while the current one is unfinished', () => {
+    // Bài 5 all but finished — still no Bài 6 until the advance rule is met.
     let s = initialState(T0);
     for (const n of [1, 2, 3, 4]) s = completeLesson(s, n, T0);
     const l5 = lessonTargets(byNumber(5));
-    for (const t of l5.slice(0, l5.length - 1)) s = demonstrate(s, t.kind, t.ref, byNumber(5).id, MASTERY_SUCCESSES, 2, T0);
+    for (const t of l5.slice(0, l5.length - 2)) s = demonstrate(s, t.kind, t.ref, byNumber(5).id, MASTERY_SUCCESSES, 2, T0);
     const numbers = frontierNumbersIn(buildSession(s, 'today', T0 + 4 * DAY_MS));
-    expect(numbers.has(6), 'session never reached into Bài 6').toBe(true);
+    expect([...numbers].every((n) => n <= 5), `reached ${[...numbers]}`).toBe(true);
   });
 });
 
@@ -408,56 +413,55 @@ describe('the frontier advances continuously, never by the clock', () => {
 /* ------------------------------------------------------------------ */
 
 describe('"ukończone lekcje" counts only real completion evidence', () => {
-  it('does NOT count a lesson whose targets are merely mastered', () => {
-    // Exactly the Bài 2 case: a small lesson (12 targets, 10 needed for the
-    // 80 % bar) drilled through ordinary review sessions.
+  it('counts a lesson only at 100 % target mastery', () => {
     let s = initialState(T0);
-    s = completeLesson(s, 2, T0);
-    const st = lessonStatus(s, byNumber(2));
-    expect(st.demonstrated).toBe(true);
-    expect(st.complete, 'mastery alone must not read as "ukończona"').toBe(false);
-    expect(completedLessons(s)).toEqual([]);
-  });
-
-  it('counts a lesson the learner explicitly finished', () => {
-    let s = initialState(T0);
-    s = reducer(s, { type: 'complete-lesson', lesson: byNumber(1).id, completed: true, now: T0 });
-    expect(lessonStatus(s, byNumber(1)).complete).toBe(true);
+    s = completeLesson(s, 1, T0);
+    expect(lessonStatus(s, byNumber(1)).percent).toBe(100);
     expect(completedLessons(s).map((l) => l.number)).toEqual([1]);
   });
 
-  it('counts a lesson whose checkpoint was passed', () => {
+  it('does NOT count a lesson an old manual flag calls finished', () => {
+    // Mastery is the source of truth; a stale flag cannot override it.
+    let s = initialState(T0);
+    s = reducer(s, { type: 'complete-lesson', lesson: byNumber(1).id, completed: true, now: T0 });
+    const st = lessonStatus(s, byNumber(1));
+    expect(st.markedComplete).toBe(true);
+    expect(st.complete, 'a stale flag must not read as "ukończona"').toBe(false);
+    expect(completedLessons(s)).toEqual([]);
+  });
+
+  it('does NOT count a lesson on a passed checkpoint alone', () => {
     let s = initialState(T0);
     s = reducer(s, { type: 'checkpoint', lesson: byNumber(1).id, score: 9, total: 10, now: T0 });
     expect(lessonStatus(s, byNumber(1)).checkpointPassed).toBe(true);
-    expect(completedLessons(s).map((l) => l.number)).toEqual([1]);
-  });
-
-  it('does not count a failed checkpoint', () => {
-    let s = initialState(T0);
-    s = reducer(s, { type: 'checkpoint', lesson: byNumber(1).id, score: 4, total: 10, now: T0 });
     expect(completedLessons(s)).toEqual([]);
   });
 
-  it('reproduces the reported state: Bài 1 finished, Bài 2 only practised → 1/12', () => {
-    let s = initialState(T0);
-    s = reducer(s, { type: 'complete-lesson', lesson: byNumber(1).id, completed: true, now: T0 });
-    s = completeLesson(s, 2, T0); // drilled, never formally closed
-    expect(completedLessons(s).map((l) => l.number)).toEqual([1]);
-    expect(completedLessonNumbers(s).size).toBe(1);
+  it('shows "w trakcie" at 99 % and "ukończona" only at 100 %', () => {
+    const l = byNumber(2);
+    const targets = lessonTargets(l);
+    let s = reducer(initialState(T0), { type: 'visit-lesson', lesson: l.id, now: T0 });
+    for (const t of targets.slice(0, targets.length - 1)) s = demonstrate(s, t.kind, t.ref, l.id, MASTERY_SUCCESSES, 2, T0);
+    let st = lessonStatus(s, l);
+    expect(st.percent).toBeLessThan(100);
+    expect(st.complete).toBe(false);
+
+    const last = targets[targets.length - 1];
+    s = demonstrate(s, last.kind, last.ref, l.id, MASTERY_SUCCESSES, 2, T0);
+    st = lessonStatus(s, l);
+    expect(st.percent).toBe(100);
+    expect(st.complete).toBe(true);
   });
 
-  it('keeps supplying new material from the frontier despite the stricter count', () => {
-    // Bài 1 formally done, Bài 2 practised through: the course must move on to
-    // Bài 3 rather than re-teaching Bài 2 just because it is not "ukończona".
-    let s = initialState(T0);
-    s = reducer(s, { type: 'complete-lesson', lesson: byNumber(1).id, completed: true, now: T0 });
-    s = completeLesson(s, 2, T0);
+  it('reproduces the reported state: Bài 1 mastered, Bài 2 half-learned → 1/12', () => {
+    let s = completeLesson(initialState(T0), 1, T0);
+    const l2 = byNumber(2);
+    const targets = lessonTargets(l2);
+    s = reducer(s, { type: 'visit-lesson', lesson: l2.id, now: T0 });
+    for (const t of targets.slice(0, Math.floor(targets.length * 0.6))) s = demonstrate(s, t.kind, t.ref, l2.id, MASTERY_SUCCESSES, 2, T0);
     expect(completedLessons(s).map((l) => l.number)).toEqual([1]);
-    expect(nextLesson(s)!.number).toBe(3);
-    const plan = buildSession(s, 'today', T0 + DAY_MS) as DailyPlan;
-    expect(plan.course.next!.number).toBe(3);
-    expect(frontierNumbersIn(plan).has(3)).toBe(true);
+    expect(completedLessonNumbers(s).size).toBe(1);
+    expect(nextLesson(s)!.number).toBe(2);
   });
 
   it('still advances through several lessons in one day', () => {
@@ -466,18 +470,18 @@ describe('"ukończone lekcje" counts only real completion evidence', () => {
     expect(nextLesson(s)!.number).toBe(5);
     for (const n of [5, 6, 7]) s = completeLesson(s, n, T0);
     expect(nextLesson(s)!.number).toBe(8);
-    // …while the visible count stays honest: none of them were formally closed.
-    expect(completedLessons(s)).toEqual([]);
+    expect(completedLessons(s).map((l) => l.number)).toEqual([1, 2, 3, 4, 5, 6, 7]);
   });
 
-  it('leaves an older explicitly completed lesson completed', () => {
+  it('keeps the frontier past a lesson that later goes shaky', () => {
     let s = initialState(T0);
-    for (const n of [1, 2, 3]) s = reducer(s, { type: 'complete-lesson', lesson: byNumber(n).id, completed: true, now: T0 });
-    expect(completedLessons(s).map((l) => l.number)).toEqual([1, 2, 3]);
-    // A later failed review does not take it away.
+    for (const n of [1, 2, 3]) s = completeLesson(s, n, T0);
+    expect(nextLesson(s)!.number).toBe(4);
+    // One Bài 2 target fails later: mastery dips, but coverage and the other
+    // targets hold, so the course does not march backwards.
     const t = lessonTargets(byNumber(2))[0];
     s = demonstrate(s, t.kind, t.ref, byNumber(2).id, 1, 0, T0 + 10 * DAY_MS);
-    expect(completedLessons(s).map((l) => l.number)).toEqual([1, 2, 3]);
+    expect(nextLesson(s)!.number).toBe(4);
   });
 
   it('resets nothing while evaluating', () => {

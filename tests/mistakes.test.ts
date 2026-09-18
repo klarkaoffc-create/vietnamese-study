@@ -6,8 +6,17 @@ import { actionsForTask } from '../src/learning/record';
 import { grammarTask, dialogueTask, scenarioTask } from '../src/learning/tasks';
 import { allDialogues, allGrammar, scenarios } from '../src/data/content';
 import type { GradeResult } from '../src/learning/grading';
+import { openCourseThrough } from './helpers/course';
+import { DAY_MS } from '../src/utilities/dates';
 
 const T0 = Date.UTC(2026, 8, 9, 9, 0, 0);
+
+/**
+ * Mistakes can only exist for material the course has reached, so these
+ * fixtures open the course first. Deferred (future-lesson) records are covered
+ * by their own suite in tests/eligibility.test.ts.
+ */
+const openState = () => openCourseThrough(initialState(T0), 12, T0 - 400 * DAY_MS);
 
 const WRONG: GradeResult = { outcome: 'wrong', score: 0, feedback: 'nie', expected: 'x', category: 'grammar', flagged: false, unverified: true };
 
@@ -42,7 +51,7 @@ function views(state: AppState) {
 
 describe('the count and the practice session always agree', () => {
   it('CASE A: 2 open → both practiceable → solve one → 1 open and it still appears', () => {
-    let s = initialState(T0);
+    let s = openState();
     s = logMistake(s, 'v-bai-03-nam', 'vocab');
     s = logMistake(s, 'v-bai-03-tuoi', 'vocab');
     expect(views(s)).toEqual({ badge: 2, page: 2, session: 2 });
@@ -60,7 +69,7 @@ describe('the count and the practice session always agree', () => {
   });
 
   it('CASE B: the last mistake is offered until it is actually corrected', () => {
-    let s = initialState(T0);
+    let s = openState();
     s = logMistake(s, 'v-bai-03-tuoi', 'vocab');
     expect(views(s)).toEqual({ badge: 1, page: 1, session: 1 });
     s = retry(s, 'v-bai-03-tuoi', true);
@@ -70,7 +79,7 @@ describe('the count and the practice session always agree', () => {
   });
 
   it('CASE C: nothing open means nothing to practise', () => {
-    const s = initialState(T0);
+    const s = openState();
     expect(views(s)).toEqual({ badge: 0, page: 0, session: 0 });
   });
 
@@ -84,7 +93,7 @@ describe('the count and the practice session always agree', () => {
       { ref: 'v-bai-03-nam', kind: 'vocab' as const },
     ];
     for (const { ref, kind } of refs) {
-      const s = logMistake(initialState(T0), ref, kind);
+      const s = logMistake(openState(), ref, kind);
       const v = views(s);
       expect(v.page, `${ref} counted`).toBe(1);
       expect(v.session, `${ref} practiceable`).toBe(1);
@@ -105,7 +114,7 @@ describe('mistakes logged by the review runner are rebuildable', () => {
     ];
     for (const { task, kind } of cases) {
       const actions = actionsForTask({ kind: 'task', task }, WRONG, 'zła odpowiedź');
-      const s = apply(initialState(T0), actions);
+      const s = apply(openState(), actions);
       const logged = s.mistakes[0];
       expect(logged, `${kind}: nothing logged`).toBeDefined();
       // recordTask labels every non-vocabulary ability "exercise"…
@@ -125,7 +134,7 @@ describe('mistakes logged by the review runner are rebuildable', () => {
 
 describe('a mistake resolves only on real success', () => {
   it('is not resolved by opening the page, listing it or building the session', () => {
-    let s = logMistake(initialState(T0), 'v-bai-03-nam', 'vocab');
+    let s = logMistake(openState(), 'v-bai-03-nam', 'vocab');
     const before = JSON.stringify(s);
     openMistakes(s);
     orphanedMistakes(s);
@@ -141,7 +150,7 @@ describe('a mistake resolves only on real success', () => {
   });
 
   it('needs two consecutive successes, and a failure restarts the count', () => {
-    let s = logMistake(initialState(T0), 'v-bai-03-nam', 'vocab');
+    let s = logMistake(openState(), 'v-bai-03-nam', 'vocab');
     s = retry(s, 'v-bai-03-nam', true);
     expect(s.mistakes[0].retries).toBe(1);
     s = retry(s, 'v-bai-03-nam', false);
@@ -154,7 +163,7 @@ describe('a mistake resolves only on real success', () => {
   });
 
   it('reopens nothing that was already resolved when the same item fails again', () => {
-    let s = logMistake(initialState(T0), 'v-bai-03-nam', 'vocab');
+    let s = logMistake(openState(), 'v-bai-03-nam', 'vocab');
     s = retry(s, 'v-bai-03-nam', true);
     s = retry(s, 'v-bai-03-nam', true);
     expect(openMistakes(s)).toHaveLength(0);
@@ -172,7 +181,7 @@ describe('a mistake resolves only on real success', () => {
 
 describe('stale mistakes from older content', () => {
   it('are kept in history but never counted as practiceable', () => {
-    let s = logMistake(initialState(T0), 'v-bai-99-does-not-exist', 'vocab');
+    let s = logMistake(openState(), 'v-bai-99-does-not-exist', 'vocab');
     s = logMistake(s, 'e-bai-99-removed-exercise', 'exercise', 'bai-99', T0 + 1);
     s = logMistake(s, 'v-bai-03-nam', 'vocab', 'bai-03', T0 + 2);
     expect(s.mistakes).toHaveLength(3); // nothing deleted
@@ -183,7 +192,7 @@ describe('stale mistakes from older content', () => {
 
   it('treats a generated drill with no recorded generator as stale', () => {
     // Older records predate `generatorKind`; the instance id alone is opaque.
-    const s = reducer(initialState(T0), {
+    const s = reducer(openState(), {
       type: 'mistake',
       now: T0,
       mistake: { lesson: 'bai-03', ref: 'gen:number:42', refKind: 'generated', category: 'numbers', prompt: 'p', expected: 'e', given: 'g', outcome: 'wrong', flagged: false },
@@ -193,7 +202,7 @@ describe('stale mistakes from older content', () => {
   });
 
   it('practises a generated drill that does record its generator', () => {
-    const s = reducer(initialState(T0), {
+    const s = reducer(openState(), {
       type: 'mistake',
       now: T0,
       mistake: { lesson: 'bai-03', ref: 'gen:number:42', refKind: 'generated', generatorKind: 'number', category: 'numbers', prompt: 'p', expected: 'e', given: 'g', outcome: 'wrong', flagged: false },
@@ -208,7 +217,7 @@ describe('stale mistakes from older content', () => {
 
 describe('every surface uses the same definition', () => {
   it('badge, list and session agree over a mixed pile of mistakes', () => {
-    let s = initialState(T0);
+    let s = openState();
     const refs: [string, Mistake['refKind']][] = [
       ['v-bai-03-nam', 'vocab'],
       ['v-bai-05-pho', 'vocab'],
@@ -230,7 +239,7 @@ describe('every surface uses the same definition', () => {
   });
 
   it('every open mistake really produces a task in the session', () => {
-    let s = initialState(T0);
+    let s = openState();
     for (const g of allGrammar.slice(0, 6)) s = logMistake(s, g.id, 'exercise', g.lessonId);
     const built = buildSession(s, 'mistakes').items;
     expect(built).toHaveLength(openMistakes(s).length);
@@ -248,7 +257,7 @@ describe('every surface uses the same definition', () => {
         delete store[k];
       },
     };
-    let s = logMistake(initialState(T0), 'v-bai-03-nam', 'vocab');
+    let s = logMistake(openState(), 'v-bai-03-nam', 'vocab');
     s = logMistake(s, allGrammar[0].id, 'exercise', allGrammar[0].lessonId, T0 + 1);
     s = retry(s, 'v-bai-03-nam', true);
     saveState(storage, s);

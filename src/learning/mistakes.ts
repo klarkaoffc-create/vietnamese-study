@@ -38,6 +38,7 @@ import { GeneratorKindSchema, type GeneratorKind, type Scenario } from '../data/
 import { generate } from './generators';
 import { makeSrsId, type AutomaticityLevel, type SrsItem } from './srs';
 import { dialogueTask, grammarTask, scenarioTask, vocabActiveTask } from './tasks';
+import { eligibilityFilter } from './eligibility';
 import type { AppState, Mistake } from './state';
 import type { SessionItem } from './session';
 
@@ -135,7 +136,19 @@ export function isPracticeable(m: Mistake, state: AppState): boolean {
  * next mistake session.
  */
 export function openMistakes(state: AppState): Mistake[] {
-  return state.mistakes.filter((m) => !m.resolved && isPracticeable(m, state));
+  const eligible = eligibilityFilter(state);
+  return state.mistakes.filter((m) => !m.resolved && eligible(m) && isPracticeable(m, state));
+}
+
+/**
+ * Unresolved mistakes from lessons the course has not reached yet — logged
+ * when an earlier version let future material leak into sessions. Kept in
+ * history, shown separately, never counted and never practised: when that
+ * lesson opens properly, fresh learning should drive it.
+ */
+export function deferredMistakes(state: AppState): Mistake[] {
+  const eligible = eligibilityFilter(state);
+  return state.mistakes.filter((m) => !m.resolved && !eligible(m));
 }
 
 /**
@@ -144,7 +157,8 @@ export function openMistakes(state: AppState): Mistake[] {
  * never silently deleted.
  */
 export function orphanedMistakes(state: AppState): Mistake[] {
-  return state.mistakes.filter((m) => !m.resolved && !isPracticeable(m, state));
+  const eligible = eligibilityFilter(state);
+  return state.mistakes.filter((m) => !m.resolved && eligible(m) && !isPracticeable(m, state));
 }
 
 export function resolvedMistakes(state: AppState): Mistake[] {

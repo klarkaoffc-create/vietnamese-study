@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { blocks, lessonsInBlock, lessonLabel } from '../data/content';
 import { useStore } from '../learning/store';
-import { completedLessonNumbers } from '../learning/progression';
+import { completedLessonNumbers, lessonStatus } from '../learning/progression';
+import { isDeferredLesson } from '../learning/eligibility';
 import { Card, PageHeader, Pill, Progress } from '../components/ui';
-import { makeSrsId, mastery } from '../learning/srs';
 
 export function LessonsPage() {
   const { state } = useStore();
@@ -38,8 +38,13 @@ export function LessonsPage() {
             </div>
             <div className="grid">
               {ls.map((l) => {
-                const vocabItems = l.vocabulary.filter((v) => v.srs).map((v) => state.srs[makeSrsId('vocab-active', v.id)]).filter(Boolean);
-                const avg = vocabItems.length ? Math.round(vocabItems.reduce((a, i) => a + mastery(i), 0) / l.vocabulary.length) : 0;
+                // Progress is mastered required targets / all required targets,
+                // so it moves by itself as the learner works anywhere in the app.
+                const st = lessonStatus(state, l);
+                // A lesson the course has not reached shows as future, never as
+                // a misleading few percent picked up by accidental exposure.
+                const deferred = isDeferredLesson(state, l.number);
+                const avg = deferred ? 0 : st.percent;
                 const lp = state.lessons[l.id];
                 const lastCp = lp?.checkpoints?.[lp.checkpoints.length - 1];
                 return (
@@ -54,8 +59,16 @@ export function LessonsPage() {
                     <p className="muted small">{l.summary}</p>
                     <Progress value={avg} thin />
                     <div className="row" style={{ marginTop: '0.5rem' }}>
-                      {completed.has(l.number) ? <Pill tone="ok">✓ ukończona</Pill> : lp?.visited ? <Pill tone="primary">w trakcie</Pill> : <Pill>nowa</Pill>}
-                      <Pill>{l.vocabulary.length} słówek · {avg}% opanowania</Pill>
+                      {deferred ? (
+                        <Pill>🔒 później</Pill>
+                      ) : st.complete ? (
+                        <Pill tone="ok">✓ ukończona</Pill>
+                      ) : st.percent > 0 || lp?.visited ? (
+                        <Pill tone="primary">w trakcie</Pill>
+                      ) : (
+                        <Pill>nowa</Pill>
+                      )}
+                      <Pill>{l.vocabulary.length} słówek{deferred ? '' : ` · ${avg}% opanowania (${st.mastered}/${st.total})`}</Pill>
                       {lastCp && <Pill tone={lastCp.score / lastCp.total >= 0.8 ? 'ok' : 'warn'}>checkpoint {Math.round((lastCp.score / lastCp.total) * 100)}%</Pill>}
                       {l.draft && <Pill tone="warn">szkic</Pill>}
                     </div>
