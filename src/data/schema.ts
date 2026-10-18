@@ -46,11 +46,26 @@ export const SkillSchema = z.enum([
 ]);
 export type Skill = z.infer<typeof SkillSchema>;
 
+/**
+ * One meaningful piece of a longer sentence: a phrase that belongs together
+ * grammatically ("chị đi siêu thị", "để nấu bữa tối"), never a cut by word
+ * count. Read in order, a sentence's chunks must say exactly the sentence;
+ * the validator checks that.
+ */
+export const ChunkSchema = z.object({
+  vi: z.string().min(1),
+  /** Short Polish gloss of this piece alone. */
+  pl: z.string().min(1),
+});
+export type Chunk = z.infer<typeof ChunkSchema>;
+
 export const ExampleSchema = z.object({
   vi: z.string().min(1),
   pl: z.string().optional(),
   note: z.string().optional(),
   status: StatusSchema.default('verified'),
+  /** Only on sentences long enough to be worth building up in pieces. */
+  chunks: z.array(ChunkSchema).min(2).optional(),
 });
 export type Example = z.infer<typeof ExampleSchema>;
 
@@ -124,6 +139,13 @@ export const GrammarPointSchema = z.object({
   status: StatusSchema.default('verified'),
   /** Ids of exercises that practise this point. */
   practice: z.array(z.string()).default([]),
+  /**
+   * The same pattern with different, already-taught vocabulary. Written for
+   * practice (not from the teacher's material), so tasks built from them are
+   * always marked as unverified. Used once a pattern is well known, to check
+   * the structure is understood rather than one sentence memorised.
+   */
+  transfer: z.array(ExampleSchema).default([]),
 });
 export type GrammarPoint = z.infer<typeof GrammarPointSchema>;
 
@@ -138,6 +160,7 @@ export const DialogueLineSchema = z.object({
   /** Optional per-line note (e.g. flagged form). */
   note: z.string().optional(),
   status: StatusSchema.default('verified'),
+  chunks: z.array(ChunkSchema).min(2).optional(),
 });
 export type DialogueLine = z.infer<typeof DialogueLineSchema>;
 

@@ -100,6 +100,7 @@ export function ExerciseView({
       return (
         <div>
           {meta}
+          {ex.instruction && <div className="ex-instruction">{ex.instruction}</div>}
           <p className="ex-prompt">{ex.prompt}</p>
           <OrderingInput tokens={ex.tokens} value={val} onChange={(tokens) => onAnswer({ kind: 'order', tokens })} result={result} />
         </div>

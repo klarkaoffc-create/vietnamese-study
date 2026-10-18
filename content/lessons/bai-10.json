@@ -60,7 +60,10 @@
         { "vi": "Chị ấy thế nào?", "pl": "Jaka ona jest?" }
       ],
       "keywords": ["thế nào", "jaki"],
-      "practice": ["e-bai-10-typed-the-nao"]
+      "practice": ["e-bai-10-typed-the-nao"],
+      "transfer": [
+        {"vi": "Quán cà phê này thế nào?", "pl": "Jaka jest ta kawiarnia?", "status": "unverified"}
+      ]
     },
     {
       "id": "g-bai-10-adj-sentence",
@@ -76,7 +79,10 @@
         { "vi": "Phim này không hay.", "pl": "Ten film nie jest ciekawy." }
       ],
       "keywords": ["przymiotnik", "không", "này", "kia"],
-      "practice": ["e-bai-10-typed-neg", "e-bai-10-error-la", "e-bai-10-adj-match"]
+      "practice": ["e-bai-10-typed-neg", "e-bai-10-error-la", "e-bai-10-adj-match"],
+      "transfer": [
+        {"vi": "Phở ở đây không đắt.", "pl": "Phở tutaj nie jest drogie.", "status": "unverified", "chunks": [{"vi": "Phở", "pl": "phở"}, {"vi": "ở đây", "pl": "tutaj"}, {"vi": "không đắt", "pl": "nie jest drogie"}]}
+      ]
     },
     {
       "id": "g-bai-10-rat-qua-lam",
@@ -92,7 +98,11 @@
         { "vi": "Không đẹp lắm.", "pl": "Niezbyt ładny." }
       ],
       "keywords": ["rất", "quá", "lắm", "bardzo", "zbyt", "niezbyt"],
-      "practice": ["e-bai-10-mcq-rat", "e-bai-10-fill-lam", "e-bai-10-error-rat"]
+      "practice": ["e-bai-10-mcq-rat", "e-bai-10-fill-lam", "e-bai-10-error-rat"],
+      "transfer": [
+        {"vi": "Tiếng Việt khó quá!", "pl": "Wietnamski jest bardzo trudny!", "status": "unverified"},
+        {"vi": "Phim này không hay lắm.", "pl": "Ten film nie jest zbyt ciekawy.", "status": "unverified"}
+      ]
     },
     {
       "id": "g-bai-10-comparison",
@@ -107,7 +117,11 @@
         { "vi": "Mình thích sách này nhất.", "pl": "Najbardziej lubię tę książkę." }
       ],
       "keywords": ["bằng", "như", "hơn", "nhất", "porównanie", "stopniowanie"],
-      "practice": ["e-bai-10-comparison-gen", "e-bai-10-order-hon", "e-bai-10-typed-nhat"]
+      "practice": ["e-bai-10-comparison-gen", "e-bai-10-order-hon", "e-bai-10-typed-nhat"],
+      "transfer": [
+        {"vi": "Em gái tôi cao hơn tôi.", "pl": "Moja młodsza siostra jest wyższa ode mnie.", "status": "unverified", "chunks": [{"vi": "Em gái tôi", "pl": "moja młodsza siostra"}, {"vi": "cao hơn", "pl": "jest wyższa"}, {"vi": "tôi", "pl": "ode mnie"}]},
+        {"vi": "Quán này đắt nhất.", "pl": "Ten lokal jest najdroższy.", "status": "unverified"}
+      ]
     }
   ],
   "exercises": [

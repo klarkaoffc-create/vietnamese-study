@@ -70,13 +70,16 @@
       "pattern": "(dzień tygodnia) + ngày + liczba, tháng + liczba, năm + liczba",
       "explanation": "Kolejność jest od jednostki najmniejszej do największej: dzień, miesiąc, rok. Rok czyta się jako liczbę: 2026 = „hai nghìn không (trăm) hai mươi sáu” albo cyframi „hai không hai sáu”.",
       "examples": [
-        { "vi": "Thứ Ba, ngày 10, tháng 12, năm 2026", "pl": "wtorek, 10 grudnia 2026" },
+        { "vi": "Thứ Ba, ngày 10, tháng 12, năm 2026", "pl": "wtorek, 10 grudnia 2026", "chunks": [{"vi": "Thứ Ba", "pl": "wtorek"}, {"vi": "ngày 10", "pl": "dzień 10"}, {"vi": "tháng 12", "pl": "miesiąc 12 (grudzień)"}, {"vi": "năm 2026", "pl": "rok 2026"}] },
         { "vi": "Hôm nay là ngày mấy?", "pl": "Jaka jest dzisiejsza data?" },
         { "vi": "Hôm nay là ngày… tháng… năm…", "pl": "Dzisiaj jest…" },
         { "vi": "Sinh nhật của mình là ngày… tháng…", "pl": "Moje urodziny są…" }
       ],
       "keywords": ["data", "ngày", "tháng", "năm", "sinh nhật"],
-      "practice": ["e-bai-04-date-gen", "e-bai-04-year-gen", "e-bai-04-open-birthday"]
+      "practice": ["e-bai-04-date-gen", "e-bai-04-year-gen", "e-bai-04-open-birthday"],
+      "transfer": [
+        {"vi": "Chủ Nhật, ngày 21, tháng 6, năm 2026", "pl": "niedziela, 21 czerwca 2026", "status": "unverified", "chunks": [{"vi": "Chủ Nhật", "pl": "niedziela"}, {"vi": "ngày 21", "pl": "dzień 21"}, {"vi": "tháng 6", "pl": "miesiąc 6 (czerwiec)"}, {"vi": "năm 2026", "pl": "rok 2026"}]}
+      ]
     },
     {
       "id": "g-bai-04-may-bao-nhieu",
@@ -89,7 +92,10 @@
         { "vi": "Bạn bao nhiêu tuổi?", "pl": "Ile masz lat?" }
       ],
       "keywords": ["mấy", "bao nhiêu", "ile"],
-      "practice": ["e-bai-04-mcq-may", "e-bai-04-fill-may"]
+      "practice": ["e-bai-04-mcq-may", "e-bai-04-fill-may"],
+      "transfer": [
+        {"vi": "Ngày mai là thứ mấy?", "pl": "Jaki dzień tygodnia jest jutro?", "status": "unverified"}
+      ]
     },
     {
       "id": "g-bai-04-time-words",

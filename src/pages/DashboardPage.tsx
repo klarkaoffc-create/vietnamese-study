@@ -71,7 +71,7 @@ export function DashboardPage() {
           <div style={{ minWidth: 0 }}>
             <h2 style={{ marginBottom: '0.2rem' }}>Dzisiejsza nauka</h2>
             <p className="muted small" style={{ margin: '0 0 0.5rem' }}>
-              Mieszana sesja: nowy materiał, przypominanie zdań, rozmowa, gramatyka w użyciu, twoje błędy i swobodna wypowiedź.
+              Mieszana sesja: nowy materiał, przypominanie zdań, rozmowa, gramatyka w użyciu, twoje błędy, tony w zdaniu i swobodna wypowiedź.
             </p>
             <div className="row">
               {course.next && <Pill tone="primary">Nowy materiał: {lessonLabel(course.next.number)}</Pill>}

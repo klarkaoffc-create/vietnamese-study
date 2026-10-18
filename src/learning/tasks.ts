@@ -16,7 +16,7 @@
  * carries a synthesised `Exercise`, so `ExerciseView` and `grading.ts` work
  * unchanged.
  */
-import type { Exercise, Skill } from '../data/schema';
+import type { Chunk, Exercise, Skill } from '../data/schema';
 import {
   allVocab,
   dialogueById,
@@ -31,13 +31,21 @@ import type { AutomaticityLevel, SrsKind } from './srs';
 import { pick, sample, shuffle } from '../utilities/random';
 import { comparisonForm, headwordForms, withOptionalEdges } from '../utilities/vietnamese';
 import { glossWithoutAnswer, hintUnlessRevealing } from './answers';
+import { chunkScaffold } from '../utilities/chunks';
 
 /* ------------------------------------------------------------------ */
 /* Task shape                                                          */
 /* ------------------------------------------------------------------ */
 
 /** Broad grouping used to build a balanced daily session. */
-export type TaskPhase = 'warmup' | 'retrieval' | 'conversation' | 'grammar' | 'mistakes' | 'listening' | 'speaking' | 'free';
+export type TaskPhase = 'warmup' | 'retrieval' | 'conversation' | 'grammar' | 'mistakes' | 'listening' | 'speaking' | 'free' | 'tones';
+
+/** A sentence a task can be built on, with its meaningful pieces when it has them. */
+export interface Sentence {
+  vi: string;
+  pl: string;
+  chunks?: Chunk[];
+}
 
 export interface LearningTask {
   /** Unique within a session. */
@@ -58,6 +66,16 @@ export interface LearningTask {
   selfAssessed: boolean;
   /** Optional seconds budget, used to push toward faster responses. */
   timeLimitSec?: number;
+  /**
+   * The sentence this task is about, when it has meaningful pieces. Shown
+   * broken down AFTER an unsuccessful attempt, never before it.
+   */
+  sentence?: Sentence;
+  /**
+   * Practice that is not one scheduled ability (the daily tone task). It
+   * feeds the tone records only: no scheduler update, no mistake entry.
+   */
+  untracked?: boolean;
 }
 
 const PHASE_LABEL: Record<TaskPhase, string> = {
@@ -69,6 +87,7 @@ const PHASE_LABEL: Record<TaskPhase, string> = {
   listening: 'Słuchanie',
   speaking: 'Mówienie',
   free: 'Swobodna wypowiedź',
+  tones: 'Tony w zdaniu',
 };
 
 export function phaseLabel(p: TaskPhase): string {
@@ -93,14 +112,73 @@ function exId(lesson: string, suffix: string): string {
 }
 
 /** Sentence examples attached to a vocabulary item that have a Polish side. */
-function usableExamples(v: VocabEntry): { vi: string; pl: string }[] {
+function usableExamples(v: VocabEntry): Sentence[] {
   return v.examples
     .filter((e) => e.pl && e.status !== 'flagged' && e.vi.trim().split(/\s+/).length >= 2)
-    .map((e) => ({ vi: e.vi, pl: e.pl! }));
+    .map((e) => ({ vi: e.vi, pl: e.pl!, chunks: e.chunks }));
 }
 
-function grammarExamples(g: GrammarEntry): { vi: string; pl: string }[] {
-  return g.examples.filter((e) => e.pl && e.status !== 'flagged').map((e) => ({ vi: e.vi, pl: e.pl! }));
+function grammarExamples(g: GrammarEntry): Sentence[] {
+  return g.examples.filter((e) => e.pl && e.status !== 'flagged').map((e) => ({ vi: e.vi, pl: e.pl!, chunks: e.chunks }));
+}
+
+/** The same pattern with other vocabulary — see `GrammarPointSchema.transfer`. */
+function transferExamples(g: GrammarEntry): Sentence[] {
+  return g.transfer.filter((e) => e.pl && e.status !== 'flagged').map((e) => ({ vi: e.vi, pl: e.pl!, chunks: e.chunks }));
+}
+
+/* ------------------------------------------------------------------ */
+/* Sentences built up in pieces                                         */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Sentences with at least this many authored pieces are taught in stages.
+ * Shorter ones stay simple: splitting "Rẽ trái." into pieces helps nobody.
+ */
+export const CHUNKED_MIN = 3;
+
+export const isChunked = (s: Sentence | undefined): s is Sentence & { chunks: Chunk[] } => (s?.chunks?.length ?? 0) >= CHUNKED_MIN;
+
+/**
+ * Stage 1 support — what each piece means, listed in an order that is NOT the
+ * sentence order (alphabetical, reversed if that happens to match), so it
+ * explains the pieces without solving the ordering.
+ */
+function pieceMeanings(chunks: Chunk[]): string {
+  const sorted = [...chunks].sort((a, b) => a.vi.localeCompare(b.vi, 'vi'));
+  const same = sorted.every((c, i) => c === chunks[i]);
+  return (same ? sorted.reverse() : sorted).map((c) => `${c.vi} = ${c.pl}`).join('  ·  ');
+}
+
+/**
+ * Stages 1–2 — put the pieces together: word order in use, a phrase at a
+ * time. With `meanings`, each piece's Polish meaning is given as well (first
+ * encounter); without, only the meaning of the whole sentence.
+ */
+function chunkOrderExercise(lesson: string, key: string, s: Sentence & { chunks: Chunk[] }, meanings: boolean, extra: Partial<Exercise> = {}): Exercise {
+  return {
+    id: exId(lesson, `ck2-${key}`),
+    type: 'ordering',
+    skill: 'word-order',
+    source: 'generated',
+    status: 'unverified',
+    instruction: meanings ? `Złóż zdanie z fragmentów. Znaczenie fragmentów: ${pieceMeanings(s.chunks)}` : 'Złóż zdanie z fragmentów.',
+    prompt: `„${s.pl}”`,
+    tokens: s.chunks.map((c) => c.vi),
+    translation: s.pl,
+    grammar: [],
+    vocab: [],
+    level: 2,
+    ...extra,
+  } as Exercise;
+}
+
+/**
+ * Stage 3 scaffold — the Polish pieces in VIETNAMESE order. It shows how the
+ * sentence is built without handing over a Vietnamese word.
+ */
+function structureHint(s: Sentence, answer: string): string | undefined {
+  return isChunked(s) ? hintUnlessRevealing(`Kolejność: ${chunkScaffold(s.chunks)}`, answer) : undefined;
 }
 
 /** Build a cloze by blanking the target word inside its own example sentence. */
@@ -182,12 +260,13 @@ export function vocabActiveTask(v: VocabEntry, level: AutomaticityLevel, phase: 
         prompt: `Powiedz po wietnamsku: „${ex.pl}”`,
         answerLang: 'vi',
         answers: [ex.vi],
-        hint: level === 3 ? hintUnlessRevealing(`${v.vi} = ${v.pl}`, ex.vi) : undefined,
+        hint: level === 3 ? structureHint(ex, ex.vi) ?? hintUnlessRevealing(`${v.vi} = ${v.pl}`, ex.vi) : undefined,
         grammar: [],
         vocab: [v.id],
         level: 3,
       },
       timeLimitSec: level === 4 ? 75 : undefined,
+      sentence: isChunked(ex) ? ex : undefined,
     };
   }
 
@@ -211,6 +290,7 @@ export function vocabActiveTask(v: VocabEntry, level: AutomaticityLevel, phase: 
         vocab: [v.id],
         level: 2,
       },
+      sentence: isChunked(examples[0]) ? examples[0] : undefined,
     };
   }
 
@@ -318,9 +398,42 @@ export function grammarTask(g: GrammarEntry, level: AutomaticityLevel, phase: Ta
     };
   }
 
-  const ex = pick(examples);
+  // Level 4: the pattern is known by now, so check it TRANSFERS — the same
+  // structure with other words — instead of recalling one memorised sentence.
+  const transfer = transferExamples(g);
+  if (level === 4 && transfer.length) {
+    const ex = pick(transfer);
+    return {
+      ...common,
+      id: uid('t-g4t'),
+      exercise: {
+        id: exId(g.lessonId, `g4t-${g.id}`),
+        type: 'typed',
+        skill: 'grammar',
+        source: 'generated',
+        status: 'unverified',
+        instruction: 'Ten sam wzorzec, nowe zdanie.',
+        prompt: `Powiedz po wietnamsku: „${ex.pl}”`,
+        answerLang: 'vi',
+        answers: [ex.vi],
+        explanation: g.pattern,
+        grammar: [g.id],
+        vocab: [],
+        level: 3,
+      },
+      timeLimitSec: 75,
+      sentence: isChunked(ex) ? ex : undefined,
+    };
+  }
+
+  // Levels 1–3 build a long sentence up in stages; prefer the examples that
+  // have authored pieces so the stages stay with the same kind of sentence.
+  const chunked = examples.filter(isChunked);
+  const ex = chunked.length && level <= 3 ? pick(chunked) : pick(examples);
+
   if (level >= 3) {
-    // Produce the sentence from Polish; level 4 drops the pattern hint.
+    // Produce the sentence from Polish; level 3 shows how it is built (the
+    // pieces in Vietnamese order) or the pattern, level 4 shows nothing.
     return {
       ...common,
       id: uid('t-g3'),
@@ -333,14 +446,22 @@ export function grammarTask(g: GrammarEntry, level: AutomaticityLevel, phase: Ta
         prompt: `Powiedz po wietnamsku: „${ex.pl}”`,
         answerLang: 'vi',
         answers: [ex.vi],
-        hint: level === 3 ? hintUnlessRevealing(g.pattern, ex.vi) : undefined,
+        hint: level === 3 ? structureHint(ex, ex.vi) ?? hintUnlessRevealing(g.pattern, ex.vi) : undefined,
         explanation: g.pattern,
         grammar: [g.id],
         vocab: [],
         level: 3,
       },
       timeLimitSec: level === 4 ? 75 : undefined,
+      sentence: isChunked(ex) ? ex : undefined,
     };
+  }
+
+  if (isChunked(ex)) {
+    // Level 1: assemble the pieces knowing what each one means.
+    // Level 2: assemble them from the meaning of the whole sentence only.
+    const exercise = chunkOrderExercise(g.lessonId, g.id, ex, level === 1, { grammar: [g.id] });
+    return { ...common, id: uid('t-gck'), exercise, sentence: ex };
   }
 
   // Level 1–2: rebuild the sentence from its own words (word order in use).
@@ -430,6 +551,45 @@ export function dialogueTask(d: DialogueEntry, lineIndex: number, level: Automat
     };
   }
 
+  const sentence: Sentence = { vi: line.vi, pl: line.pl ?? '', chunks: line.chunks };
+  const context = `${prev.speaker}: „${prev.vi}”${prev.pl ? ` (${prev.pl})` : ''}`;
+  if (isChunked(sentence) && line.pl && level <= 2) {
+    if (level === 1) {
+      // Level 1: assemble the reply from its pieces, with the meaning given.
+      return {
+        ...common,
+        id: uid('t-dck'),
+        exercise: chunkOrderExercise(d.lessonId, `${d.id}-${lineIndex}`, sentence, true, {
+          skill: 'dialogue',
+          prompt: `${context}\n\n${line.speaker}: „${line.pl}”`,
+        } as Partial<Exercise>),
+        sentence,
+      };
+    }
+    // Level 2: write it yourself, with the structure (Polish pieces in
+    // Vietnamese order) as the only support.
+    return {
+      ...common,
+      id: uid('t-d2s'),
+      exercise: {
+        id: exId(d.lessonId, `d2s-${d.id}-${lineIndex}`),
+        type: 'typed',
+        skill: 'dialogue',
+        source: 'generated',
+        status: 'unverified',
+        instruction: `Rozmowa: ${d.situation ?? d.title}`,
+        prompt: `${context}\n\n${line.speaker}: ?`,
+        answerLang: 'vi',
+        answers: [line.vi],
+        hint: structureHint(sentence, line.vi),
+        grammar: [],
+        vocab: [],
+        level: 2,
+      },
+      sentence,
+    };
+  }
+
   // Levels 1–3: reconstruct the exact line, with the previous turn as context.
   return {
     ...common,
@@ -449,6 +609,7 @@ export function dialogueTask(d: DialogueEntry, lineIndex: number, level: Automat
       vocab: [],
       level: 2,
     },
+    sentence: isChunked(sentence) ? sentence : undefined,
   };
 }
 
@@ -503,8 +664,9 @@ export function scenarioTask(
  * app does not pretend otherwise. The learner speaks first, then compares
  * with the model and rates themselves.
  */
-export function speakingTask(vi: string, pl: string, ref: string, lesson: string, level: AutomaticityLevel, targetVocab: string[] = []): LearningTask {
+export function speakingTask(vi: string, pl: string, ref: string, lesson: string, level: AutomaticityLevel, targetVocab: string[] = [], chunks?: Chunk[]): LearningTask {
   return {
+    sentence: chunks && chunks.length >= CHUNKED_MIN ? { vi, pl, chunks } : undefined,
     id: uid('t-sp'),
     srsKind: 'sentence',
     srsRef: ref,
@@ -583,4 +745,4 @@ export const SKILL_OF_KIND: Record<SrsKind, Skill> = {
   listening: 'listening',
 };
 
-export { usableExamples, grammarExamples };
+export { usableExamples, grammarExamples, transferExamples };

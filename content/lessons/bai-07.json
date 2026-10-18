@@ -39,10 +39,14 @@
       "examples": [
         { "vi": "Ở kia có nhiều.", "pl": "Tam jest dużo." },
         { "vi": "Tôi không biết đi đâu.", "pl": "Nie wiem, dokąd iść." },
-        { "vi": "Ở Mỹ có rất nhiều người Việt Nam.", "pl": "W Ameryce jest bardzo dużo Wietnamczyków." }
+        { "vi": "Ở Mỹ có rất nhiều người Việt Nam.", "pl": "W Ameryce jest bardzo dużo Wietnamczyków.", "chunks": [{"vi": "Ở Mỹ", "pl": "w Ameryce"}, {"vi": "có", "pl": "jest / są"}, {"vi": "rất nhiều", "pl": "bardzo dużo"}, {"vi": "người Việt Nam", "pl": "Wietnamczyków"}] }
       ],
       "keywords": ["đây", "đó", "kia", "đâu", "ở đâu", "gdzie"],
-      "practice": ["e-bai-07-mcq-dau", "e-bai-07-fill-o-dau", "e-bai-07-typed-where"]
+      "practice": ["e-bai-07-mcq-dau", "e-bai-07-fill-o-dau", "e-bai-07-typed-where"],
+      "transfer": [
+        {"vi": "Ở Pháp có nhiều quán cà phê.", "pl": "We Francji jest dużo kawiarni.", "status": "unverified", "chunks": [{"vi": "Ở Pháp", "pl": "we Francji"}, {"vi": "có nhiều", "pl": "jest dużo"}, {"vi": "quán cà phê", "pl": "kawiarni"}]},
+        {"vi": "Quán rượu ở đâu?", "pl": "Gdzie jest bar?", "status": "unverified"}
+      ]
     },
     {
       "id": "g-bai-07-plans",
@@ -50,12 +54,15 @@
       "pattern": "Bạn muốn + czasownik + với mình không? · Thế thì, … · Mình chưa biết, còn bạn?",
       "explanation": "Propozycję buduje się z „muốn … không?” (chcesz…?) i „với mình” (ze mną). „Thế thì” (w takim razie) otwiera reakcję na to, co powiedział rozmówca. „Mình chưa biết” = jeszcze nie wiem.",
       "examples": [
-        { "vi": "Bạn muốn đi quán ăn với mình không?", "pl": "Chcesz iść ze mną do restauracji?" },
+        { "vi": "Bạn muốn đi quán ăn với mình không?", "pl": "Chcesz iść ze mną do restauracji?", "chunks": [{"vi": "Bạn muốn", "pl": "chcesz"}, {"vi": "đi quán ăn", "pl": "iść do restauracji"}, {"vi": "với mình", "pl": "ze mną"}, {"vi": "không", "pl": "? (pytanie)"}] },
         { "vi": "Thế thì, bạn muốn làm gì?", "pl": "W takim razie, co chcesz robić?" },
         { "vi": "Mình chưa biết, còn bạn?", "pl": "Jeszcze nie wiem, a ty?" }
       ],
       "keywords": ["thế thì", "với", "plany", "propozycja"],
-      "practice": ["e-bai-07-dialogue-1", "e-bai-07-dialogue-2", "e-bai-07-order-invite"]
+      "practice": ["e-bai-07-dialogue-1", "e-bai-07-dialogue-2", "e-bai-07-order-invite"],
+      "transfer": [
+        {"vi": "Chị muốn xem phim với em không?", "pl": "Chcesz obejrzeć ze mną film? (do starszej koleżanki)", "status": "unverified", "chunks": [{"vi": "Chị muốn", "pl": "chcesz (do chị)"}, {"vi": "xem phim", "pl": "obejrzeć film"}, {"vi": "với em", "pl": "ze mną"}, {"vi": "không", "pl": "? (pytanie)"}]}
+      ]
     }
   ],
   "dialogues": [
@@ -68,11 +75,11 @@
         { "speaker": "B", "vi": "Không phải, hôm nay là thứ Bảy, mình không đi làm việc.", "pl": "Nie, dzisiaj jest sobota, nie idę do pracy.", "status": "flagged", "note": "CONTENT_REVIEW: na pytanie o czynność naturalniej „Không”." },
         { "speaker": "A", "vi": "Thế thì, bạn muốn làm gì?", "pl": "W takim razie, co chcesz robić?" },
         { "speaker": "B", "vi": "Mình chưa biết, còn bạn?", "pl": "Jeszcze nie wiem, a ty?" },
-        { "speaker": "A", "vi": "Mình muốn ăn phở. Bạn muốn đi quán ăn với mình không?", "pl": "Chcę zjeść phở. Chcesz iść ze mną do restauracji?", "note": "W oryginale literówka „vời” – poprawiona na „với” (CONFIRMED TYPO)." },
+        { "speaker": "A", "vi": "Mình muốn ăn phở. Bạn muốn đi quán ăn với mình không?", "pl": "Chcę zjeść phở. Chcesz iść ze mną do restauracji?", "note": "W oryginale literówka „vời” – poprawiona na „với” (CONFIRMED TYPO).", "chunks": [{"vi": "Mình muốn ăn phở", "pl": "chcę zjeść phở"}, {"vi": "Bạn muốn đi quán ăn", "pl": "chcesz iść do restauracji"}, {"vi": "với mình không", "pl": "ze mną?"}] },
         { "speaker": "B", "vi": "Muốn, nhưng mình cũng muốn uống cà phê. Ăn sau, chúng mình sẽ đi quán cà phê không?", "pl": "Chcę, ale chcę też napić się kawy. Po jedzeniu pójdziemy do kawiarni?", "status": "flagged", "note": "CONTENT_REVIEW: „Ăn sau” prawdopodobnie „Sau khi ăn”." },
-        { "speaker": "A", "vi": "Mình không uống cà phê. Mình muốn uống bia.", "pl": "Nie piję kawy. Chcę napić się piwa." },
-        { "speaker": "B", "vi": "Thế thì, bạn biết quán rượu tốt không?", "pl": "W takim razie znasz jakiś dobry bar?" },
-        { "speaker": "A", "vi": "Ở kia có nhiều. Chúng mình đi xem.", "pl": "Tam jest dużo. Chodźmy zobaczyć." }
+        { "speaker": "A", "vi": "Mình không uống cà phê. Mình muốn uống bia.", "pl": "Nie piję kawy. Chcę napić się piwa.", "chunks": [{"vi": "Mình không uống", "pl": "nie piję"}, {"vi": "cà phê", "pl": "kawy"}, {"vi": "Mình muốn uống", "pl": "chcę się napić"}, {"vi": "bia", "pl": "piwa"}] },
+        { "speaker": "B", "vi": "Thế thì, bạn biết quán rượu tốt không?", "pl": "W takim razie znasz jakiś dobry bar?", "chunks": [{"vi": "Thế thì", "pl": "w takim razie"}, {"vi": "bạn biết", "pl": "znasz"}, {"vi": "quán rượu tốt", "pl": "dobry bar"}, {"vi": "không", "pl": "? (pytanie)"}] },
+        { "speaker": "A", "vi": "Ở kia có nhiều. Chúng mình đi xem.", "pl": "Tam jest dużo. Chodźmy zobaczyć.", "chunks": [{"vi": "Ở kia", "pl": "tam"}, {"vi": "có nhiều", "pl": "jest dużo"}, {"vi": "Chúng mình đi xem", "pl": "chodźmy zobaczyć"}] }
       ]
     }
   ],

@@ -131,9 +131,37 @@ generuje kart Anki-style.
 `grammar: ["g-..."]` w swoim polu — obie ścieżki są sumowane
 (`exercisesForGrammar` w `src/data/content.ts`).
 
+#### `transfer` — ten sam wzorzec, inne słowa
+
+Opcjonalna lista zdań (`{ vi, pl, status, chunks? }`) z tym samym wzorcem,
+ale innym, już poznanym słownictwem. **Nie pochodzą z materiału
+nauczycielki** — są opracowane do nauki, więc walidator wymaga statusu innego
+niż `verified`. Silnik używa ich na poziomie 4, żeby sprawdzić, czy struktura
+jest zrozumiana, a nie jedno zdanie zapamiętane. Słownictwo w zdaniu
+transferowym musi pochodzić z tej samej lub wcześniejszej lekcji.
+
+### `chunks` — długie zdanie w sensownych fragmentach
+
+Przykład (`examples[]`, `transfer[]`) i linia dialogu mogą mieć pole
+`chunks: [{ vi, pl }, …]`: zdanie podzielone na **fragmenty znaczeniowe**
+(„Nếu anh đi” · „bằng xe buýt” · „thì em đi” · „với anh”), każdy z krótką
+polską glosą. Podział wyznacza gramatyka i sens, nigdy liczba słów.
+Walidator sprawdza, że fragmenty czytane po kolei dają dokładnie całe zdanie.
+
+Dodawaj je tylko do zdań na tyle długich, że da się je sensownie rozłożyć na
+**co najmniej 3** części — krótsze zdania silnik traktuje zwyczajnie. Pomiń
+zdania-wyliczenia („kawa, herbata i woda”), w których kolejność elementów jest
+dowolna — układanie fragmentów byłoby wtedy niejednoznaczne.
+
+Zdanie z fragmentami przechodzi etapy: poziom 1 — co znaczy każdy fragment,
+poziom 2 — złóż zdanie z fragmentów, poziom 3 — napisz je, mając jako
+podpowiedź tylko polskie fragmenty w wietnamskiej kolejności, poziom 4 — bez
+podpowiedzi albo zdanie transferowe. Po nieudanej próbie aplikacja pokazuje
+zdanie rozłożone na fragmenty.
+
 ### `Dialogue` i `Reading`
 
-Dialog to lista `{ speaker, vi, pl?, note?, status? }`. Czytanka to lista
+Dialog to lista `{ speaker, vi, pl?, note?, status?, chunks? }`. Czytanka to lista
 akapitów (`paragraphs`) z opcjonalnym tłumaczeniem `translation` (musi mieć
 tyle samo elementów co `paragraphs` — walidator to sprawdza) oraz
 `glossary` — lista id słówek.

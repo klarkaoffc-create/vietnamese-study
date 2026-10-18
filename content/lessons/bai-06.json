@@ -59,10 +59,15 @@
         { "vi": "đã ăn", "pl": "zjadłam / zjadłem" },
         { "vi": "đang ăn", "pl": "jem (teraz)" },
         { "vi": "sẽ ăn", "pl": "zjem" },
-        { "vi": "Năm trước chị ấy đã đi Trung Quốc.", "pl": "W zeszłym roku pojechała do Chin." }
+        { "vi": "Năm trước chị ấy đã đi Trung Quốc.", "pl": "W zeszłym roku pojechała do Chin.", "chunks": [{"vi": "Năm trước", "pl": "w zeszłym roku"}, {"vi": "chị ấy", "pl": "ona"}, {"vi": "đã đi", "pl": "pojechała (đã = przeszłość)"}, {"vi": "Trung Quốc", "pl": "do Chin"}] }
       ],
       "keywords": ["đã", "đang", "sẽ", "czas przeszły", "czas przyszły"],
-      "practice": ["e-bai-06-tense-gen", "e-bai-06-fill-tense", "e-bai-06-mcq-tense"]
+      "practice": ["e-bai-06-tense-gen", "e-bai-06-fill-tense", "e-bai-06-mcq-tense"],
+      "transfer": [
+        {"vi": "Hôm qua bố đã xem phim với mẹ.", "pl": "Wczoraj tata oglądał film z mamą.", "status": "unverified", "chunks": [{"vi": "Hôm qua", "pl": "wczoraj"}, {"vi": "bố đã xem phim", "pl": "tata obejrzał film"}, {"vi": "với mẹ", "pl": "z mamą"}]},
+        {"vi": "Năm sau chúng tôi sẽ đi du lịch Việt Nam.", "pl": "W przyszłym roku pojedziemy na wycieczkę do Wietnamu.", "status": "unverified", "chunks": [{"vi": "Năm sau", "pl": "w przyszłym roku"}, {"vi": "chúng tôi sẽ đi du lịch", "pl": "pojedziemy na wycieczkę"}, {"vi": "Việt Nam", "pl": "do Wietnamu"}]},
+        {"vi": "Mẹ đang đọc sách.", "pl": "Mama (teraz) czyta książkę.", "status": "unverified"}
+      ]
     },
     {
       "id": "g-bai-06-roi-chua",
@@ -76,7 +81,11 @@
         { "vi": "Chưa có.", "pl": "Jeszcze nie mam." }
       ],
       "keywords": ["rồi", "chưa", "już", "jeszcze nie"],
-      "practice": ["e-bai-06-typed-roi", "e-bai-06-typed-chua", "e-bai-06-mcq-chua"]
+      "practice": ["e-bai-06-typed-roi", "e-bai-06-typed-chua", "e-bai-06-mcq-chua"],
+      "transfer": [
+        {"vi": "Bạn ăn phở chưa?", "pl": "Jadłeś/aś już phở?", "status": "unverified"},
+        {"vi": "Mình chưa xem phim này.", "pl": "Jeszcze nie widziałam/em tego filmu.", "status": "unverified"}
+      ]
     },
     {
       "id": "g-bai-06-family-talk",
@@ -85,11 +94,14 @@
       "explanation": "Czytanka pokazuje schemat opisu rodziny: liczba osób („có 5 người”), imiona („Bố tên là Đức”), wiek („năm nay 65 tuổi”), zajęcie („Bố là bác sĩ”), miejsce zamieszkania („sống ở Sài Gòn”), zainteresowania („sở thích của Huy là đá bóng”).",
       "examples": [
         { "vi": "Gia đình của tôi có 5 người.", "pl": "Moja rodzina ma 5 osób." },
-        { "vi": "Bố là bác sĩ và mẹ làm việc ở nhà.", "pl": "Tata jest lekarzem, a mama pracuje w domu." },
+        { "vi": "Bố là bác sĩ và mẹ làm việc ở nhà.", "pl": "Tata jest lekarzem, a mama pracuje w domu.", "chunks": [{"vi": "Bố là bác sĩ", "pl": "tata jest lekarzem"}, {"vi": "và mẹ làm việc", "pl": "a mama pracuje"}, {"vi": "ở nhà", "pl": "w domu"}] },
         { "vi": "Tôi rất yêu gia đình của tôi.", "pl": "Bardzo kocham moją rodzinę." }
       ],
       "keywords": ["rodzina", "gia đình", "opis"],
-      "practice": ["e-bai-06-read-1", "e-bai-06-read-2", "e-bai-06-open-family"]
+      "practice": ["e-bai-06-read-1", "e-bai-06-read-2", "e-bai-06-open-family"],
+      "transfer": [
+        {"vi": "Bạn gái của em trai tôi sống ở Pháp.", "pl": "Dziewczyna mojego młodszego brata mieszka we Francji.", "status": "unverified", "chunks": [{"vi": "Bạn gái", "pl": "dziewczyna"}, {"vi": "của em trai tôi", "pl": "mojego młodszego brata"}, {"vi": "sống ở Pháp", "pl": "mieszka we Francji"}]}
+      ]
     }
   ],
   "readings": [

@@ -116,7 +116,21 @@ Legenda statusów:
   lekcji. Zachowane w słowniczku z adnotacją o rejestrze, ale wyłączone z
   powtórek (`srs: false`), żeby nie trafiało do losowych sesji.
 
-## 5. Literówki i nieścisłości po stronie polskiej
+## 5. Treść opracowana do nauki (do potwierdzenia przez native speakera)
+
+- **Zdania transferowe** (`transfer` przy strukturach gramatycznych, Bài 3–14):
+  ten sam wzorzec co w lekcji, ale z innym, już poznanym słownictwem. Zostały
+  napisane do ćwiczeń, nie pochodzą z materiału nauczycielki, więc mają
+  `status: "unverified"`, a zadania z nich budowane są oznaczone jako
+  „Ćwiczenie wygenerowane do nauki”. Uczą schematów kursu w takiej postaci, w
+  jakiej podaje je lekcja (np. `g-bai-11-position`: „Cái bút ở quyển sách bên
+  cạnh.”), więc dotyczą ich te same uwagi co w sekcjach 2–3.
+- **Podziały zdań na fragmenty** (`chunks`) i ich polskie glosy: opracowane
+  do nauki. Same zdania wietnamskie się nie zmieniły (walidator pilnuje, by
+  fragmenty składały się dokładnie w oryginał); do sprawdzenia jest tylko to,
+  czy granice fragmentów i glosy dobrze oddają budowę zdania.
+
+## 6. Literówki i nieścisłości po stronie polskiej
 
 Materiał nauczycielki miejscami zawiera też polskie literówki/niekonsekwencje
 (np. „Wrzeń” zamiast „Wrzesień” w Bài 4, „bố (pł.)” jako skrót od „północ”,

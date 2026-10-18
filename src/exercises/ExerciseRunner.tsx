@@ -7,6 +7,7 @@ import { AUTOMATICITY_LABEL, type SrsGrade } from '../learning/srs';
 import { phaseLabel } from '../learning/tasks';
 import { ExerciseView, answerToText, taskExplanation, taskPrompt, type Task } from './ExerciseView';
 import { SpeakingTask } from '../components/SpeakingTask';
+import { ChunkBreakdown, ToneSlipNote } from '../components/ToneText';
 import { Callout, Kbd, Pill, Progress, Vi } from '../components/ui';
 import { lessonById, lessonLabel } from '../data/content';
 
@@ -242,6 +243,7 @@ export function ExerciseRunner({
             translation={speaking.translation}
             showTarget={speaking.showTarget}
             targetId={meta?.srsRef}
+            chunks={meta?.sentence?.chunks}
             onDone={finishSpeaking}
           />
         ) : (
@@ -251,6 +253,10 @@ export function ExerciseRunner({
               {result && (
                 <div className={`feedback ${result.outcome}`}>
                   <strong>{result.feedback}</strong>
+                  {/* After a miss, show what exactly went wrong — the slipped
+                      tones, or the sentence in its pieces — and nothing more. */}
+                  {result.toneSlips?.length ? <ToneSlipNote expected={result.expected} slips={result.toneSlips} /> : null}
+                  {result.outcome !== 'correct' && !result.toneSlips?.length && meta?.sentence?.chunks && <ChunkBreakdown chunks={meta.sentence.chunks} />}
                   {taskExplanation(task) && <span className="expl">ℹ {taskExplanation(task)}</span>}
                   {result.flagged && <span className="expl">⚠ Ten element jest oznaczony do weryfikacji w CONTENT_REVIEW.md – klucz może być niepełny.</span>}
                   {!result.flagged && result.unverified && task.kind === 'exercise' && task.exercise.source === 'teacher' && (

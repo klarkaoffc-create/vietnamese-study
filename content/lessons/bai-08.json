@@ -58,7 +58,10 @@
         { "vi": "hai ly cà phê", "pl": "dwie kawy" }
       ],
       "keywords": ["klasyfikator", "cái", "con", "người", "ly", "cốc", "chén"],
-      "practice": ["e-bai-08-classifier-gen", "e-bai-08-mcq-classifier", "e-bai-08-fill-classifier"]
+      "practice": ["e-bai-08-classifier-gen", "e-bai-08-mcq-classifier", "e-bai-08-fill-classifier"],
+      "transfer": [
+        {"vi": "Mình có hai con chó và một con mèo.", "pl": "Mam dwa psy i jednego kota.", "status": "unverified", "chunks": [{"vi": "Mình có", "pl": "mam"}, {"vi": "hai con chó", "pl": "dwa psy"}, {"vi": "và một con mèo", "pl": "i jednego kota"}]}
+      ]
     },
     {
       "id": "g-bai-08-ordering",
@@ -66,12 +69,15 @@
       "pattern": "Cho + zaimek (ja) + liczebnik + klasyfikator + potrawa · Zaimek + ơi! · Tính tiền!",
       "explanation": "Zamówienie zaczyna się od „cho” + zaimek, którym mówimy o sobie (anh / chị / em …): „Cho anh một ly cà phê” = poproszę jedną kawę. Kelnera woła się przez zaimek + „ơi!”. Rachunek: „Tính tiền!”. Kelner pyta „Anh muốn uống gì?” (co chce pan pić?), a gość może zapytać „Có đồ uống gì?” (jakie są napoje?).",
       "examples": [
-        { "vi": "Cho anh năm cái nem rán, một chén cơm và hai cái bánh xèo.", "pl": "Poproszę pięć sajgonek, miseczkę ryżu i dwa bánh xèo." },
+        { "vi": "Cho anh năm cái nem rán, một chén cơm và hai cái bánh xèo.", "pl": "Poproszę pięć sajgonek, miseczkę ryżu i dwa bánh xèo.", "chunks": [{"vi": "Cho anh", "pl": "poproszę (dla mnie)"}, {"vi": "năm cái nem rán", "pl": "pięć sajgonek"}, {"vi": "một chén cơm", "pl": "miseczkę ryżu"}, {"vi": "và hai cái bánh xèo", "pl": "i dwa bánh xèo"}] },
         { "vi": "Có đồ uống gì?", "pl": "Jakie są napoje?" },
         { "vi": "Em ơi! Tính tiền!", "pl": "Przepraszam! Rachunek!" }
       ],
       "keywords": ["cho", "ơi", "tính tiền", "zamawianie", "restauracja"],
-      "practice": ["e-bai-08-order-coffee", "e-bai-08-typed-bill", "e-bai-08-dialogue-1", "e-bai-08-dialogue-2"]
+      "practice": ["e-bai-08-order-coffee", "e-bai-08-typed-bill", "e-bai-08-dialogue-1", "e-bai-08-dialogue-2"],
+      "transfer": [
+        {"vi": "Cho chị một ly trà xanh và hai cái nem rán.", "pl": "Poproszę jedną zieloną herbatę i dwie sajgonki. (mówi chị)", "status": "unverified", "chunks": [{"vi": "Cho chị", "pl": "poproszę (mówi chị)"}, {"vi": "một ly trà xanh", "pl": "jedną zieloną herbatę"}, {"vi": "và hai cái nem rán", "pl": "i dwie sajgonki"}]}
+      ]
     }
   ],
   "dialogues": [
@@ -80,13 +86,13 @@
       "title": "Ở quán ăn",
       "situation": "Phi zamawia w restauracji; kelner (người phục vụ, NPV) jest młodszy, więc mówi „em” o sobie i „anh” do gościa.",
       "lines": [
-        { "speaker": "Người phục vụ", "vi": "Em chào anh! Đây là thực đơn cho anh xem.", "pl": "Dzień dobry! Oto menu do obejrzenia." },
-        { "speaker": "Phi", "vi": "Chào em, cảm ơn. Cho anh năm cái nem rán, một chén cơm và hai cái bánh xèo.", "pl": "Dzień dobry, dziękuję. Poproszę pięć sajgonek, miseczkę ryżu i dwa bánh xèo." },
+        { "speaker": "Người phục vụ", "vi": "Em chào anh! Đây là thực đơn cho anh xem.", "pl": "Dzień dobry! Oto menu do obejrzenia.", "chunks": [{"vi": "Em chào anh", "pl": "dzień dobry (kelner do gościa)"}, {"vi": "Đây là thực đơn", "pl": "oto menu"}, {"vi": "cho anh xem", "pl": "do obejrzenia dla pana"}] },
+        { "speaker": "Phi", "vi": "Chào em, cảm ơn. Cho anh năm cái nem rán, một chén cơm và hai cái bánh xèo.", "pl": "Dzień dobry, dziękuję. Poproszę pięć sajgonek, miseczkę ryżu i dwa bánh xèo.", "chunks": [{"vi": "Chào em, cảm ơn", "pl": "dzień dobry, dziękuję"}, {"vi": "Cho anh", "pl": "poproszę"}, {"vi": "năm cái nem rán", "pl": "pięć sajgonek"}, {"vi": "một chén cơm", "pl": "miseczkę ryżu"}, {"vi": "và hai cái bánh xèo", "pl": "i dwa bánh xèo"}] },
         { "speaker": "Người phục vụ", "vi": "Anh muốn uống gì?", "pl": "Co chce pan pić?" },
         { "speaker": "Phi", "vi": "Có đồ uống gì?", "pl": "Jakie są napoje?" },
         { "speaker": "Người phục vụ", "vi": "Có cà phê muối, cà phê trứng, cà phê sữa đá, trà xanh, trà sữa và nước.", "pl": "Jest kawa solona, kawa jajeczna, mrożona kawa z mlekiem, zielona herbata, herbata z mlekiem i woda." },
-        { "speaker": "Phi", "vi": "Thế thì cho anh một ly cà phê trứng. Cảm ơn em.", "pl": "W takim razie poproszę jedną kawę jajeczną. Dziękuję." },
-        { "speaker": "Người phục vụ", "vi": "Đồ ăn cho anh và một ly cà phê.", "pl": "Jedzenie dla pana i jedna kawa." },
+        { "speaker": "Phi", "vi": "Thế thì cho anh một ly cà phê trứng. Cảm ơn em.", "pl": "W takim razie poproszę jedną kawę jajeczną. Dziękuję.", "chunks": [{"vi": "Thế thì", "pl": "w takim razie"}, {"vi": "cho anh", "pl": "poproszę"}, {"vi": "một ly cà phê trứng", "pl": "jedną kawę jajeczną"}, {"vi": "Cảm ơn em", "pl": "dziękuję"}] },
+        { "speaker": "Người phục vụ", "vi": "Đồ ăn cho anh và một ly cà phê.", "pl": "Jedzenie dla pana i jedna kawa.", "chunks": [{"vi": "Đồ ăn", "pl": "jedzenie"}, {"vi": "cho anh", "pl": "dla pana"}, {"vi": "và một ly cà phê", "pl": "i jedna kawa"}] },
         { "speaker": "Phi", "vi": "Em ơi! Tính tiền!", "pl": "(po jedzeniu) Przepraszam! Rachunek!" },
         { "speaker": "Người phục vụ", "vi": "Vâng, 150 000 đồng.", "pl": "Tak, 150 000 dongów.", "note": "W oryginale „Văng” – CONFIRMED TYPO, poprawiono na „Vâng”." },
         { "speaker": "Phi", "vi": "Mắt tiền cho em.", "pl": "Gotówka dla ciebie (płacę gotówką).", "status": "flagged", "note": "CONTENT_REVIEW: standardowo „tiền mặt”." },

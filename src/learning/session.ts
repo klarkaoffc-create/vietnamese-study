@@ -33,9 +33,12 @@ import { inCooldown, isMastered } from './targets';
 import { eligibilityFilter, frontierNumber } from './eligibility';
 import { type AppState } from './state';
 import { sample, shuffle } from '../utilities/random';
+import { stripDiacritics, syllables } from '../utilities/vietnamese';
+import { toneIsSettled } from './state';
 import {
   contextualVocab,
   dialogueTask,
+  grammarExamples,
   grammarTask,
   poolsFor,
   scenarioTask,
@@ -44,6 +47,7 @@ import {
   vocabActiveTask,
   vocabPassiveTask,
   type LearningTask,
+  type Sentence,
   type TaskPhase,
 } from './tasks';
 
@@ -59,7 +63,7 @@ export type SessionItem =
 export type ReviewMode = 'today' | 'production' | 'conversation' | 'grammar' | 'mistakes' | 'listening' | 'weak' | 'diagnostic';
 
 export const REVIEW_MODES: { id: ReviewMode; label: string; description: string; icon: string }[] = [
-  { id: 'today', label: 'Dzisiejsza sesja', description: 'Krótka mieszana sesja: rozgrzewka, przypomnienie, rozmowa, gramatyka w użyciu, twoje błędy i swobodna wypowiedź.', icon: '🌅' },
+  { id: 'today', label: 'Dzisiejsza sesja', description: 'Krótka mieszana sesja: rozgrzewka, przypomnienie, rozmowa, gramatyka w użyciu, twoje błędy, tony w zdaniu i swobodna wypowiedź.', icon: '🌅' },
   { id: 'production', label: 'Budowanie zdań', description: 'Polski → wietnamski. Tworzysz całe zdania z materiału, który już znasz.', icon: '✍️' },
   { id: 'conversation', label: 'Rozmowa', description: 'Odpowiadasz na repliki z dialogów i sytuacje komunikacyjne.', icon: '💬' },
   { id: 'grammar', label: 'Gramatyka w użyciu', description: 'Struktury ćwiczone w żywych zdaniach, nie w regułkach.', icon: '📐' },
@@ -154,7 +158,7 @@ function taskForDueItem(item: SrsItem, phase: TaskPhase): LearningTask | null {
       // A sentence ability can also come from a speaking task on a vocab example.
       const v = vocabById.get(item.ref);
       const ex = v ? usableExamples(v)[0] : undefined;
-      return v && ex ? speakingTask(ex.vi, ex.pl, v.id, v.lessonId, level, [v.id]) : null;
+      return v && ex ? speakingTask(ex.vi, ex.pl, v.id, v.lessonId, level, [v.id], ex.chunks) : null;
     }
     case 'listening':
       return null; // built separately, only when audio exists
@@ -193,7 +197,7 @@ function speakingPhase(state: AppState, pools: ReturnType<typeof poolsFor>, limi
   return sample(speakable, limit).map((v) => {
     const ex = usableExamples(v)[0];
     const level = levelOf(state.srs[makeSrsId('sentence', v.id)]);
-    return { kind: 'task' as const, task: speakingTask(ex.vi, ex.pl, v.id, v.lessonId, level, [v.id]) };
+    return { kind: 'task' as const, task: speakingTask(ex.vi, ex.pl, v.id, v.lessonId, level, [v.id], ex.chunks) };
   });
 }
 
@@ -293,6 +297,87 @@ function listeningPhase(state: AppState, pools: ReturnType<typeof poolsFor>, lim
       return { kind: 'task' as const, task };
     })
     .slice(0, limit);
+}
+
+/* ------------------------------------------------------------------ */
+/* Tones inside whole sentences                                         */
+/* ------------------------------------------------------------------ */
+
+/** Sentences from studied material that are a sensible length for tone work. */
+function toneSentences(pools: ReturnType<typeof poolsFor>): (Sentence & { lesson: string })[] {
+  const out = new Map<string, Sentence & { lesson: string }>();
+  for (const v of pools.vocab) for (const e of usableExamples(v)) out.set(e.vi, { ...e, lesson: v.lessonId });
+  for (const g of pools.grammar) for (const e of grammarExamples(g)) out.set(e.vi, { ...e, lesson: g.lessonId });
+  for (const { dialogue, lineIndex } of pools.dialogues) {
+    const l = dialogue.lines[lineIndex];
+    if (l.pl) out.set(l.vi, { vi: l.vi, pl: l.pl, chunks: l.chunks, lesson: dialogue.lessonId });
+  }
+  return [...out.values()].filter((s) => {
+    const n = syllables(s.vi).length;
+    return n >= 3 && n <= 14 && !/\d/.test(s.vi);
+  });
+}
+
+/** Syllables whose tone keeps slipping, most troublesome and most recent first. */
+export function troubleSyllables(state: AppState) {
+  return Object.values(state.tones)
+    .filter((r) => !toneIsSettled(r))
+    .sort((a, b) => b.misses - b.hits - (a.misses - a.hits) || b.lastMiss - a.lastMiss);
+}
+
+/**
+ * Tone practice in a whole sentence: the sentence is shown without any marks
+ * and the learner restores them. Tones are learned in sentences, not as
+ * isolated syllables, so the sentence is one the learner has already met —
+ * preferably one containing a syllable whose tone has slipped before.
+ *
+ * Untracked: it feeds the tone records, not the scheduler or the mistake book.
+ */
+export function toneTasks(state: AppState, pools: ReturnType<typeof poolsFor>, limit: number): SessionItem[] {
+  const candidates = toneSentences(pools);
+  const chosen: { s: Sentence & { lesson: string }; focus?: string }[] = [];
+  const used = new Set<string>();
+  for (const rec of troubleSyllables(state)) {
+    if (chosen.length >= limit) break;
+    const containing = candidates.filter((s) => !used.has(s.vi) && syllables(s.vi).includes(rec.syllable));
+    const s = containing.length ? sample(containing, 1)[0] : undefined;
+    if (s) {
+      used.add(s.vi);
+      chosen.push({ s, focus: rec.syllable });
+    }
+  }
+  for (const s of sample(candidates.filter((c) => !used.has(c.vi)), limit - chosen.length)) chosen.push({ s });
+  return chosen.map(({ s, focus }) => {
+    const task: LearningTask = {
+      id: `t-tone-${s.vi}`,
+      srsKind: 'sentence',
+      srsRef: `tone:${s.vi}`,
+      lesson: s.lesson,
+      level: 2,
+      phase: 'tones',
+      targetVocab: [],
+      selfAssessed: false,
+      untracked: true,
+      sentence: s.chunks && s.chunks.length >= 3 ? s : undefined,
+      exercise: {
+        id: `${s.lesson.replace(/^bai/, 'e-bai')}-t-tone`,
+        type: 'diacritics',
+        skill: 'tone',
+        source: 'generated',
+        status: 'unverified',
+        instruction: focus
+          ? `Dopisz tony, a potem powiedz zdanie na głos. Uważaj na sylabę „${stripDiacritics(focus)}” — jej ton ostatnio się mylił.`
+          : 'Dopisz tony, a potem powiedz zdanie na głos.',
+        stripped: stripDiacritics(s.vi),
+        answers: [s.vi],
+        translation: s.pl,
+        grammar: [],
+        vocab: [],
+        level: 2,
+      },
+    };
+    return { kind: 'task' as const, task };
+  });
 }
 
 /** One open prompt requiring several Vietnamese sentences. */
@@ -531,7 +616,7 @@ function summarise(mode: ReviewMode, items: SessionItem[]): SessionPlan {
     if (it.kind !== 'task') continue;
     counts.set(it.task.phase, (counts.get(it.task.phase) ?? 0) + 1);
   }
-  const order: TaskPhase[] = ['warmup', 'retrieval', 'conversation', 'grammar', 'mistakes', 'listening', 'free'];
+  const order: TaskPhase[] = ['warmup', 'retrieval', 'conversation', 'grammar', 'mistakes', 'tones', 'listening', 'free'];
   return {
     mode,
     items,
@@ -572,9 +657,11 @@ export function buildSession(state: AppState, mode: ReviewMode, now = Date.now()
       const newTalk = frontierTalkPhase(state, frontier, 3, picker);
       const review = reviewPhase(state, DAILY_REVIEW_CAP, now, picker);
       const mistakes = picker.accept(mistakesPhase(state, DAILY_MISTAKE_CAP), DAILY_MISTAKE_CAP);
+      // One tone task a day, inside the same 12-task budget.
+      const tones = picker.accept(toneTasks(state, pools, 1), 1);
 
       const forward = [...newVocab, ...newGrammar, ...newTalk];
-      const older = [...review, ...mistakes];
+      const older = [...review, ...mistakes, ...tones];
       let items = weave([forward, older]);
 
       // Top up from the studied pool so a thin frontier still yields a full,
@@ -617,6 +704,8 @@ export function buildSession(state: AppState, mode: ReviewMode, now = Date.now()
       const weak = weakAbilities(state).slice(0, 8);
       const items: SessionItem[] = asItems(weak.map((i) => taskForDueItem(i, 'retrieval')));
       items.push(...mistakesPhase(state, 4));
+      // Tones that keep slipping are a weak spot too.
+      items.push(...toneTasks(state, pools, Math.min(3, troubleSyllables(state).length)));
       return summarise(mode, items);
     }
     case 'diagnostic': {
@@ -729,7 +818,7 @@ export function buildVocabSession(state: AppState, vocabId: string): SessionItem
     if (t) out.push({ kind: 'task', task: t });
   }
   const ex = usableExamples(v)[0];
-  if (ex) out.push({ kind: 'task', task: speakingTask(ex.vi, ex.pl, v.id, v.lessonId, level, [v.id]) });
+  if (ex) out.push({ kind: 'task', task: speakingTask(ex.vi, ex.pl, v.id, v.lessonId, level, [v.id], ex.chunks) });
   return out;
 }
 

@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { LessonSchema, ReviewSchema, ExamBlueprintSchema, AudioManifestSchema, ScenarioPackSchema, type Lesson, type Review, type ExamBlueprint, type Exercise, type Scenario } from '../src/data/schema';
 import { findAnswerLeaks, revealsAnswer, type ContentLookup } from '../src/learning/answers';
 import { matchPatterns, withOptionalEdges } from '../src/utilities/vietnamese';
+import { chunksRebuild } from '../src/utilities/chunks';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -142,10 +143,24 @@ for (const l of lessons) {
     registerId(g.id, l.id);
     if (!g.id.startsWith(`g-${l.id}-`)) errors.push(`${l.id}: gramatyka ${g.id} powinna zaczynać się od g-${l.id}-`);
     grammarIds.add(g.id);
+    for (const t of g.transfer) {
+      if (!t.pl) errors.push(`${l.id}: ${g.id} – zdanie transferowe „${t.vi}” nie ma tłumaczenia`);
+      if (t.status === 'verified') errors.push(`${l.id}: ${g.id} – zdanie transferowe „${t.vi}” jest opracowane do nauki, nie może mieć statusu verified`);
+    }
   }
   for (const d of l.dialogues) {
     registerId(d.id, l.id);
     dialogues.set(d.id, d.lines.length);
+  }
+  // Chunked sentences must rebuild exactly; otherwise reconstruction tasks
+  // would teach a sentence that does not exist.
+  const chunked = [
+    ...l.vocabulary.flatMap((v) => v.examples.map((e) => ({ where: v.id, s: e }))),
+    ...l.grammar.flatMap((g) => [...g.examples, ...g.transfer].map((e) => ({ where: g.id, s: e }))),
+    ...l.dialogues.flatMap((d) => d.lines.map((ln, i) => ({ where: `${d.id}#${i}`, s: ln }))),
+  ];
+  for (const { where, s } of chunked) {
+    if (s.chunks && !chunksRebuild(s.vi, s.chunks)) errors.push(`${l.id}: ${where} – fragmenty nie składają się w zdanie „${s.vi}”: ${s.chunks.map((c) => c.vi).join(' | ')}`);
   }
   for (const r of l.readings) {
     registerId(r.id, l.id);

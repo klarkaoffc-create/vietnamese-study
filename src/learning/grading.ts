@@ -25,6 +25,19 @@ export interface GradeResult {
   /** True when the exercise or its answer key is flagged / unverified. */
   flagged: boolean;
   unverified: boolean;
+  /**
+   * Syllables written with the right letters but the wrong tone mark,
+   * position by position. Only set when the answer was right apart from tones.
+   */
+  toneSlips?: { expected: string; given: string }[];
+}
+
+/** Syllable pairs that differ only in tone or vowel marks. */
+export function toneSlipsOf(given: string, expected: string): { expected: string; given: string }[] {
+  const g = comparisonForm(given).split(' ');
+  const e = comparisonForm(expected).split(' ');
+  if (g.length !== e.length) return [];
+  return e.flatMap((syl, i) => (syl !== g[i] && stripDiacritics(syl) === stripDiacritics(g[i]) ? [{ expected: syl, given: g[i] }] : []));
 }
 
 export type UserAnswer =
@@ -54,7 +67,7 @@ function refineCategory(given: string, expected: string, base: MistakeCategory):
   return base;
 }
 
-function gradeText(given: string, answers: string[], lang: 'vi' | 'pl', skill: Skill): { outcome: Outcome; score: number; feedback: string; expected: string; category: MistakeCategory } {
+function gradeText(given: string, answers: string[], lang: 'vi' | 'pl', skill: Skill): { outcome: Outcome; score: number; feedback: string; expected: string; category: MistakeCategory; toneSlips?: { expected: string; given: string }[] } {
   const expected = answers[0];
   if (!given.trim()) return { outcome: 'wrong', score: 0, feedback: `Brak odpowiedzi. Poprawna odpowiedź: ${expected}`, expected, category: skill };
   if (lang === 'pl') {
@@ -68,7 +81,8 @@ function gradeText(given: string, answers: string[], lang: 'vi' | 'pl', skill: S
   }
   const m = matchAny(given, answers);
   const r = fromMatch(m, m.expected, skill);
-  return { ...r, expected: m.expected, category: r.outcome === 'wrong' ? refineCategory(given, m.expected, r.category) : r.category };
+  const toneSlips = m.kind === 'tone' ? toneSlipsOf(given, m.expected) : undefined;
+  return { ...r, expected: m.expected, category: r.outcome === 'wrong' ? refineCategory(given, m.expected, r.category) : r.category, ...(toneSlips?.length ? { toneSlips } : {}) };
 }
 
 export function gradeGenerated(inst: GeneratedInstance, answer: UserAnswer): GradeResult {

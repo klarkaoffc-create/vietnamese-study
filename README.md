@@ -33,6 +33,17 @@ przypomnienie z podpowiedzią → budowanie zdania → użycie w kontekście →
 produkcja spontaniczna), a przy każdym kolejnym spotkaniu dostajesz **mniej
 podpowiedzi**.
 
+**Długie zdania** budowane są etapami: najpierw składasz zdanie z sensownych
+fragmentów (np. „Nếu anh đi” · „bằng xe buýt” · „thì em đi” · „với anh”), potem
+piszesz je z podpowiedzią samej struktury, potem bez podpowiedzi, a na końcu
+dostajesz nowe zdanie z tym samym wzorcem. Po nieudanej próbie zdanie pokazuje
+się rozłożone na fragmenty z tłumaczeniem każdego z nich.
+
+**Tony** ćwiczysz w całych zdaniach: codziennie jedno zadanie „Tony w zdaniu”
+(dopisz znaki do znanego zdania i powiedz je na głos). Aplikacja zapamiętuje,
+w których sylabach ton ci się myli, i do nich wraca. Po pomyłce w tonie
+widzisz, które sylaby były złe i jaki ton powinny mieć.
+
 Słownictwo liczone jest w dwóch osobnych wymiarach: **aktywne** (potrafię użyć)
 i **bierne** (rozumiem). Rozpoznanie polskiego tłumaczenia nie wystarczy, żeby
 słowo uznać za opanowane — opanowanie wymaga wielokrotnej produkcji w różnych

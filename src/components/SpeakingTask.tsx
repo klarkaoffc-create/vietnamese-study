@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import type { SrsGrade } from '../learning/srs';
 import { audioByTarget } from '../data/content';
 import { AudioButton } from './AudioButton';
-import { Callout, Kbd, Pill, Vi } from './ui';
+import { Callout, Kbd, Pill } from './ui';
+import { ChunkBreakdown, ToneLegend, ToneText } from './ToneText';
+import type { Chunk } from '../data/schema';
 
 /**
  * Speaking practice: say it → (optionally) record yourself → compare with the
@@ -20,6 +22,7 @@ export function SpeakingTask({
   translation,
   showTarget,
   targetId,
+  chunks,
   onDone,
 }: {
   /** What the learner has to say, in Polish. Shown before the attempt. */
@@ -30,6 +33,8 @@ export function SpeakingTask({
   showTarget: boolean;
   /** Vocabulary / line id, used to find a real recording if one exists. */
   targetId?: string;
+  /** Pieces of the model sentence, shown with it after the attempt. */
+  chunks?: Chunk[];
   onDone: (grade: SrsGrade) => void;
 }) {
   const [revealed, setRevealed] = useState(showTarget);
@@ -109,12 +114,14 @@ export function SpeakingTask({
 
       {revealed ? (
         <div className="speak-target">
-          <div className="muted tiny">Wzór</div>
-          <Vi big>{target}</Vi>
+          <div className="muted tiny">Wzór — kolory pokazują tony</div>
+          <ToneText text={target} big />
           {translation && <div className="muted small">{translation}</div>}
+          <ToneLegend />
           <div className="row" style={{ marginTop: '0.5rem', justifyContent: 'center' }}>
             <AudioButton targetId={targetId} text={target} />
           </div>
+          {chunks && <ChunkBreakdown chunks={chunks} title="Powiedz jeszcze raz, fragment po fragmencie" />}
         </div>
       ) : (
         <div className="speak-target muted">

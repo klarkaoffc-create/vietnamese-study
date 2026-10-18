@@ -56,7 +56,10 @@
         { "vi": "Bây giờ là 5 giờ chiều.", "pl": "Teraz jest 17:00." }
       ],
       "keywords": ["giờ", "phút", "mấy giờ", "godzina", "sáng", "chiều", "tối"],
-      "practice": ["e-bai-09-time-gen", "e-bai-09-clock-image", "e-bai-09-mcq-daypart"]
+      "practice": ["e-bai-09-time-gen", "e-bai-09-clock-image", "e-bai-09-mcq-daypart"],
+      "transfer": [
+        {"vi": "Bây giờ là 9 giờ 15 phút tối.", "pl": "Jest teraz 21:15.", "status": "unverified", "chunks": [{"vi": "Bây giờ là", "pl": "teraz jest"}, {"vi": "9 giờ 15 phút", "pl": "9:15"}, {"vi": "tối", "pl": "wieczorem"}]}
+      ]
     },
     {
       "id": "g-bai-09-khi-nao",
@@ -70,7 +73,10 @@
         { "vi": "Mẹ đọc sách khi nào?", "pl": "Kiedy mama czytała książkę?" }
       ],
       "keywords": ["khi nào", "kiedy"],
-      "practice": ["e-bai-09-mcq-khi-nao", "e-bai-09-order-khi-nao-past", "e-bai-09-typed-khi-nao"]
+      "practice": ["e-bai-09-mcq-khi-nao", "e-bai-09-order-khi-nao-past", "e-bai-09-typed-khi-nao"],
+      "transfer": [
+        {"vi": "Khi nào bạn về nhà?", "pl": "Kiedy wracasz do domu?", "status": "unverified"}
+      ]
     },
     {
       "id": "g-bai-09-routine",
@@ -78,12 +84,16 @@
       "pattern": "Mỗi ngày + godzina + zaimek + czynność · Sau đó, … · Khi + zdanie, + zdanie · … hoặc …",
       "explanation": "Czytanka pokazuje, jak łączyć czynności w kolejności: „Mỗi ngày 7 giờ sáng, tôi thức dậy” (codziennie o 7 rano wstaję), „Sau đó, tôi chơi game” (potem gram), „Khi tôi ăn sáng, tôi cũng uống cà phê sữa” (gdy jem śniadanie, piję też kawę z mlekiem), „đọc sách hoặc xem phim” (czytam albo oglądam film).",
       "examples": [
-        { "vi": "Mỗi ngày 7 giờ sáng, tôi thức dậy.", "pl": "Codziennie o 7 rano wstaję." },
+        { "vi": "Mỗi ngày 7 giờ sáng, tôi thức dậy.", "pl": "Codziennie o 7 rano wstaję.", "chunks": [{"vi": "Mỗi ngày", "pl": "codziennie"}, {"vi": "7 giờ sáng", "pl": "o 7 rano"}, {"vi": "tôi thức dậy", "pl": "wstaję"}] },
         { "vi": "Khoảng 10 giờ tối, tôi đi ngủ.", "pl": "Około 22 idę spać." },
-        { "vi": "Sau đó, tôi chơi game, đọc sách hoặc xem phim.", "pl": "Potem gram w gry, czytam albo oglądam film." }
+        { "vi": "Sau đó, tôi chơi game, đọc sách hoặc xem phim.", "pl": "Potem gram w gry, czytam albo oglądam film.", "chunks": [{"vi": "Sau đó", "pl": "potem"}, {"vi": "tôi chơi game, đọc sách", "pl": "gram w gry, czytam"}, {"vi": "hoặc xem phim", "pl": "albo oglądam film"}] }
       ],
       "keywords": ["rutyna", "sau đó", "khi", "hoặc", "mỗi ngày"],
-      "practice": ["e-bai-09-routine-order", "e-bai-09-read-1", "e-bai-09-read-2", "e-bai-09-open-wake"]
+      "practice": ["e-bai-09-routine-order", "e-bai-09-read-1", "e-bai-09-read-2", "e-bai-09-open-wake"],
+      "transfer": [
+        {"vi": "Mỗi ngày 6 giờ chiều, tôi tập thể thao.", "pl": "Codziennie o 18 uprawiam sport.", "status": "unverified", "chunks": [{"vi": "Mỗi ngày", "pl": "codziennie"}, {"vi": "6 giờ chiều", "pl": "o 6 po południu (18:00)"}, {"vi": "tôi tập thể thao", "pl": "uprawiam sport"}]},
+        {"vi": "Sau đó, tôi ăn tối với gia đình.", "pl": "Potem jem kolację z rodziną.", "status": "unverified", "chunks": [{"vi": "Sau đó", "pl": "potem"}, {"vi": "tôi ăn tối", "pl": "jem kolację"}, {"vi": "với gia đình", "pl": "z rodziną"}]}
+      ]
     }
   ],
   "readings": [

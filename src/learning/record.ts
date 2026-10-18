@@ -13,17 +13,43 @@ import type { LearningTask } from './tasks';
 import { gradeFromOutcome, type SrsGrade } from './srs';
 import { taskPrompt, type Task } from '../exercises/ExerciseView';
 import { exerciseById, vocabById } from '../data/content';
+import type { Exercise } from '../data/schema';
+import { syllables } from '../utilities/vietnamese';
+
+/**
+ * Answer types where the learner typed the Vietnamese, tones included.
+ * (Dialogue completion is left out: its answer may have been picked.)
+ */
+const TYPED_VIETNAMESE = new Set<Exercise['type']>(['typed', 'fill-blank', 'error-correction', 'diacritics']);
+
+/**
+ * Tone bookkeeping for one graded answer: slips are counted against the
+ * syllables written with the wrong tone; a fully correct typed answer counts
+ * as a hit for every tracked syllable it contains. Choosing an option or
+ * ordering tiles proves nothing about tones, so only typed answers count.
+ */
+export function toneActions(exercise: Exercise | null, result: GradeResult | null, given: string, lesson: string): Action[] {
+  if (!exercise || !result || !TYPED_VIETNAMESE.has(exercise.type) || !given.trim()) return [];
+  if ('answerLang' in exercise && exercise.answerLang === 'pl') return [];
+  if (result.toneSlips?.length) return [{ type: 'tone-slips', slips: result.toneSlips, sentence: result.expected, lesson }];
+  if (result.outcome === 'correct') return [{ type: 'tone-hits', syllables: syllables(result.expected) }];
+  return [];
+}
 
 /** Actions for a scheduled task that the engine graded automatically. */
 export function actionsForTask(item: Extract<SessionItem, { kind: 'task' }>, result: GradeResult, given: string): Action[] {
   const { task } = item;
   const outcome3 = result.outcome === 'partial' ? (result.score >= 0.5 ? 'tone' : 'wrong') : result.outcome;
   const grade = gradeFromOutcome(outcome3);
-  return recordTask(task, grade, outcome3, given, result, item.mistakeRef);
+  const tones = toneActions(task.exercise, result, given, task.lesson);
+  // Untracked practice (the daily tone task) only feeds the tone records.
+  if (task.untracked) return tones;
+  return [...recordTask(task, grade, outcome3, given, result, item.mistakeRef), ...tones];
 }
 
 /** Actions for an open task the learner rated themselves (speaking). */
 export function actionsForSelfAssessed(item: Extract<SessionItem, { kind: 'task' }>, grade: SrsGrade, given: string): Action[] {
+  if (item.task.untracked) return [];
   const outcome = grade >= 2 ? 'correct' : grade === 1 ? 'tone' : 'wrong';
   return recordTask(item.task, grade, outcome, given, null, item.mistakeRef);
 }
@@ -80,6 +106,7 @@ export function actionsForExercise(task: Task, lesson: string, result: GradeResu
   const grade = gradeFromOutcome(outcome3);
   const ref = task.kind === 'exercise' ? task.exercise.id : task.instance.id;
   const lessonId = task.kind === 'exercise' ? exerciseById.get(task.exercise.id)?.ownerId ?? lesson : lesson;
+  if (task.kind === 'exercise') actions.push(...toneActions(task.exercise, result, given, lessonId));
 
   if (task.kind === 'exercise') {
     for (const gid of task.exercise.grammar) actions.push({ type: 'review', kind: 'grammar', ref: gid, lesson: lessonId, grade });

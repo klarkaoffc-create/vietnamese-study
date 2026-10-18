@@ -126,6 +126,12 @@ który był tylko rozpoznawany (poziom 1–2), nie może wyglądać na opanowany
 choćby miał długi odstęp. `masteryLevel()` przyznaje „dojrzały” dopiero przy
 poziomie ≥ 4.
 
+**Trudny materiał wraca częściej.** Umiejętność, która zawiodła co najmniej
+dwa razy i nadal zawodzi w około jednej trzeciej prób (`isDifficult`), ma
+odstęp ograniczony do `DIFFICULT_MAX_DAYS` (6 dni) i nie dostaje 10-dniowego
+„odpoczynku” po trzech sukcesach. Każdy kolejny sukces obniża udział porażek,
+więc ograniczenie znika samo, gdy materiał zostanie naprawdę opanowany.
+
 Migracja z wersji 1 stanu (era fiszek) mapuje `vocab-vi-pl` → `vocab-passive`
 i `vocab-pl-vi` → `vocab-active`, zachowując interwały i historię.
 
@@ -140,6 +146,21 @@ silnik świadomie schodzi do słabszego zadania, zamiast fabrykować zdanie.
 Każde zadanie niesie zsyntetyzowany obiekt `Exercise`, więc renderuje je i
 ocenia **istniejący** silnik ćwiczeń (`ExerciseView` + `grading.ts`) bez
 żadnych zmian.
+
+**Długie zdania budowane etapami.** Gdy zdanie ma w treści co najmniej trzy
+fragmenty (`chunks`, patrz CONTENT_SCHEMA.md), drabina dla gramatyki i
+dialogów wygląda tak: znaczenie fragmentów (dopasowanie) → złożenie zdania z
+fragmentów → pisanie z jedyną podpowiedzią w postaci polskich fragmentów w
+wietnamskiej kolejności → pisanie bez podpowiedzi lub **zdanie transferowe**
+(ten sam wzorzec, inne słowa). Zadanie niesie `sentence`, a runner po nieudanej
+próbie pokazuje zdanie rozłożone na fragmenty. Krótkie zdania zostają bez zmian.
+
+**Tony w zdaniu.** `grading.ts` zwraca `toneSlips` — sylaby wpisane z dobrymi
+literami, ale złym tonem — a `record.ts` zapisuje je w `state.tones` (tylko z
+odpowiedzi wpisywanych, nie z wybierania opcji). Dzienna sesja zawiera jedno
+zadanie „Tony w zdaniu”: znane już zdanie bez znaków do uzupełnienia,
+najlepiej zawierające sylabę, której ton ostatnio się mylił. To zadanie jest
+`untracked` — zasila tylko rekordy tonów, nie harmonogram ani zeszyt błędów.
 
 ### Sesje (`src/learning/session.ts`)
 
@@ -210,6 +231,21 @@ Reactowy w `learning/`) trzyma to w `useReducer`, zapisuje do
 `localStorage` z 150 ms debounce i wczytuje przy starcie. Eksport/import to
 `JSON.stringify`/`JSON.parse` z polem `app: "vietnamese-study"` jako
 zabezpieczeniem przed wczytaniem cudzego pliku.
+
+Zabezpieczenia postępu (`loadStateSafely`, `saveState`):
+
+- Nieczytelny zapis (uszkodzony JSON albo wersja nowsza niż kod, np. po
+  wycofaniu wdrożenia) jest kopiowany pod `vietnamese-study:v1:recovered-<czas>`
+  zanim aplikacja zacznie od zera. Jeśli nawet kopia się nie uda, zapisywanie
+  jest wstrzymane na całą wizytę — oryginał zostaje nietknięty.
+- Raz dziennie, przed pierwszym zapisem danego dnia, poprzedni stan trafia pod
+  `vietnamese-study:v1:snapshot`; strona Postęp ma przycisk „Przywróć stan z
+  początku dnia”. Przy braku miejsca kopia ustępuje bieżącemu zapisowi.
+- Nowe pola stanu są dodawane **bez podnoszenia `STATE_VERSION`** (np.
+  `tones`), z bezpieczną wartością domyślną w `migrate()`. Starsza wersja
+  aplikacji wczytuje taki zapis bez problemu (ignoruje nieznane pole), zamiast
+  odrzucić go jako „nieznaną wersję”. Pilnują tego testy w
+  `tests/progress-safety.test.ts`.
 
 ## Dlaczego HashRouter
 

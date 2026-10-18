@@ -472,3 +472,44 @@ select:focus-visible {
 }
 .theme-toggle button[aria-pressed='true'] { background: var(--surface-3); color: var(--text); }
 @media (max-width: 860px) { .theme-toggle { display: none; } }
+
+/* ------------------------------------------------------------------ */
+/* Tones and sentence pieces                                           */
+/* ------------------------------------------------------------------ */
+/*
+ * One colour per marked tone; the level tone (ngang) keeps the body colour.
+ * Hues are spread far apart and every one clears 4.5:1 on its theme's
+ * surfaces. Colour is never the only cue — see ToneText.
+ */
+:root {
+  --tone-huyen: #86aef0;
+  --tone-sac: #ef8f7d;
+  --tone-hoi: #c8a1f0;
+  --tone-nga: #5fcab4;
+  --tone-nang: #ddb45e;
+}
+:root[data-theme='light'] {
+  --tone-huyen: #2b5aa8;
+  --tone-sac: #a3361f;
+  --tone-hoi: #7440a3;
+  --tone-nga: #13644f;
+  --tone-nang: #735509;
+}
+.tone-huyen { color: var(--tone-huyen); }
+.tone-sac { color: var(--tone-sac); }
+.tone-hoi { color: var(--tone-hoi); }
+.tone-nga { color: var(--tone-nga); }
+.tone-nang { color: var(--tone-nang); }
+.tone-text .tone-slip { text-decoration: underline wavy; text-underline-offset: 4px; font-weight: 700; }
+.tone-legend { display: flex; flex-wrap: wrap; gap: 0.35rem 0.8rem; margin-top: 0.4rem; }
+.tone-note { margin-top: 0.5rem; color: var(--text); }
+.tone-note .tone-text { font-size: 1.2rem; }
+.tone-slip-list { margin: 0.35rem 0 0; padding-left: 1.1rem; font-size: 0.88rem; }
+
+.chunk-breakdown { margin-top: 0.75rem; color: var(--text); }
+.chunk-list { list-style: none; margin: 0.3rem 0 0; padding: 0; display: grid; gap: 0.3rem; }
+.chunk-list li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.7rem; padding: 0.35rem 0.6rem; border-radius: var(--radius-sm); background: var(--surface-2); }
+.chunk-list .tone-text { font-size: 1.1rem; font-weight: 600; }
+.chunk-pl { color: var(--muted); font-size: 0.9rem; }
+.chunk-list .audio-group { margin-left: auto; }
+.audio-group { display: inline-flex; gap: 0.25rem; align-items: center; }

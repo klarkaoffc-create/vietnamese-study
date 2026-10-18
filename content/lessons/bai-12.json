@@ -21,12 +21,12 @@
     { "id": "v-bai-12-benh-vien", "vi": "bệnh viện", "pl": "szpital", "category": "noun", "tags": ["place"] },
     { "id": "v-bai-12-cho", "vi": "chợ", "pl": "rynek, targ", "category": "noun", "tags": ["place"] },
     { "id": "v-bai-12-sieu-thi", "vi": "siêu thị", "pl": "supermarket", "category": "noun", "tags": ["place"] },
-    { "id": "v-bai-12-may-rut-tien", "vi": "máy rút tiền", "pl": "bankomat", "category": "noun", "tags": ["place"], "examples": [{ "vi": "Bạn có thể đi máy rút tiền hoặc đi ngân hàng.", "pl": "Możesz pójść do bankomatu albo do banku." }] },
+    { "id": "v-bai-12-may-rut-tien", "vi": "máy rút tiền", "pl": "bankomat", "category": "noun", "tags": ["place"], "examples": [{ "vi": "Bạn có thể đi máy rút tiền hoặc đi ngân hàng.", "pl": "Możesz pójść do bankomatu albo do banku.", "chunks": [{"vi": "Bạn có thể", "pl": "możesz"}, {"vi": "đi máy rút tiền", "pl": "pójść do bankomatu"}, {"vi": "hoặc đi ngân hàng", "pl": "albo pójść do banku"}] }] },
     { "id": "v-bai-12-nha-thuoc", "vi": "nhà thuốc", "pl": "apteka", "category": "noun", "tags": ["place"] },
     { "id": "v-bai-12-thanh-pho", "vi": "thành phố", "pl": "miasto", "category": "noun", "tags": ["place"], "note": "W oryginale polska glosa „míasto” – literówka po stronie polskiej." },
     { "id": "v-bai-12-noi", "vi": "nơi", "pl": "miejsce", "category": "noun", "note": "W oryginale polska glosa „mịejsce” – literówka po stronie polskiej." },
     { "id": "v-bai-12-lon", "vi": "lớn", "pl": "wielki, duży", "category": "adjective", "examples": [{ "vi": "thành phố lớn", "pl": "duże miasto" }] },
-    { "id": "v-bai-12-co-the", "vi": "có thể, được", "pl": "móc, można", "category": "verb", "examples": [{ "vi": "Bạn có thể đi chơi đến nhiều nơi khác.", "pl": "Możesz pójść w wiele innych miejsc." }] },
+    { "id": "v-bai-12-co-the", "vi": "có thể, được", "pl": "móc, można", "category": "verb", "examples": [{ "vi": "Bạn có thể đi chơi đến nhiều nơi khác.", "pl": "Możesz pójść w wiele innych miejsc.", "chunks": [{"vi": "Bạn có thể", "pl": "możesz"}, {"vi": "đi chơi", "pl": "wybrać się"}, {"vi": "đến nhiều nơi khác", "pl": "w wiele innych miejsc"}] }] },
     { "id": "v-bai-12-duong", "vi": "đường", "pl": "ulica, droga", "category": "noun", "examples": [{ "vi": "có nhiều người trên đường", "pl": "na ulicy jest dużo ludzi" }] },
     { "id": "v-bai-12-khac", "vi": "khác", "pl": "różny, inny", "category": "adjective" },
     { "id": "v-bai-12-tre-em", "vi": "trẻ em", "pl": "dzieci", "category": "noun", "note": "To samo słowo pojawiło się w Bài 10." },
@@ -46,7 +46,7 @@
     { "id": "v-bai-12-im-di", "vi": "im đi!", "pl": "cicho bądź! (niegrzeczne)", "category": "phrase", "note": "Wyrażenie nieuprzejme – w materiale lekcji podane potocznie. Wyłączone z powtórek.", "srs": false },
     { "id": "v-bai-12-im-lang", "vi": "im lặng", "pl": "cisza, cicho", "category": "phrase", "note": "W oryginale „im lăng” – CONFIRMED TYPO (powinno być „im lặng”)." },
     { "id": "v-bai-12-yeu", "vi": "yêu", "pl": "kochać", "category": "verb", "note": "Powtórka z Bài 6." },
-    { "id": "v-bai-12-nhu-the-nao", "vi": "như thế nào?", "pl": "jak? w jaki sposób?", "category": "question-word", "examples": [{ "vi": "Đi từ nhà Hoa đến ngân hàng như thế nào?", "pl": "Jak dojść z domu Hoa do banku?" }] },
+    { "id": "v-bai-12-nhu-the-nao", "vi": "như thế nào?", "pl": "jak? w jaki sposób?", "category": "question-word", "examples": [{ "vi": "Đi từ nhà Hoa đến ngân hàng như thế nào?", "pl": "Jak dojść z domu Hoa do banku?", "chunks": [{"vi": "Đi", "pl": "dojść"}, {"vi": "từ nhà Hoa", "pl": "z domu Hoa"}, {"vi": "đến ngân hàng", "pl": "do banku"}, {"vi": "như thế nào", "pl": "jak?"}] }] },
     { "id": "v-bai-12-den", "vi": "đến", "pl": "przybyć, dotrzeć do", "category": "verb", "examples": [{ "vi": "Khi bạn đến thành phố lớn…", "pl": "Kiedy przyjedziesz do dużego miasta…" }] },
     { "id": "v-bai-12-buoi-toi", "vi": "buổi tối", "pl": "wieczór, wieczorem", "category": "time", "note": "Rozszerzenie „tối” z Bài 9." },
     { "id": "v-bai-12-nhu", "vi": "như", "pl": "jak, taki jak", "category": "particle", "examples": [{ "vi": "thành phố lớn như Hà Nội", "pl": "duże miasta takie jak Hanoi" }] }
@@ -65,7 +65,10 @@
         { "vi": "Tiếp tục đi thẳng.", "pl": "Idź dalej prosto." }
       ],
       "keywords": ["thẳng", "rẽ", "quẹo", "phải", "trái", "dừng", "tiếp tục", "droga"],
-      "practice": ["e-bai-12-directions-match", "e-bai-12-mcq-turn", "e-bai-12-map-1", "e-bai-12-order-directions"]
+      "practice": ["e-bai-12-directions-match", "e-bai-12-mcq-turn", "e-bai-12-map-1", "e-bai-12-order-directions"],
+      "transfer": [
+        {"vi": "Đi thẳng, rẽ trái, đi qua công viên.", "pl": "Idź prosto, skręć w lewo, przejdź przez park.", "status": "unverified", "chunks": [{"vi": "Đi thẳng", "pl": "idź prosto"}, {"vi": "rẽ trái", "pl": "skręć w lewo"}, {"vi": "đi qua công viên", "pl": "przejdź przez park"}]}
+      ]
     },
     {
       "id": "g-bai-12-nhu-the-nao",
@@ -73,11 +76,14 @@
       "pattern": "Đi từ + A + đến + B + như thế nào? · rzeczownik + như thế nào?",
       "explanation": "„như thế nào?” pyta o SPOSÓB („jak?”) i stoi na końcu zdania. W połączeniu z „từ … đến …” (z Bài 11) tworzy pytanie o drogę: „Đi từ nhà Hoa đến ngân hàng như thế nào?” – jak dojść z domu Hoa do banku?\n\nUwaga na różnicę wobec Bài 10: „thế nào?” pytało o cechę („jaki jest?”), a „như thế nào?” pyta o sposób wykonania.",
       "examples": [
-        { "vi": "Đi từ nhà Hoa đến ngân hàng như thế nào?", "pl": "Jak dojść z domu Hoa do banku?" },
-        { "vi": "Đi từ chợ đến bệnh viện như thế nào?", "pl": "Jak dojść z targu do szpitala?" }
+        { "vi": "Đi từ nhà Hoa đến ngân hàng như thế nào?", "pl": "Jak dojść z domu Hoa do banku?", "chunks": [{"vi": "Đi", "pl": "dojść"}, {"vi": "từ nhà Hoa", "pl": "z domu Hoa"}, {"vi": "đến ngân hàng", "pl": "do banku"}, {"vi": "như thế nào", "pl": "jak?"}] },
+        { "vi": "Đi từ chợ đến bệnh viện như thế nào?", "pl": "Jak dojść z targu do szpitala?", "chunks": [{"vi": "Đi", "pl": "dojść"}, {"vi": "từ chợ", "pl": "z targu"}, {"vi": "đến bệnh viện", "pl": "do szpitala"}, {"vi": "như thế nào", "pl": "jak?"}] }
       ],
       "keywords": ["như thế nào", "jak", "từ đến", "droga"],
-      "practice": ["e-bai-12-typed-how", "e-bai-12-map-3"]
+      "practice": ["e-bai-12-typed-how", "e-bai-12-map-3"],
+      "transfer": [
+        {"vi": "Đi từ công ty đến siêu thị như thế nào?", "pl": "Jak dojść z firmy do supermarketu?", "status": "unverified", "chunks": [{"vi": "Đi", "pl": "dojść"}, {"vi": "từ công ty", "pl": "z firmy"}, {"vi": "đến siêu thị", "pl": "do supermarketu"}, {"vi": "như thế nào", "pl": "jak?"}]}
+      ]
     },
     {
       "id": "g-bai-12-co-the",
@@ -85,12 +91,15 @@
       "pattern": "Zaimek + có thể + czasownik · czasownik + được không?",
       "explanation": "„có thể” stoi PRZED czasownikiem i znaczy „móc, można”: „Bạn có thể đi máy rút tiền” – możesz pójść do bankomatu.\n\n„được” na końcu zdania również wyraża możliwość, a „được không?” to pytanie „czy można?”: „Trả thẻ được không?” – czy można płacić kartą? Odpowiedź twierdząca to „được” (można), przecząca „không được”.",
       "examples": [
-        { "vi": "Bạn có thể đi chơi đến nhiều nơi khác.", "pl": "Możesz pójść w wiele innych miejsc." },
+        { "vi": "Bạn có thể đi chơi đến nhiều nơi khác.", "pl": "Możesz pójść w wiele innych miejsc.", "chunks": [{"vi": "Bạn có thể", "pl": "możesz"}, {"vi": "đi chơi", "pl": "wybrać się"}, {"vi": "đến nhiều nơi khác", "pl": "w wiele innych miejsc"}] },
         { "vi": "Thành phố lớn cũng có nhiều nơi bạn có thể trả thẻ.", "pl": "W dużych miastach jest też wiele miejsc, gdzie można płacić kartą." },
         { "vi": "Trả thẻ được không?", "pl": "Czy można płacić kartą?", "status": "flagged", "note": "CONTENT_REVIEW: standardowo „trả bằng thẻ được không?”" }
       ],
       "keywords": ["có thể", "được", "được không", "możliwość"],
-      "practice": ["e-bai-12-fill-cothe", "e-bai-12-typed-card", "e-bai-12-read-4"]
+      "practice": ["e-bai-12-fill-cothe", "e-bai-12-typed-card", "e-bai-12-read-4"],
+      "transfer": [
+        {"vi": "Chị có thể nói tiếng Anh không?", "pl": "Czy mówi pani po angielsku? (dosł. czy pani potrafi…)", "status": "unverified", "chunks": [{"vi": "Chị có thể", "pl": "czy pani może / potrafi"}, {"vi": "nói tiếng Anh", "pl": "mówić po angielsku"}, {"vi": "không", "pl": "? (pytanie)"}]}
+      ]
     }
   ],
   "readings": [

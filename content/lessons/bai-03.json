@@ -41,8 +41,8 @@
     { "id": "v-bai-03-bao-nhieu", "vi": "bao nhiêu", "pl": "ile?", "category": "question-word", "examples": [{ "vi": "Cô bao nhiêu tuổi?", "pl": "Ile pani ma lat?" }] },
     { "id": "v-bai-03-tuoi", "vi": "tuổi", "pl": "lat (tylko przy mówieniu o czyimś wieku)", "category": "noun", "examples": [{ "vi": "Mình 36 tuổi.", "pl": "Mam 36 lat." }] },
     { "id": "v-bai-03-so", "vi": "số", "pl": "numer", "category": "noun" },
-    { "id": "v-bai-03-dien-thoai", "vi": "điện thoại", "pl": "telefon", "category": "noun", "examples": [{ "vi": "Số điện thoại của anh là bao nhiêu?", "pl": "Jaki jest twój numer telefonu?" }] },
-    { "id": "v-bai-03-cua", "vi": "của", "pl": "partykuła posesywności („…của Ewa” = Ewy)", "category": "particle", "examples": [{ "vi": "Số điện thoại của mình là 523 911 487.", "pl": "Mój numer telefonu to 523 911 487." }] },
+    { "id": "v-bai-03-dien-thoai", "vi": "điện thoại", "pl": "telefon", "category": "noun", "examples": [{ "vi": "Số điện thoại của anh là bao nhiêu?", "pl": "Jaki jest twój numer telefonu?", "chunks": [{"vi": "Số điện thoại", "pl": "numer telefonu"}, {"vi": "của anh", "pl": "twój (do anh)"}, {"vi": "là bao nhiêu", "pl": "jest jaki?"}] }] },
+    { "id": "v-bai-03-cua", "vi": "của", "pl": "partykuła posesywności („…của Ewa” = Ewy)", "category": "particle", "examples": [{ "vi": "Số điện thoại của mình là 523 911 487.", "pl": "Mój numer telefonu to 523 911 487.", "chunks": [{"vi": "Số điện thoại", "pl": "numer telefonu"}, {"vi": "của mình", "pl": "mój"}, {"vi": "là 523 911 487", "pl": "to 523 911 487"}] }] },
     { "id": "v-bai-03-con", "vi": "còn", "pl": "a (ty)? – „Còn em?” = a ty?", "category": "particle", "examples": [{ "vi": "Anh là người Mỹ. Còn em?", "pl": "Jestem Amerykaninem. A ty?" }] },
     { "id": "v-bai-03-co", "vi": "có", "pl": "mieć", "category": "verb", "examples": [{ "vi": "Bạn có Zalo không?", "pl": "Czy masz Zalo?" }, { "vi": "Mình không có Zalo, có Facebook.", "pl": "Nie mam Zalo, mam Facebooka." }] },
     { "id": "v-bai-03-zalo", "vi": "Zalo", "pl": "Zalo (wietnamski komunikator)", "category": "proper-noun", "srs": false }
@@ -59,7 +59,11 @@
         { "vi": "Em là người Ba Lan không?", "pl": "Czy jesteś z Polski?", "status": "flagged", "note": "Zob. CONTENT_REVIEW: podręcznikowa forma „Em có phải là người Ba Lan không?”" }
       ],
       "keywords": ["người", "nước nào", "narodowość", "anh ấy"],
-      "practice": ["e-bai-03-typed-nationality", "e-bai-03-fill-country", "e-bai-03-open-nationality"]
+      "practice": ["e-bai-03-typed-nationality", "e-bai-03-fill-country", "e-bai-03-open-nationality"],
+      "transfer": [
+        {"vi": "Anh ấy không phải là người Trung Quốc.", "pl": "On nie jest Chińczykiem.", "status": "unverified", "chunks": [{"vi": "Anh ấy", "pl": "on"}, {"vi": "không phải là", "pl": "nie jest"}, {"vi": "người Trung Quốc", "pl": "Chińczykiem"}]},
+        {"vi": "Chị ấy là người Pháp.", "pl": "Ona jest Francuzką.", "status": "unverified"}
+      ]
     },
     {
       "id": "g-bai-03-numbers",
@@ -87,7 +91,11 @@
         { "vi": "Mình 36 tuổi.", "pl": "Mam 36 lat." }
       ],
       "keywords": ["wiek", "tuổi", "bao nhiêu"],
-      "practice": ["e-bai-03-age-gen", "e-bai-03-open-age"]
+      "practice": ["e-bai-03-age-gen", "e-bai-03-open-age"],
+      "transfer": [
+        {"vi": "Ông bao nhiêu tuổi?", "pl": "Ile pan ma lat? (do starszego mężczyzny)", "status": "unverified"},
+        {"vi": "Chị 29 tuổi.", "pl": "Mam 29 lat. (mówi chị)", "status": "unverified"}
+      ]
     },
     {
       "id": "g-bai-03-phone",
@@ -95,11 +103,14 @@
       "pattern": "Số điện thoại + của + zaimek + là bao nhiêu? → Số điện thoại của mình là …",
       "explanation": "„của” wyraża posiadanie: „số điện thoại của anh” = twój numer telefonu. Numer czyta się cyfra po cyfrze (0 = không).",
       "examples": [
-        { "vi": "Số điện thoại của anh là bao nhiêu?", "pl": "Jaki jest twój numer telefonu?" },
-        { "vi": "Số điện thoại của anh là 523 911 487 – năm hai ba chín một một bốn tám bảy.", "pl": "Mój numer to 523 911 487." }
+        { "vi": "Số điện thoại của anh là bao nhiêu?", "pl": "Jaki jest twój numer telefonu?", "chunks": [{"vi": "Số điện thoại", "pl": "numer telefonu"}, {"vi": "của anh", "pl": "twój (do anh)"}, {"vi": "là bao nhiêu", "pl": "jest jaki?"}] },
+        { "vi": "Số điện thoại của anh là 523 911 487 – năm hai ba chín một một bốn tám bảy.", "pl": "Mój numer to 523 911 487.", "chunks": [{"vi": "Số điện thoại", "pl": "numer telefonu"}, {"vi": "của anh", "pl": "mój (anh mówi o sobie)"}, {"vi": "là 523 911 487", "pl": "to 523 911 487"}, {"vi": "năm hai ba chín một một bốn tám bảy", "pl": "(odczytane cyfra po cyfrze)"}] }
       ],
       "keywords": ["của", "telefon", "số điện thoại"],
-      "practice": ["e-bai-03-phone-gen", "e-bai-03-order-phone"]
+      "practice": ["e-bai-03-phone-gen", "e-bai-03-order-phone"],
+      "transfer": [
+        {"vi": "Số điện thoại của chị là bao nhiêu?", "pl": "Jaki jest pani numer telefonu?", "status": "unverified", "chunks": [{"vi": "Số điện thoại", "pl": "numer telefonu"}, {"vi": "của chị", "pl": "pani (do chị)"}, {"vi": "là bao nhiêu", "pl": "jest jaki?"}]}
+      ]
     },
     {
       "id": "g-bai-03-con-co",
@@ -112,7 +123,10 @@
         { "vi": "Mình không có Zalo, có Facebook.", "pl": "Nie mam Zalo, mam Facebooka." }
       ],
       "keywords": ["còn", "có", "mieć"],
-      "practice": ["e-bai-03-dialogue-2", "e-bai-03-fill-con"]
+      "practice": ["e-bai-03-dialogue-2", "e-bai-03-fill-con"],
+      "transfer": [
+        {"vi": "Mình có Zalo. Còn chị?", "pl": "Mam Zalo. A pani?", "status": "unverified"}
+      ]
     }
   ],
   "dialogues": [
@@ -122,13 +136,13 @@
       "situation": "Starszy mężczyzna (anh) rozmawia z młodszą osobą (em).",
       "lines": [
         { "speaker": "A", "vi": "Chào em! Em khỏe không?", "pl": "Cześć! Jak się masz?" },
-        { "speaker": "B", "vi": "Chào anh! Em khỏe, cảm ơn. Anh là người nước nào?", "pl": "Cześć! Dobrze, dziękuję. Skąd jesteś?" },
+        { "speaker": "B", "vi": "Chào anh! Em khỏe, cảm ơn. Anh là người nước nào?", "pl": "Cześć! Dobrze, dziękuję. Skąd jesteś?", "chunks": [{"vi": "Chào anh", "pl": "cześć"}, {"vi": "Em khỏe, cảm ơn", "pl": "mam się dobrze, dziękuję"}, {"vi": "Anh là người nước nào", "pl": "skąd jesteś?"}] },
         { "speaker": "A", "vi": "Anh là người Mỹ. Còn em?", "pl": "Jestem Amerykaninem. A ty?" },
         { "speaker": "B", "vi": "Em là người Việt Nam.", "pl": "Jestem z Wietnamu." },
         { "speaker": "A", "vi": "Em bao nhiêu tuổi?", "pl": "Ile masz lat?" },
         { "speaker": "B", "vi": "Em 20 tuổi. Còn anh?", "pl": "Mam 20 lat. A ty?" },
-        { "speaker": "A", "vi": "Anh 22 tuổi. Số điện thoại của em là bao nhiêu?", "pl": "Mam 22 lata. Jaki jest twój numer telefonu?" },
-        { "speaker": "B", "vi": "Số điện thoại của em là 489 003 625 – bốn tám chín không không ba sáu hai năm.", "pl": "Mój numer to 489 003 625." },
+        { "speaker": "A", "vi": "Anh 22 tuổi. Số điện thoại của em là bao nhiêu?", "pl": "Mam 22 lata. Jaki jest twój numer telefonu?", "chunks": [{"vi": "Anh 22 tuổi", "pl": "mam 22 lata"}, {"vi": "Số điện thoại của em", "pl": "twój numer telefonu"}, {"vi": "là bao nhiêu", "pl": "jest jaki?"}] },
+        { "speaker": "B", "vi": "Số điện thoại của em là 489 003 625 – bốn tám chín không không ba sáu hai năm.", "pl": "Mój numer to 489 003 625.", "chunks": [{"vi": "Số điện thoại của em", "pl": "mój numer telefonu"}, {"vi": "là 489 003 625", "pl": "to 489 003 625"}, {"vi": "bốn tám chín không không ba sáu hai năm", "pl": "(odczytane cyfra po cyfrze)"}] },
         { "speaker": "A", "vi": "Cảm ơn, chào em!", "pl": "Dziękuję, cześć!" }
       ]
     }

@@ -110,6 +110,20 @@ export function newSrsItem(kind: SrsKind, ref: string, lesson: string, now = Dat
 
 const clampLevel = (n: number): AutomaticityLevel => Math.max(1, Math.min(5, n)) as AutomaticityLevel;
 
+/**
+ * Longest rest a DIFFICULT ability may get. Difficult means it has failed at
+ * least twice and still fails about a third of the time or more. Such an item
+ * keeps coming back within a week until its record improves, instead of
+ * riding a success streak out to a month and being forgotten again. Each
+ * success lowers the failure share, so the cap lifts on its own.
+ */
+export const DIFFICULT_MAX_DAYS = 6;
+
+export function isDifficult(item: Pick<SrsItem, 'successes' | 'failures'>): boolean {
+  const total = item.successes + item.failures;
+  return item.failures >= 2 && item.failures / total >= 1 / 3;
+}
+
 export function schedule(item: SrsItem, grade: SrsGrade, now = Date.now()): SrsItem {
   const next: SrsItem = { ...item, lastReview: now, level: item.level ?? 1 };
   switch (grade) {
@@ -145,9 +159,12 @@ export function schedule(item: SrsItem, grade: SrsGrade, now = Date.now()): SrsI
   // maintenance immediately. Without this jump the 1 → 3 → 7 climb put a
   // target you had just proved three times back in tomorrow's queue, which is
   // how a week of study could end up drilling the same material.
-  if (grade >= 2 && next.successes >= MASTERY_SUCCESSES && next.lapses === 0) {
+  // Only for a record that is genuinely reliable: three successes after a
+  // string of failures is not mastery yet.
+  if (grade >= 2 && next.successes >= MASTERY_SUCCESSES && next.lapses === 0 && !isDifficult(next)) {
     next.interval = Math.max(next.interval, MAINTENANCE_MIN_DAYS);
   }
+  if (isDifficult(next)) next.interval = Math.min(next.interval, DIFFICULT_MAX_DAYS);
   next.interval = Math.min(next.interval, 365);
   next.due = now + next.interval * DAY_MS;
   // A clean success moves the ability one rung up the automaticity ladder,

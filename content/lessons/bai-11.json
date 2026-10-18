@@ -50,11 +50,14 @@
         { "vi": "Quyển sách ở cái bàn bên cạnh.", "pl": "Książka jest obok stołu." },
         { "vi": "Cái ghế ở cái bàn bên trên.", "pl": "Krzesło jest na stole." },
         { "vi": "Cái bàn ở cái ghế bên cạnh.", "pl": "Stół jest obok krzesła." },
-        { "vi": "Con chó ngủ ở con mèo bên cạnh.", "pl": "Pies śpi obok kota." },
+        { "vi": "Con chó ngủ ở con mèo bên cạnh.", "pl": "Pies śpi obok kota.", "chunks": [{"vi": "Con chó ngủ", "pl": "pies śpi"}, {"vi": "ở con mèo", "pl": "przy kocie"}, {"vi": "bên cạnh", "pl": "obok"}] },
         { "vi": "Quyển sách ở cái bàn bên trước.", "pl": "Książka jest przed stołem.", "status": "flagged", "note": "CONTENT_REVIEW: „bên trước” – zwykle „phía trước”." }
       ],
       "keywords": ["ở", "bên", "phía", "cạnh", "trước", "sau", "położenie", "szyk"],
-      "practice": ["e-bai-11-position-gen", "e-bai-11-order-position", "e-bai-11-mcq-order", "e-bai-11-scene-1c"]
+      "practice": ["e-bai-11-position-gen", "e-bai-11-order-position", "e-bai-11-mcq-order", "e-bai-11-scene-1c"],
+      "transfer": [
+        {"vi": "Cái bút ở quyển sách bên cạnh.", "pl": "Długopis jest obok książki.", "status": "unverified", "chunks": [{"vi": "Cái bút", "pl": "długopis"}, {"vi": "ở quyển sách", "pl": "przy książce"}, {"vi": "bên cạnh", "pl": "obok"}]}
+      ]
     },
     {
       "id": "g-bai-11-tren-duoi",
@@ -68,7 +71,10 @@
         { "vi": "Bên dưới cái bàn có quyển sách.", "pl": "Pod stołem jest książka." }
       ],
       "keywords": ["trên", "dưới", "wyjątek", "có", "położenie"],
-      "practice": ["e-bai-11-tren-duoi-typed", "e-bai-11-scene-2b", "e-bai-11-scene-2c", "e-bai-11-scene-3b"]
+      "practice": ["e-bai-11-tren-duoi-typed", "e-bai-11-scene-2b", "e-bai-11-scene-2c", "e-bai-11-scene-3b"],
+      "transfer": [
+        {"vi": "Con mèo dưới cái bàn.", "pl": "Kot jest pod stołem.", "status": "unverified"}
+      ]
     }
   ],
   "images": [

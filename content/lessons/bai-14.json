@@ -34,7 +34,7 @@
     { "id": "v-bai-14-phong", "vi": "phòng", "pl": "pokój", "category": "noun" },
     { "id": "v-bai-14-thay-do", "vi": "thay đồ", "pl": "przebierać się (wg lekcji: zmieniać, zmiana)", "category": "verb", "note": "„thay” = zmieniać, „đồ” = rzeczy, ubrania; „thay đồ” to po prostu „przebrać się”." },
     { "id": "v-bai-14-mua", "vi": "mua", "pl": "kupić, kupować", "category": "verb", "tags": ["shop"], "examples": [{ "vi": "Chị mua cái này.", "pl": "Kupię to." }] },
-    { "id": "v-bai-14-tim-verb", "vi": "tìm", "pl": "szukać", "category": "verb", "examples": [{ "vi": "Chị cũng tìm quần áo mới cho bạn trai.", "pl": "Szukam też nowych ubrań dla chłopaka." }] },
+    { "id": "v-bai-14-tim-verb", "vi": "tìm", "pl": "szukać", "category": "verb", "examples": [{ "vi": "Chị cũng tìm quần áo mới cho bạn trai.", "pl": "Szukam też nowych ubrań dla chłopaka.", "chunks": [{"vi": "Chị cũng tìm", "pl": "szukam też"}, {"vi": "quần áo mới", "pl": "nowych ubrań"}, {"vi": "cho bạn trai", "pl": "dla chłopaka"}] }] },
     { "id": "v-bai-14-quan-ao", "vi": "quần áo", "pl": "ubrania", "category": "noun", "tags": ["clothes"] },
     { "id": "v-bai-14-nam", "vi": "nam", "pl": "męski", "category": "adjective", "examples": [{ "vi": "quần áo nam", "pl": "ubrania męskie" }] },
     { "id": "v-bai-14-nu", "vi": "nữ", "pl": "damski", "category": "adjective", "examples": [{ "vi": "quần áo nữ", "pl": "ubrania damskie" }] },
@@ -72,10 +72,14 @@
         { "vi": "Cái đầm đỏ đẹp quá!", "pl": "Ta czerwona sukienka jest prześliczna!" },
         { "vi": "Có màu vàng, màu đỏ và màu hồng.", "pl": "Jest żółta, czerwona i różowa." },
         { "vi": "Chị thích màu gì?", "pl": "Jaki kolor pani lubi?" },
-        { "vi": "Thế thì, chị mua cái này màu đen.", "pl": "W takim razie kupię tę w kolorze czarnym." }
+        { "vi": "Thế thì, chị mua cái này màu đen.", "pl": "W takim razie kupię tę w kolorze czarnym.", "chunks": [{"vi": "Thế thì", "pl": "w takim razie"}, {"vi": "chị mua", "pl": "kupię"}, {"vi": "cái này", "pl": "to (tę rzecz)"}, {"vi": "màu đen", "pl": "w kolorze czarnym"}] }
       ],
       "keywords": ["màu", "màu gì", "kolor", "kolory"],
-      "practice": ["e-bai-14-colors-match", "e-bai-14-colors-match-2", "e-bai-14-mcq-xanh", "e-bai-14-typed-red-dress", "e-bai-14-typed-color-q", "e-bai-14-qa-color"]
+      "practice": ["e-bai-14-colors-match", "e-bai-14-colors-match-2", "e-bai-14-mcq-xanh", "e-bai-14-typed-red-dress", "e-bai-14-typed-color-q", "e-bai-14-qa-color"],
+      "transfer": [
+        {"vi": "Anh thích cái áo khoác màu xanh dương này.", "pl": "Podoba mi się ta ciemnoniebieska kurtka. (mówi anh)", "status": "unverified", "chunks": [{"vi": "Anh thích", "pl": "podoba mi się"}, {"vi": "cái áo khoác", "pl": "kurtka"}, {"vi": "màu xanh dương", "pl": "ciemnoniebieska"}, {"vi": "này", "pl": "ta"}]},
+        {"vi": "Quần của bạn màu gì?", "pl": "Jakiego koloru są twoje spodnie?", "status": "unverified"}
+      ]
     },
     {
       "id": "g-bai-14-classifiers",
@@ -85,10 +89,13 @@
       "examples": [
         { "vi": "Tôi hôm qua đã mua hai bộ đầm đẹp.", "pl": "Wczoraj kupiłam dwie ładne sukienki.", "status": "flagged", "note": "CONTENT_REVIEW: przy pojedynczej sukience częściej „chiếc/cái đầm” (sam dialog lekcji mówi „cái đầm”); szyk „Tôi hôm qua” zamiast „Hôm qua tôi”." },
         { "vi": "Tôi thích đôi giày này, nhưng không có số tôi.", "pl": "Podobają mi się te buty, ale nie ma mojego rozmiaru.", "status": "flagged", "note": "CONTENT_REVIEW: standardowo „không có số của tôi” / „không có cỡ của tôi”." },
-        { "vi": "Em ấy mua một cái túi cho mẹ và hai cái ba lô cho bố và anh.", "pl": "Ona kupuje torebkę dla mamy i dwa plecaki dla taty i brata." }
+        { "vi": "Em ấy mua một cái túi cho mẹ và hai cái ba lô cho bố và anh.", "pl": "Ona kupuje torebkę dla mamy i dwa plecaki dla taty i brata.", "chunks": [{"vi": "Em ấy mua", "pl": "ona kupuje"}, {"vi": "một cái túi", "pl": "torebkę"}, {"vi": "cho mẹ", "pl": "dla mamy"}, {"vi": "và hai cái ba lô", "pl": "i dwa plecaki"}, {"vi": "cho bố và anh", "pl": "dla taty i brata"}] }
       ],
       "keywords": ["bộ", "đôi", "cái", "chiếc", "klasyfikator", "ubrania"],
-      "practice": ["e-bai-14-mcq-cl-shoes", "e-bai-14-mcq-cl-bag", "e-bai-14-fill-doi", "e-bai-14-typed-cl", "e-bai-14-order-cl"]
+      "practice": ["e-bai-14-mcq-cl-shoes", "e-bai-14-mcq-cl-bag", "e-bai-14-fill-doi", "e-bai-14-typed-cl", "e-bai-14-order-cl"],
+      "transfer": [
+        {"vi": "Tôi muốn mua một đôi giày màu đen.", "pl": "Chcę kupić parę czarnych butów.", "status": "unverified", "chunks": [{"vi": "Tôi muốn mua", "pl": "chcę kupić"}, {"vi": "một đôi giày", "pl": "parę butów"}, {"vi": "màu đen", "pl": "czarnych"}]}
+      ]
     },
     {
       "id": "g-bai-14-wear",
@@ -101,7 +108,11 @@
         { "vi": "Ông không thích đeo mũ.", "pl": "Dziadek nie lubi nosić czapki.", "status": "flagged", "note": "CONTENT_REVIEW: do nakryć głowy standardowo „đội mũ”." }
       ],
       "keywords": ["mặc", "đi", "đeo", "nosić", "ubrania"],
-      "practice": ["e-bai-14-mcq-wear-shoes", "e-bai-14-mcq-wear-glasses", "e-bai-14-fill-mac", "e-bai-14-err-wear", "e-bai-14-typed-wear", "e-bai-14-photo-1", "e-bai-14-qa-now"]
+      "practice": ["e-bai-14-mcq-wear-shoes", "e-bai-14-mcq-wear-glasses", "e-bai-14-fill-mac", "e-bai-14-err-wear", "e-bai-14-typed-wear", "e-bai-14-photo-1", "e-bai-14-qa-now"],
+      "transfer": [
+        {"vi": "Hôm nay chị ấy mặc váy đỏ và đeo kính.", "pl": "Dziś ona ma na sobie czerwoną spódnicę i okulary.", "status": "unverified", "chunks": [{"vi": "Hôm nay", "pl": "dziś"}, {"vi": "chị ấy mặc váy đỏ", "pl": "ona ma na sobie czerwoną spódnicę"}, {"vi": "và đeo kính", "pl": "i nosi okulary"}]},
+        {"vi": "Anh ấy đi giày trắng.", "pl": "On ma na sobie białe buty.", "status": "unverified"}
+      ]
     },
     {
       "id": "g-bai-14-shopping",
@@ -115,7 +126,11 @@
         { "vi": "Chị mua cái này.", "pl": "Kupię to." }
       ],
       "keywords": ["mua", "màu khác", "size", "bao nhiêu tiền", "tổng cộng", "sklep", "zakupy"],
-      "practice": ["e-bai-14-dialogue-1", "e-bai-14-dialogue-2", "e-bai-14-dialogue-3", "e-bai-14-typed-other-color", "e-bai-14-typed-fitting", "e-bai-14-typed-buy", "e-bai-14-order-size"]
+      "practice": ["e-bai-14-dialogue-1", "e-bai-14-dialogue-2", "e-bai-14-dialogue-3", "e-bai-14-typed-other-color", "e-bai-14-typed-fitting", "e-bai-14-typed-buy", "e-bai-14-order-size"],
+      "transfer": [
+        {"vi": "Có size nhỏ hơn không?", "pl": "Czy jest mniejszy rozmiar?", "status": "unverified"},
+        {"vi": "Cái áo len này bao nhiêu tiền?", "pl": "Ile kosztuje ten sweter?", "status": "unverified"}
+      ]
     }
   ],
   "dialogues": [
@@ -124,20 +139,20 @@
       "title": "Ở cửa hàng quần áo",
       "situation": "Klientka (chị) kupuje sukienkę dla siebie i kurtkę dla swojego chłopaka. Sprzedawczyni jest młodsza, więc mówi o sobie „em”.",
       "lines": [
-        { "speaker": "Người bán hàng", "vi": "Xin chào, em có thể giúp gì cho chị?", "pl": "Dzień dobry, w czym mogę pani pomóc?" },
-        { "speaker": "Khách", "vi": "Chào em, chị thích cái đầm này. Có màu khác không?", "pl": "Dzień dobry, podoba mi się ta sukienka. Czy jest w innym kolorze?" },
+        { "speaker": "Người bán hàng", "vi": "Xin chào, em có thể giúp gì cho chị?", "pl": "Dzień dobry, w czym mogę pani pomóc?", "chunks": [{"vi": "Xin chào", "pl": "dzień dobry"}, {"vi": "em có thể giúp gì", "pl": "w czym mogę pomóc"}, {"vi": "cho chị", "pl": "pani"}] },
+        { "speaker": "Khách", "vi": "Chào em, chị thích cái đầm này. Có màu khác không?", "pl": "Dzień dobry, podoba mi się ta sukienka. Czy jest w innym kolorze?", "chunks": [{"vi": "Chào em", "pl": "dzień dobry"}, {"vi": "chị thích", "pl": "podoba mi się"}, {"vi": "cái đầm này", "pl": "ta sukienka"}, {"vi": "Có màu khác không", "pl": "czy jest inny kolor?"}] },
         { "speaker": "Người bán hàng", "vi": "Có màu vàng, màu đỏ và màu hồng. Chị thích màu gì?", "pl": "Jest żółta, czerwona i różowa. Jaki kolor pani lubi?" },
-        { "speaker": "Khách", "vi": "Cái đầm đỏ đẹp quá! Phòng thay đồ ở đâu?", "pl": "Czerwona sukienka jest prześliczna! Gdzie jest przymierzalnia?" },
+        { "speaker": "Khách", "vi": "Cái đầm đỏ đẹp quá! Phòng thay đồ ở đâu?", "pl": "Czerwona sukienka jest prześliczna! Gdzie jest przymierzalnia?", "chunks": [{"vi": "Cái đầm đỏ", "pl": "czerwona sukienka"}, {"vi": "đẹp quá", "pl": "jest prześliczna"}, {"vi": "Phòng thay đồ", "pl": "przymierzalnia"}, {"vi": "ở đâu", "pl": "gdzie jest?"}] },
         { "speaker": "Người bán hàng", "vi": "Ở kia.", "pl": "Tam." },
-        { "speaker": "Khách", "vi": "Cảm ơn em… em ơi! Có size to hơn không?", "pl": "Dziękuję… (z przymierzalni) przepraszam! Czy jest większy rozmiar?" },
+        { "speaker": "Khách", "vi": "Cảm ơn em… em ơi! Có size to hơn không?", "pl": "Dziękuję… (z przymierzalni) przepraszam! Czy jest większy rozmiar?", "chunks": [{"vi": "Cảm ơn em", "pl": "dziękuję"}, {"vi": "em ơi", "pl": "przepraszam! (wołanie)"}, {"vi": "Có size to hơn", "pl": "jest większy rozmiar"}, {"vi": "không", "pl": "? (pytanie)"}] },
         { "speaker": "Người bán hàng", "vi": "Có, đây là size L cho chị.", "pl": "Tak, oto rozmiar L dla pani." },
-        { "speaker": "Khách", "vi": "Cảm ơn em. Cái này bao nhiêu tiền?", "pl": "Dziękuję. Ile to kosztuje?" },
-        { "speaker": "Người bán hàng", "vi": "Cái đầm này 400 000 (bốn trăm nghìn) đồng.", "pl": "Ta sukienka kosztuje 400 000 dongów." },
-        { "speaker": "Khách", "vi": "Chị mua cái này. Chị cũng tìm quần áo mới cho bạn trai.", "pl": "Kupię ją. Szukam też nowych ubrań dla mojego chłopaka." },
-        { "speaker": "Người bán hàng", "vi": "Quần áo nam ở phòng thay đồ bên phải. Chị tìm quần áo gì?", "pl": "Ubrania męskie są na prawo od przymierzalni. Czego pani szuka?" },
+        { "speaker": "Khách", "vi": "Cảm ơn em. Cái này bao nhiêu tiền?", "pl": "Dziękuję. Ile to kosztuje?", "chunks": [{"vi": "Cảm ơn em", "pl": "dziękuję"}, {"vi": "Cái này", "pl": "to"}, {"vi": "bao nhiêu tiền", "pl": "ile kosztuje?"}] },
+        { "speaker": "Người bán hàng", "vi": "Cái đầm này 400 000 (bốn trăm nghìn) đồng.", "pl": "Ta sukienka kosztuje 400 000 dongów.", "chunks": [{"vi": "Cái đầm này", "pl": "ta sukienka"}, {"vi": "400 000 (bốn trăm nghìn)", "pl": "400 000"}, {"vi": "đồng", "pl": "dongów"}] },
+        { "speaker": "Khách", "vi": "Chị mua cái này. Chị cũng tìm quần áo mới cho bạn trai.", "pl": "Kupię ją. Szukam też nowych ubrań dla mojego chłopaka.", "chunks": [{"vi": "Chị mua cái này", "pl": "kupię to"}, {"vi": "Chị cũng tìm", "pl": "szukam też"}, {"vi": "quần áo mới", "pl": "nowych ubrań"}, {"vi": "cho bạn trai", "pl": "dla chłopaka"}] },
+        { "speaker": "Người bán hàng", "vi": "Quần áo nam ở phòng thay đồ bên phải. Chị tìm quần áo gì?", "pl": "Ubrania męskie są na prawo od przymierzalni. Czego pani szuka?", "chunks": [{"vi": "Quần áo nam", "pl": "ubrania męskie"}, {"vi": "ở phòng thay đồ bên phải", "pl": "są na prawo od przymierzalni"}, {"vi": "Chị tìm quần áo gì", "pl": "czego pani szuka?"}] },
         { "speaker": "Khách", "vi": "Có lẽ, áo len hoặc áo khoác.", "pl": "Może swetra albo kurtki." },
-        { "speaker": "Người bán hàng", "vi": "Cái áo khoác này mới nhất, có màu đen và màu trắng.", "pl": "Ta kurtka jest najnowsza, jest w kolorze czarnym i białym." },
-        { "speaker": "Khách", "vi": "Thế thì, chị mua cái này màu đen.", "pl": "W takim razie wezmę tę w czarnym." },
+        { "speaker": "Người bán hàng", "vi": "Cái áo khoác này mới nhất, có màu đen và màu trắng.", "pl": "Ta kurtka jest najnowsza, jest w kolorze czarnym i białym.", "chunks": [{"vi": "Cái áo khoác này", "pl": "ta kurtka"}, {"vi": "mới nhất", "pl": "jest najnowsza"}, {"vi": "có màu đen và màu trắng", "pl": "jest czarna i biała"}] },
+        { "speaker": "Khách", "vi": "Thế thì, chị mua cái này màu đen.", "pl": "W takim razie wezmę tę w czarnym.", "chunks": [{"vi": "Thế thì", "pl": "w takim razie"}, {"vi": "chị mua", "pl": "kupię"}, {"vi": "cái này", "pl": "to (tę rzecz)"}, {"vi": "màu đen", "pl": "w kolorze czarnym"}] },
         { "speaker": "Người bán hàng", "vi": "Tổng cộng của chị là 700 000 đồng.", "pl": "Razem 700 000 dongów.", "status": "flagged", "note": "CONTENT_REVIEW: naturalniej „Tổng cộng là 700 000 đồng” albo „Của chị tổng cộng 700 000 đồng”." },
         { "speaker": "Khách", "vi": "Chị có thể trả thẻ không?", "pl": "Czy mogę zapłacić kartą?", "status": "flagged", "note": "CONTENT_REVIEW: „trả thẻ” jak w Bài 12 – standardowo „trả bằng thẻ”." },
         { "speaker": "Người bán hàng", "vi": "Em xin lỗi, không có thể.", "pl": "Przepraszam, nie można.", "status": "flagged", "note": "CONTENT_REVIEW: standardowo „không thể” albo „không được” – bez „có”." },

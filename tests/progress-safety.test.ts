@@ -156,7 +156,7 @@ describe('daily snapshot', () => {
     // …and the next day takes a fresh one.
     saveState(storage, changed, day1 + DAY_MS);
     expect(JSON.parse(storage.data[SNAPSHOT_KEY]).lessons['bai-05']).toBeDefined();
-    expect(storage.data[SNAPSHOT_DAY_KEY]).not.toBe('2026-10-18');
+    expect(storage.data[SNAPSHOT_DAY_KEY]).toBe('2026-10-19');
   });
 
   it('gives up the snapshot rather than the live save when space runs out', () => {

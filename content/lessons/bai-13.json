@@ -32,7 +32,7 @@
     { "id": "v-bai-13-tau-dien-tren-cao", "vi": "tàu điện trên cao", "pl": "metro (kolejka nad ziemią)", "category": "noun", "tags": ["transport"] },
     { "id": "v-bai-13-chiec", "vi": "chiếc", "pl": "klasyfikator pojazdów (sztuka)", "category": "classifier", "examples": [{ "vi": "hai chiếc xe đạp", "pl": "dwa rowery" }] },
     { "id": "v-bai-13-bang", "vi": "bằng", "pl": "czymś, za pomocą (środek, narzędzie)", "category": "preposition", "examples": [{ "vi": "Tôi đi bằng xe máy.", "pl": "Jeżdżę skuterem." }] },
-    { "id": "v-bai-13-neu", "vi": "nếu", "pl": "jeśli (nếu …, thì … = jeśli …, to …)", "category": "particle", "examples": [{ "vi": "Nếu bạn có tiền, thì chúng ta đi quán ăn.", "pl": "Jeśli masz pieniądze, to pójdziemy do restauracji." }] }
+    { "id": "v-bai-13-neu", "vi": "nếu", "pl": "jeśli (nếu …, thì … = jeśli …, to …)", "category": "particle", "examples": [{ "vi": "Nếu bạn có tiền, thì chúng ta đi quán ăn.", "pl": "Jeśli masz pieniądze, to pójdziemy do restauracji.", "chunks": [{"vi": "Nếu bạn có tiền", "pl": "jeśli masz pieniądze"}, {"vi": "thì", "pl": "to"}, {"vi": "chúng ta đi quán ăn", "pl": "pójdziemy do restauracji"}] }] }
   ],
   "grammar": [
     {
@@ -58,7 +58,11 @@
         { "vi": "Bạn đi làm việc bằng gì?", "pl": "Czym jeździsz do pracy?" }
       ],
       "keywords": ["bằng", "bằng gì", "czym", "transport"],
-      "practice": ["e-bai-13-fill-bang", "e-bai-13-typed-bang", "e-bai-13-typed-bang-gi", "e-bai-13-order-bang", "e-bai-13-qa-work", "e-bai-13-tr-1", "e-bai-13-tr-3"]
+      "practice": ["e-bai-13-fill-bang", "e-bai-13-typed-bang", "e-bai-13-typed-bang-gi", "e-bai-13-order-bang", "e-bai-13-qa-work", "e-bai-13-tr-1", "e-bai-13-tr-3"],
+      "transfer": [
+        {"vi": "Bố tôi đi làm việc bằng xe máy.", "pl": "Mój tata jeździ do pracy skuterem.", "status": "unverified", "chunks": [{"vi": "Bố tôi", "pl": "mój tata"}, {"vi": "đi làm việc", "pl": "jeździ do pracy"}, {"vi": "bằng xe máy", "pl": "skuterem"}]},
+        {"vi": "Chúng tôi sẽ đi Việt Nam bằng máy bay.", "pl": "Polecimy do Wietnamu samolotem.", "status": "unverified", "chunks": [{"vi": "Chúng tôi sẽ đi", "pl": "pojedziemy / polecimy"}, {"vi": "Việt Nam", "pl": "do Wietnamu"}, {"vi": "bằng máy bay", "pl": "samolotem"}]}
+      ]
     },
     {
       "id": "g-bai-13-neu-thi",
@@ -66,12 +70,16 @@
       "pattern": "Nếu + warunek, thì + skutek",
       "explanation": "„nếu” (jeśli) otwiera warunek, „thì” (to) otwiera skutek: „Nếu bạn có tiền, thì chúng ta đi quán ăn” – jeśli masz pieniądze, to pójdziemy do restauracji.\n\nPrzecinek stoi przed „thì”. Kolejność jest stała: najpierw warunek z „nếu”, potem skutek z „thì”.\n\nNie myl z „thế thì” (Bài 7) – „w takim razie”, które nawiązuje do tego, co już padło.",
       "examples": [
-        { "vi": "Nếu bạn có tiền, thì chúng ta đi quán ăn.", "pl": "Jeśli masz pieniądze, to pójdziemy do restauracji." },
-        { "vi": "Nếu anh đi bằng xe buýt, thì em đi với anh.", "pl": "Jeśli pojedziesz autobusem, to pojadę z tobą." },
-        { "vi": "Nếu chị đi ngủ, thì tôi về nhà.", "pl": "Jeśli pójdziesz spać, to wrócę do domu." }
+        { "vi": "Nếu bạn có tiền, thì chúng ta đi quán ăn.", "pl": "Jeśli masz pieniądze, to pójdziemy do restauracji.", "chunks": [{"vi": "Nếu bạn có tiền", "pl": "jeśli masz pieniądze"}, {"vi": "thì", "pl": "to"}, {"vi": "chúng ta đi quán ăn", "pl": "pójdziemy do restauracji"}] },
+        { "vi": "Nếu anh đi bằng xe buýt, thì em đi với anh.", "pl": "Jeśli pojedziesz autobusem, to pojadę z tobą.", "chunks": [{"vi": "Nếu anh đi", "pl": "jeśli pojedziesz"}, {"vi": "bằng xe buýt", "pl": "autobusem"}, {"vi": "thì em đi", "pl": "to ja pojadę"}, {"vi": "với anh", "pl": "z tobą"}] },
+        { "vi": "Nếu chị đi ngủ, thì tôi về nhà.", "pl": "Jeśli pójdziesz spać, to wrócę do domu.", "chunks": [{"vi": "Nếu chị đi ngủ", "pl": "jeśli pójdziesz spać"}, {"vi": "thì", "pl": "to"}, {"vi": "tôi về nhà", "pl": "wrócę do domu"}] }
       ],
       "keywords": ["nếu", "thì", "jeśli", "warunek"],
-      "practice": ["e-bai-13-fill-neu", "e-bai-13-order-neu", "e-bai-13-neu-1", "e-bai-13-neu-2", "e-bai-13-neu-3", "e-bai-13-typed-neu"]
+      "practice": ["e-bai-13-fill-neu", "e-bai-13-order-neu", "e-bai-13-neu-1", "e-bai-13-neu-2", "e-bai-13-neu-3", "e-bai-13-typed-neu"],
+      "transfer": [
+        {"vi": "Nếu bạn không có xe máy, thì bạn có thể đi bằng xe buýt.", "pl": "Jeśli nie masz skutera, to możesz pojechać autobusem.", "status": "unverified", "chunks": [{"vi": "Nếu bạn không có xe máy", "pl": "jeśli nie masz skutera"}, {"vi": "thì bạn có thể đi", "pl": "to możesz pojechać"}, {"vi": "bằng xe buýt", "pl": "autobusem"}]},
+        {"vi": "Nếu chị thích, thì em đi với chị.", "pl": "Jeśli chcesz, to pójdę z tobą. (dosł. jeśli lubisz)", "status": "unverified", "chunks": [{"vi": "Nếu chị thích", "pl": "jeśli chcesz (dosł. lubisz)"}, {"vi": "thì em đi", "pl": "to pójdę"}, {"vi": "với chị", "pl": "z tobą"}]}
+      ]
     }
   ],
   "dialogues": [],

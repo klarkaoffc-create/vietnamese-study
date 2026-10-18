@@ -51,7 +51,11 @@
         { "vi": "Anh ấy không nói tiếng Anh.", "pl": "On nie mówi po angielsku." }
       ],
       "keywords": ["không", "przeczenie", "pytanie", "czasownik"],
-      "practice": ["e-bai-05-fill-neg", "e-bai-05-typed-speak", "e-bai-05-mcq-short-answer"]
+      "practice": ["e-bai-05-fill-neg", "e-bai-05-typed-speak", "e-bai-05-mcq-short-answer"],
+      "transfer": [
+        {"vi": "Bạn nghe nhạc không?", "pl": "Słuchasz muzyki?", "status": "unverified"},
+        {"vi": "Chị ấy không uống bia.", "pl": "Ona nie pije piwa.", "status": "unverified"}
+      ]
     },
     {
       "id": "g-bai-05-modal",
@@ -64,7 +68,11 @@
         { "vi": "Anh ấy phải đi làm việc.", "pl": "On musi iść do pracy." }
       ],
       "keywords": ["thích", "muốn", "phải", "czasowniki modalne"],
-      "practice": ["e-bai-05-order-modal", "e-bai-05-typed-want", "e-bai-05-open-like"]
+      "practice": ["e-bai-05-order-modal", "e-bai-05-typed-want", "e-bai-05-open-like"],
+      "transfer": [
+        {"vi": "Mình thích nghe nhạc Việt Nam.", "pl": "Lubię słuchać wietnamskiej muzyki.", "status": "unverified", "chunks": [{"vi": "Mình thích", "pl": "lubię"}, {"vi": "nghe", "pl": "słuchać"}, {"vi": "nhạc Việt Nam", "pl": "wietnamskiej muzyki"}]},
+        {"vi": "Hôm nay anh ấy phải học tiếng Anh.", "pl": "Dzisiaj on musi uczyć się angielskiego.", "status": "unverified", "chunks": [{"vi": "Hôm nay", "pl": "dzisiaj"}, {"vi": "anh ấy phải", "pl": "on musi"}, {"vi": "học tiếng Anh", "pl": "uczyć się angielskiego"}]}
+      ]
     },
     {
       "id": "g-bai-05-lam-gi",
@@ -77,7 +85,10 @@
         { "vi": "Bạn muốn ăn gì?", "pl": "Co chcesz zjeść?" }
       ],
       "keywords": ["làm gì", "gì"],
-      "practice": ["e-bai-05-typed-what-do", "e-bai-05-verb-match"]
+      "practice": ["e-bai-05-typed-what-do", "e-bai-05-verb-match"],
+      "transfer": [
+        {"vi": "Chủ Nhật bạn thích làm gì?", "pl": "Co lubisz robić w niedzielę?", "status": "unverified", "chunks": [{"vi": "Chủ Nhật", "pl": "w niedzielę"}, {"vi": "bạn thích", "pl": "lubisz"}, {"vi": "làm gì", "pl": "robić co?"}]}
+      ]
     }
   ],
   "exercises": [
