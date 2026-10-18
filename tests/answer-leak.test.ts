@@ -67,7 +67,7 @@ const SHOWS_KEY_AS_AN_OPTION = new Set(['mcq', 'matching', 'ordering', 'reading-
 /* ------------------------------------------------------------------ */
 
 describe('no lesson exercise prints its own answer in the task', () => {
-  it('audits every exercise in Bài 1–12, the reviews and the exams', () => {
+  it('audits every exercise in Bài 1–14, the reviews and the exams', () => {
     const leaks = allExercises.flatMap((e) => findAnswerLeaks(e.exercise));
     const report = leaks.map((l) => `${l.exerciseId} · ${l.field} · answer ${JSON.stringify(l.answer)} in ${JSON.stringify(l.text)}`);
     expect(report, `answer visible before the attempt:\n${report.join('\n')}`).toEqual([]);

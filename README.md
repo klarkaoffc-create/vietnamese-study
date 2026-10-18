@@ -1,7 +1,7 @@
 # Tiếng Việt — nauka wietnamskiego
 
 Aplikacja do nauki wietnamskiego zbudowana na podstawie prawdziwych lekcji
-(Bài 1–11 i powtórki 1–5) w formacie notatek kursowych + aktywnego
+(Bài 1–14 i powtórki 1–5) w formacie notatek kursowych + aktywnego
 przypominania + spaced repetition (jak Anki) + ćwiczeń interaktywnych +
 egzaminów + zeszytu błędów. Wszystko działa lokalnie w przeglądarce, bez
 serwera i bez konta — postęp zapisuje się na urządzeniu.

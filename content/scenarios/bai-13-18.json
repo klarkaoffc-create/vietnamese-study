@@ -1,0 +1,110 @@
+{
+  "id": "sc-pack-13-18",
+  "title": "Sytuacje komunikacyjne – Bài 13–18",
+  "scenarios": [
+    {
+      "id": "s-bai-13-commute",
+      "lesson": "bai-13",
+      "situation": "Nowa koleżanka z pracy pyta, jak dojeżdżasz do biura.",
+      "goal": "Powiedz, czym jeździsz do pracy.",
+      "patterns": ["{x}bằng{x}", "{x}đi bộ{x}"],
+      "sample": "Tôi đi làm việc bằng tàu điện.",
+      "hint": "đi làm việc + bằng + pojazd",
+      "vocab": ["v-bai-13-bang", "v-bai-13-tau-dien", "v-bai-13-xe-buyt"],
+      "grammar": ["g-bai-13-bang"],
+      "status": "unverified"
+    },
+    {
+      "id": "s-bai-13-ask-how",
+      "lesson": "bai-13",
+      "situation": "Rozmawiasz ze znajomym Wietnamczykiem o tym, jak dostaje się na uczelnię.",
+      "goal": "Zapytaj go, czym jeździ na zajęcia.",
+      "patterns": ["{x}bằng gì{x}"],
+      "sample": "Bạn đi học bằng gì?",
+      "hint": "… bằng gì?",
+      "vocab": ["v-bai-13-bang"],
+      "grammar": ["g-bai-13-bang"],
+      "status": "unverified"
+    },
+    {
+      "id": "s-bai-13-if-bus",
+      "lesson": "bai-13",
+      "situation": "Umawiasz się ze starszym kolegą (anh). Jeśli on pojedzie autobusem, ty pojedziesz z nim.",
+      "goal": "Powiedz mu to zdaniem warunkowym.",
+      "patterns": ["{x}nếu{x}thì{x}"],
+      "sample": "Nếu anh đi bằng xe buýt, thì em đi với anh.",
+      "hint": "Nếu …, thì …",
+      "vocab": ["v-bai-13-neu", "v-bai-13-xe-buyt"],
+      "grammar": ["g-bai-13-neu-thi", "g-bai-13-bang"],
+      "status": "unverified"
+    },
+    {
+      "id": "s-bai-13-count-vehicles",
+      "lesson": "bai-13",
+      "situation": "Stoisz na skrzyżowaniu w Hà Nội i opisujesz znajomemu przez telefon, co widzisz.",
+      "goal": "Powiedz, że na ulicy jest dużo skuterów i dwa autobusy (z klasyfikatorem).",
+      "patterns": ["{x}xe máy{x}chiếc xe buýt{x}", "{x}chiếc xe buýt{x}xe máy{x}"],
+      "sample": "Trên đường có nhiều xe máy và hai chiếc xe buýt.",
+      "hint": "Trên đường có … · liczebnik + chiếc + pojazd",
+      "minSentences": 1,
+      "vocab": ["v-bai-13-xe-may", "v-bai-13-xe-buyt", "v-bai-13-chiec"],
+      "grammar": ["g-bai-13-classifiers"],
+      "combines": [12],
+      "status": "unverified"
+    },
+    {
+      "id": "s-bai-14-other-color",
+      "lesson": "bai-14",
+      "situation": "W sklepie podoba ci się sukienka, ale nie w tym kolorze. Sprzedawczyni jest młodsza od ciebie.",
+      "goal": "Zapytaj, czy jest w innym kolorze, i powiedz, który kolor lubisz.",
+      "patterns": ["{x}màu khác{x}", "{x}thích màu{x}"],
+      "sample": "Có màu khác không? Chị thích màu đỏ.",
+      "hint": "Có màu khác không? · … thích màu + kolor",
+      "minSentences": 2,
+      "vocab": ["v-bai-14-mau", "v-bai-14-dam"],
+      "grammar": ["g-bai-14-colors", "g-bai-14-shopping"],
+      "status": "unverified"
+    },
+    {
+      "id": "s-bai-14-buy-dress",
+      "lesson": "bai-14",
+      "situation": "Przymierzyłaś sukienkę – jest za mała. Potem chcesz ją kupić.",
+      "goal": "Poproś o większy rozmiar, zapytaj o cenę i powiedz, że ją kupujesz (3 wypowiedzi).",
+      "patterns": ["{x}to hơn{x}bao nhiêu tiền{x}mua{x}"],
+      "sample": "Em ơi! Có size to hơn không? Cái này bao nhiêu tiền? Chị mua cái này.",
+      "hint": "Có size to hơn không? · bao nhiêu tiền? · mua cái này",
+      "minSentences": 3,
+      "vocab": ["v-bai-14-mua"],
+      "grammar": ["g-bai-14-shopping", "g-bai-10-comparison"],
+      "combines": [8],
+      "status": "unverified"
+    },
+    {
+      "id": "s-bai-14-describe-outfit",
+      "lesson": "bai-14",
+      "situation": "Umawiasz się na spotkanie z kimś, kto cię nie zna.",
+      "goal": "Opisz, co masz dziś na sobie: ubranie z kolorem, buty i jeden dodatek (mặc / đi / đeo).",
+      "patterns": ["{x}mặc{x}"],
+      "sample": "Hôm nay tôi mặc áo khoác màu đen và quần màu xanh dương. Tôi đi giày trắng và đeo kính.",
+      "hint": "mặc + ubranie + kolor · đi + giày · đeo + dodatek",
+      "minSentences": 2,
+      "vocab": ["v-bai-14-mac", "v-bai-14-deo", "v-bai-14-giay"],
+      "grammar": ["g-bai-14-wear", "g-bai-14-colors"],
+      "status": "unverified"
+    },
+    {
+      "id": "s-bai-14-gift",
+      "lesson": "bai-14",
+      "situation": "Zadanie łączące lekcje: rodzina + klasyfikatory + kolory. Kupujesz prezenty dla rodziny.",
+      "goal": "Powiedz, co kupujesz i dla kogo – z klasyfikatorem i kolorem (2 zdania).",
+      "patterns": ["{x}mua{x}cho{x}"],
+      "sample": "Tôi mua một cái túi màu nâu cho mẹ. Tôi cũng mua hai đôi giày cho bố và anh trai.",
+      "hint": "mua + liczebnik + klasyfikator + rzecz (+ kolor) + cho + osoba",
+      "minSentences": 2,
+      "vocab": ["v-bai-14-mua", "v-bai-14-tui", "v-bai-14-doi"],
+      "grammar": ["g-bai-14-classifiers", "g-bai-14-colors"],
+      "combines": [6, 8],
+      "status": "unverified"
+    }
+  ]
+}

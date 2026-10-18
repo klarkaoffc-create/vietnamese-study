@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Aplikacja do nauki wietnamskiego oparta na lekcjach Bài 1–11",
+  "description": "Aplikacja do nauki wietnamskiego oparta na lekcjach Bài 1–14",
   "scripts": {
     "dev": "vite",
     "build": "npm run validate-content && tsc --noEmit && vite build",

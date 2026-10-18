@@ -29,7 +29,7 @@ describe('lesson discovery', () => {
     expect(blocks[1].complete).toBe(true);
     // Block 3 (Bài 11–15) stays incomplete until Bài 15 exists, so no review
     // or exam is generated for it.
-    expect(blocks[2].lessons).toEqual([11, 12]);
+    expect(blocks[2].lessons).toEqual([11, 12, 13, 14]);
     expect(blocks[2].complete).toBe(false);
     expect(blocks[2].reviewId).toBeUndefined();
     expect(blocks[2].examId).toBeUndefined();

@@ -50,7 +50,7 @@ jednostkowych działa w ułamku sekundy i nie wymaga jsdom.
 ```
 source-lessons/        # oryginalne DOCX — WYŁĄCZNIE DO ODCZYTU, nigdy nie modyfikowane
 content/
-  lessons/              # bai-01.json … bai-11.json (jedna lekcja = jeden plik)
+  lessons/              # bai-01.json … bai-14.json (jedna lekcja = jeden plik)
   reviews/              # rev-01-05.json — powtórka blokowa
   scenarios/             # sytuacje komunikacyjne (roleplay, produkcja spontaniczna)
   exams/                # exam-01.json, exam-02.json — blueprinty egzaminów

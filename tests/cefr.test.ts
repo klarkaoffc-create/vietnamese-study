@@ -125,7 +125,7 @@ describe('demonstrated production earns A1', () => {
 });
 
 describe('course ceiling', () => {
-  it('caps Bài 1–12 at A1 — full mastery is strong A1, never A2', () => {
+  it('caps Bài 1–14 at A1 — full mastery is strong A1, never A2', () => {
     expect(courseCoverage(CEFR_CAPABILITIES, courseIndex())).toBe('A1');
     const est = estimateCefr(masteredWholeCourse());
     expect(est.ceiling).toBe('A1');

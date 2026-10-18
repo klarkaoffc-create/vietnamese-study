@@ -6,7 +6,10 @@ import {
   type CefrEstimate,
   type CefrLevel,
 } from '../learning/cefr';
+import { lessons } from '../data/content';
 import { Card, Progress } from './ui';
+
+const LAST_LESSON = lessons.length ? Math.max(...lessons.map((l) => l.number)) : 1;
 
 /**
  * The CEFR estimate on the progress dashboard.
@@ -142,7 +145,7 @@ export function CefrDetail({ estimate }: { estimate: CefrEstimate }) {
       )}
 
       <p className="muted tiny mt">
-        Sufit obecnego kursu: <b>{ceiling}</b>. Bài 1–12 to materiał dla początkujących, więc nawet pełne opanowanie całego kursu oznacza mocne {ceiling},
+        Sufit obecnego kursu: <b>{ceiling}</b>. Bài 1–{LAST_LESSON} to materiał dla początkujących, więc nawet pełne opanowanie całego kursu oznacza mocne {ceiling},
         a nie automatycznie wyższy poziom. Kolejne lekcje rozszerzą ten sufit.
       </p>
       <p className="muted tiny">

@@ -14,7 +14,7 @@
  *    headroom (see PASSIVE_HEADROOM).
  * 4. Nothing is awarded without enough evidence (MIN_EVIDENCE): a handful of
  *    lucky answers is not an A1.
- * 5. The course itself has a ceiling. Bài 1–12 is beginner material, so
+ * 5. The course itself has a ceiling. Bài 1–14 is beginner material, so
  *    mastering all of it is strong A1 evidence — not A2. The ceiling is
  *    derived from CEFR_CAPABILITIES: a level is only reachable when the
  *    loaded content actually contains the can-do abilities for it. Adding
@@ -178,9 +178,10 @@ export interface CanDoCapability {
 }
 
 /**
- * Bài 1–12 in can-do form. Everything here is A1: greetings, personal
+ * Bài 1–14 in can-do form. Everything here is A1: greetings, personal
  * information, family, routines, dates and times, ordering food, describing
- * things and places, asking for and giving simple directions.
+ * things and places, asking for and giving simple directions, transport,
+ * shopping for clothes.
  *
  * There is deliberately no A2 row yet. A2 needs abilities this course does
  * not teach or test (narrating past events at length, giving reasons and
@@ -315,6 +316,22 @@ export const CEFR_CAPABILITIES: CanDoCapability[] = [
     lessons: ['bai-12'],
     grammar: ['g-bai-12-directions', 'g-bai-12-nhu-the-nao', 'g-bai-12-co-the'],
     scenarios: ['s-bai-12-ask-way', 's-bai-12-give-directions', 's-bai-12-pay-card', 's-bai-12-city-day'],
+  },
+  {
+    id: 'transport',
+    label: 'powiedzieć, czym podróżuję, i postawić prosty warunek (nếu … thì …)',
+    level: 'A1',
+    lessons: ['bai-13'],
+    grammar: ['g-bai-13-classifiers', 'g-bai-13-bang', 'g-bai-13-neu-thi'],
+    scenarios: ['s-bai-13-commute', 's-bai-13-ask-how', 's-bai-13-if-bus', 's-bai-13-count-vehicles'],
+  },
+  {
+    id: 'shopping-clothes',
+    label: 'kupić ubranie w sklepie i opisać, co ktoś ma na sobie',
+    level: 'A1',
+    lessons: ['bai-14'],
+    grammar: ['g-bai-14-colors', 'g-bai-14-classifiers', 'g-bai-14-wear', 'g-bai-14-shopping'],
+    scenarios: ['s-bai-14-other-color', 's-bai-14-buy-dress', 's-bai-14-describe-outfit', 's-bai-14-gift'],
   },
 ];
 

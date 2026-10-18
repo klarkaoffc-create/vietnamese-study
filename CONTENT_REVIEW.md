@@ -40,6 +40,7 @@ Legenda statusów:
 | Bài 10 (tabela słówek) | `beo` | `béo` (gruby) — brak znaku sắc | `v-bai-10-beo`. |
 | Bài 10 (tabela słówek) | `gấy` | `gầy` (chudy) — zły znak (sắc zamiast huyền) | `v-bai-10-gay`. |
 | Bài 11 (tabela słówek) | `lến` | `lên` (w górę) — nadmiarowy znak sắc | `v-bai-11-len`. |
+| Bài 14 (Ćwiczenie 1, pytanie i odpowiedź) | „Bạn thích **nhật** màu gì?” / „Tôi thích **nhật** màu đỏ đô.” | „…thích **nhất**…” (najbardziej) — zły znak tonu (nặng zamiast sắc) | `e-bai-14-qa-color` — poprawiona forma w treści zadania, z notatką w `explanation`. |
 | wszystkie pliki | Nazwa pliku „bái N” zamiast „bài N” | — | **Nie poprawiane.** Nazwy plików DOCX nigdy nie są zmieniane (wymóg „source-lessons pozostaje read-only”); to dotyczy tylko nazw plików, nie treści lekcji. |
 
 ## 2. Formy językowe do weryfikacji (LIKELY ISSUE)
@@ -70,6 +71,16 @@ Legenda statusów:
 | Bài 12 | „**trả thẻ**” = „płacić kartą” (tabela słówek i zwrot „trả thẻ được không?”) | Standardowo „trả **bằng** thẻ” / „thanh toán bằng thẻ”; samo „trả thẻ” znaczy raczej „oddać/zwrócić kartę”. | `v-bai-12-tra-the` i `e-bai-12-typed-card` mają `status: "flagged"`, słówko wyłączone z SRS; przyjmowana jest też forma z „bằng”. |
 | Bài 12 | „**rút** – wyrzucać” (glosa) | „rút” to „wyciągać / wypłacać” (stąd „máy rút tiền” = bankomat), nie „wyrzucać”. Glosa polska prawdopodobnie pomyłkowa. | `v-bai-12-rut`, `status: "flagged"`, glosa poprawiona w treści z adnotacją. |
 | Bài 12 | „im lăng” | Powinno być „im **lặng**” (cisza) — zły znak tonu. Zaklasyfikowane niżej niż CONFIRMED TYPO tylko dlatego, że słowo pojawia się raz, bez kontekstu zdaniowego. | `v-bai-12-im-lang` — w treści ustrukturyzowanej zapis poprawiony, oryginał zachowany. |
+| Bài 13 | „**giao thông**” = „środki transportu” (tabela słówek, Ćwiczenie 3: „Ở VN có nhiều giao thông khác.”) | „giao thông” to przede wszystkim „ruch drogowy, komunikacja”; „środki transportu” to standardowo „**phương tiện** giao thông”. | `v-bai-13-giao-thong` ma `status: "flagged"` i jest wyłączone z SRS; `e-bai-13-order-1` oznaczone. |
+| Bài 13, Bài 14 | „Bạn **thích hơn** đi du lịch bằng tàu hỏa **hoặc** máy bay?” / „Bạn thích hơn đeo túi hoặc ba lô?” / „Tôi thích hơn đeo túi.” | „hơn” w porównaniu stoi po dopełnieniu („thích đeo túi **hơn**”), a w pytaniu alternatywnym używa się „**hay**”, nie „hoặc” (to drugie jest dla zdań oznajmujących). | `e-bai-13-qa-travel`, `e-bai-14-qa-bag`, `e-bai-14-match-halves` — `status: "flagged"`, poprawny szyk podany w `explanation`. |
+| Bài 13 | „Người Ba Lan **thường nhất** đi bằng gì?” | „nhất” stoi standardowo na końcu: „…thường đi bằng gì **nhất**?”. | `e-bai-13-qa-poles`, `status: "flagged"`. |
+| Bài 13 | „Tôi thích đi bằng xe đạp, **thế thì** cũng thích tập thể thao.” (klucz Ćwiczenia 3) | „thế thì” = „w takim razie” (reakcja na czyjąś wypowiedź); do wyrażenia skutku naturalniejsze „**vì vậy**” (Bài 6). | `e-bai-13-order-3`, `status: "flagged"`; klucz z lekcji zostawiony. |
+| Bài 14 (dialog, Ćwiczenie 2) | „Em xin lỗi, **không có thể**.” / „Ở chợ **không có thể** trả thẻ” | Przeczenie od „có thể” to „**không thể**” (albo „không được”) — bez „có”. | Linia dialogu `d-bai-14-shop` #16 i `e-bai-14-match-halves` — `status: "flagged"`. |
+| Bài 14 (dialog) | „Chị có thể **trả thẻ** không?” | Ten sam problem co w Bài 12 — standardowo „trả **bằng** thẻ”. | Linia dialogu `d-bai-14-shop` #15, `status: "flagged"`. |
+| Bài 14 (dialog) | „Tổng cộng **của chị là** 700 000 đồng.” | Zrozumiałe, ale nienaturalne; zwykle „Tổng cộng là 700 000 đồng” albo „Của chị tổng cộng 700 000 đồng”. | Linia dialogu `d-bai-14-shop` #14, `status: "flagged"`. |
+| Bài 14 | „Ông không thích **đeo** mũ.” (i „đeo – nosić akcesoria” w odniesieniu do czapki) | Do nakryć głowy (mũ, nón) standardowo używa się osobnego czasownika „**đội**” („đội mũ”); „đeo” to okulary, torby, biżuteria. | Przykład w `g-bai-14-wear` oznaczony, z wyjaśnieniem; „đội” nie jest dodawane jako słówko (nie ma go w materiale). |
+| Bài 14 | „Tôi thích đôi giày này, nhưng không có **số tôi**.” | Standardowo z „của”: „không có số **của** tôi” / „cỡ của tôi”. | Przykład w `g-bai-14-classifiers`, `status: "flagged"`. |
+| Bài 14 | „Ćwiczenie 2”: „Nếu tôi muốn đi ngủ, thì uống cà phê.” | Jedyne gramatycznie możliwe połączenie (nếu … thì), ale znaczeniowo dziwne („jeśli chcę iść spać, to piję kawę”) — może brakuje „không” („Nếu tôi **không** muốn đi ngủ…”). | Odnotowane w `explanation` `e-bai-14-match-halves`. |
 
 ## 3. Do weryfikacji przez nauczyciela (NEEDS TEACHER VERIFICATION)
 
@@ -84,6 +95,9 @@ Legenda statusów:
 | Bài 11 (nowa wersja) | „Không có cái bút. / **\*Cái bút dưới quyển sách**” (odpowiedź b do pierwszego obrazka) | Na tym obrazku długopisu w ogóle nie ma, więc pierwsza część odpowiedzi jest jasna. Nie wiadomo natomiast, czym jest wariant po gwiazdce: hipotetycznym przykładem, notatką do innego obrazka, czy pomyłką. Gwiazdka w tej lekcji oznacza gdzie indziej „wariant dopuszczalny” (np. „\*cái ghế trên cái bàn”), co tu nie pasuje. | Do ćwiczenia `e-bai-11-scene-1b` przyjęto tylko „Không có cái bút”; wariant po gwiazdce nie jest używany jako klucz. |
 | Bài 12 | Zapis „người **v**iệt **n**am” małą literą w czytance | W wietnamskim nazwy narodowości/krajów pisze się wielką literą („người Việt Nam”), tak jak w pozostałych lekcjach. Prawdopodobnie przeoczenie przy pisaniu, ale zostawione bez zmian w treści oryginalnej. | Do potwierdzenia; w tłumaczeniu polskim użyto poprawnej pisowni. |
 | Bài 12, ćwiczenie z mapą | Sześć pytań o drogę (Đi từ … đến … như thế nào?) bez żadnych odpowiedzi w materiale | Trasy na mapie da się opisać na kilka poprawnych sposobów, a lekcja nie podaje ani jednego wzoru. Nie wymyślono więc „jedynej poprawnej” odpowiedzi. | Zadania `e-bai-12-map-1…6` są typu „własna odpowiedź”: sprawdzają, czy zdanie używa struktur z lekcji (thẳng / rẽ / qua…), i pokazują przykładową odpowiedź opisaną jako opracowana do nauki, nie jako klucz nauczycielki. |
+| Bài 14 | „Tôi hôm qua đã mua hai **bộ** đầm đẹp.” | Lekcja podaje „bộ” jako klasyfikator do sukienek, ale ten sam dialog mówi „**cái** đầm”, a w standardzie przy pojedynczej sukience częściej „chiếc/cái đầm” („bộ” to raczej komplety, garnitury). Do potwierdzenia, czy „bộ đầm” to zamierzona norma kursu. Szyk „Tôi hôm qua” zamiast typowego „Hôm qua tôi”. | Przykład w `g-bai-14-classifiers`, `status: "flagged"`; żadne ćwiczenie nie wymaga „bộ đầm”. |
+| Bài 14 | „Bạn **thường nhật** mặc quần áo màu gì?” | „thường nhật” to istniejące książkowe słowo („codzienny, na co dzień”), więc zdanie może być poprawne. Ale tuż obok jest literówka „thích nhật” → „nhất”, więc możliwe, że chodziło o „thường … nhất” („jaki kolor nosisz najczęściej”). | `e-bai-14-qa-usually`, `status: "flagged"`. |
+| Bài 14 | „thay đồ” = „zmieniać, zmiana” | Glosa niepełna — „thay đồ” to po prostu „przebierać się”. | `v-bai-14-thay-do` — glosa rozszerzona z notatką. |
 
 ## 4. Elementy celowo pominięte lub oznaczone poza powtórkami
 
