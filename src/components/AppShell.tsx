@@ -4,6 +4,7 @@ import { useStore } from '../learning/store';
 import { dashboardCounts } from '../learning/session';
 import { useNowForDay } from '../learning/today';
 import { useTheme } from '../learning/theme';
+import { Callout } from './ui';
 
 const NAV = [
   { to: '/', icon: '🏠', label: 'Dzisiaj', end: true },
@@ -19,7 +20,7 @@ const NAV = [
 ];
 
 export function AppShell() {
-  const { state } = useStore();
+  const { state, storageProblem } = useStore();
   // Recomputed when the local calendar day rolls over, so the badges are
   // never a day stale on a tab left open overnight.
   const counts = dashboardCounts(state, useNowForDay());
@@ -66,6 +67,13 @@ export function AppShell() {
           <span className="sub" lang="vi">Tiếng Việt</span>
         </div>
         <main className="main">
+          {storageProblem && (
+            <Callout tone="warn">
+              {storageProblem.canSave
+                ? 'Zapisanego postępu nie udało się odczytać. Oryginał został zachowany w przeglądarce jako osobna kopia i nie został usunięty.'
+                : 'Zapisanego postępu nie udało się odczytać. Nic nie zostało nadpisane, ale zmiany z tej wizyty nie zostaną zapisane.'}
+            </Callout>
+          )}
           <Outlet />
         </main>
       </div>

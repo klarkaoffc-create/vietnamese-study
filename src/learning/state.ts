@@ -87,6 +87,25 @@ export interface Settings {
   dailyReviewLimit: number;
 }
 
+/**
+ * How reliably the learner produces the tone of one syllable. Fed by every
+ * graded answer that was right except for tone marks, so the daily tone task
+ * can come back to exactly the syllables that keep slipping.
+ */
+export interface ToneRecord {
+  /** Expected syllable in comparison form, e.g. "ở". */
+  syllable: string;
+  misses: number;
+  hits: number;
+  lastMiss: number;
+  lastSeen: number;
+  /** What was typed instead, most recent first. */
+  confusedWith: string[];
+  /** A sentence the syllable was missed in. */
+  sentence: string;
+  lesson: string;
+}
+
 export interface AppState {
   version: number;
   createdAt: number;
@@ -96,6 +115,8 @@ export interface AppState {
   exams: ExamAttempt[];
   sessions: StudySession[];
   settings: Settings;
+  /** Added without a version bump; absent in older records, which load as {}. */
+  tones: Record<string, ToneRecord>;
 }
 
 export function initialState(now = Date.now()): AppState {
@@ -108,7 +129,22 @@ export function initialState(now = Date.now()): AppState {
     exams: [],
     sessions: [],
     settings: { ttsEnabled: false, dailyNewLimit: 10, dailyReviewLimit: 40 },
+    tones: {},
   };
+}
+
+/** Records kept at most; the oldest settled ones are dropped first. */
+export const MAX_TONE_RECORDS = 300;
+
+export const toneIsSettled = (r: ToneRecord) => r.hits > r.misses;
+
+function pruneTones(tones: Record<string, ToneRecord>): Record<string, ToneRecord> {
+  const all = Object.values(tones);
+  if (all.length <= MAX_TONE_RECORDS) return tones;
+  const keep = all
+    .sort((a, b) => Number(toneIsSettled(a)) - Number(toneIsSettled(b)) || b.lastSeen - a.lastSeen)
+    .slice(0, MAX_TONE_RECORDS);
+  return Object.fromEntries(keep.map((r) => [r.syllable, r]));
 }
 
 export type Action =
@@ -123,6 +159,8 @@ export type Action =
   | { type: 'exam'; attempt: ExamAttempt }
   | { type: 'session'; session: StudySession }
   | { type: 'settings'; settings: Partial<Settings> }
+  | { type: 'tone-slips'; slips: { expected: string; given: string }[]; sentence: string; lesson: string; now?: number }
+  | { type: 'tone-hits'; syllables: string[]; now?: number }
   | { type: 'import'; state: AppState }
   | { type: 'reset' };
 
@@ -187,6 +225,36 @@ export function reducer(state: AppState, action: Action): AppState {
       return { ...state, sessions: [action.session, ...state.sessions].slice(0, 200) };
     case 'settings':
       return { ...state, settings: { ...state.settings, ...action.settings } };
+    case 'tone-slips': {
+      const now = action.now ?? Date.now();
+      const tones = { ...state.tones };
+      for (const { expected, given } of action.slips) {
+        const prev = tones[expected];
+        tones[expected] = {
+          syllable: expected,
+          misses: (prev?.misses ?? 0) + 1,
+          hits: prev?.hits ?? 0,
+          lastMiss: now,
+          lastSeen: now,
+          confusedWith: [given, ...(prev?.confusedWith ?? []).filter((g) => g !== given)].slice(0, 3),
+          sentence: action.sentence,
+          lesson: action.lesson,
+        };
+      }
+      return { ...state, tones: pruneTones(tones) };
+    }
+    case 'tone-hits': {
+      const now = action.now ?? Date.now();
+      const tones = { ...state.tones };
+      let changed = false;
+      for (const s of action.syllables) {
+        const prev = tones[s];
+        if (!prev) continue; // only syllables that once slipped are tracked
+        tones[s] = { ...prev, hits: prev.hits + 1, lastSeen: now };
+        changed = true;
+      }
+      return changed ? { ...state, tones } : state;
+    }
     case 'import':
       return migrate(action.state);
     case 'reset':
@@ -238,6 +306,7 @@ export function migrate(raw: unknown): AppState {
     exams: Array.isArray(r.exams) ? r.exams : [],
     sessions: Array.isArray(r.sessions) ? r.sessions : [],
     settings: { ...base.settings, ...(r.settings ?? {}) },
+    tones: r.tones && typeof r.tones === 'object' && !Array.isArray(r.tones) ? r.tones : {},
   };
 }
 
@@ -247,23 +316,102 @@ export interface StorageLike {
   removeItem(key: string): void;
 }
 
-export function loadState(storage: StorageLike | undefined): AppState {
-  if (!storage) return initialState();
+/*
+ * Progress lives only in this browser, so the persistence layer is built to
+ * never destroy a record it cannot read:
+ *
+ *  - An unreadable record (corrupted JSON, or written by a NEWER version of the
+ *    app after a rollback) is copied aside under RECOVERY_PREFIX before the app
+ *    starts fresh. If even that copy fails, saving is suspended for the whole
+ *    visit, so the original stays untouched.
+ *  - Once per calendar day, the record as it stood before the first save of
+ *    the day is kept under SNAPSHOT_KEY. "Przywróć stan z początku dnia" on
+ *    the progress page restores it.
+ *
+ * STATE_VERSION is deliberately not raised for additive fields: an older
+ * deployment loading a v2 record keeps working (it ignores fields it does not
+ * know) instead of refusing it as "unknown version".
+ */
+export const RECOVERY_PREFIX = `${STORAGE_KEY}:recovered-`;
+export const SNAPSHOT_KEY = `${STORAGE_KEY}:snapshot`;
+export const SNAPSHOT_DAY_KEY = `${STORAGE_KEY}:snapshot-day`;
+
+export interface LoadResult {
+  state: AppState;
+  /** False when stored data could not be read AND could not be copied aside. */
+  canSave: boolean;
+  /** Storage key holding the unreadable original, when one was set aside. */
+  recoveredKey?: string;
+}
+
+export function loadStateSafely(storage: StorageLike | undefined, now = Date.now()): LoadResult {
+  if (!storage) return { state: initialState(now), canSave: false };
+  let raw: string | null;
   try {
-    const raw = storage.getItem(STORAGE_KEY);
-    if (!raw) return initialState();
-    return migrate(JSON.parse(raw));
+    raw = storage.getItem(STORAGE_KEY);
   } catch {
-    return initialState();
+    return { state: initialState(now), canSave: false };
+  }
+  if (!raw) return { state: initialState(now), canSave: true };
+  try {
+    return { state: migrate(JSON.parse(raw)), canSave: true };
+  } catch {
+    const recoveredKey = `${RECOVERY_PREFIX}${now}`;
+    try {
+      storage.setItem(recoveredKey, raw);
+      return { state: initialState(now), canSave: true, recoveredKey };
+    } catch {
+      return { state: initialState(now), canSave: false };
+    }
   }
 }
 
-export function saveState(storage: StorageLike | undefined, state: AppState): void {
+export function loadState(storage: StorageLike | undefined): AppState {
+  return loadStateSafely(storage).state;
+}
+
+const localDayKey = (ts: number) => {
+  const d = new Date(ts);
+  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+};
+
+export function saveState(storage: StorageLike | undefined, state: AppState, now = Date.now()): void {
   if (!storage) return;
+  // Best effort: a failed snapshot must never stand in the way of saving.
   try {
-    storage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const today = localDayKey(now);
+    if (storage.getItem(SNAPSHOT_DAY_KEY) !== today) {
+      const previous = storage.getItem(STORAGE_KEY);
+      if (previous) storage.setItem(SNAPSHOT_KEY, previous);
+      storage.setItem(SNAPSHOT_DAY_KEY, today);
+    }
   } catch {
-    /* quota or private mode – ignore */
+    /* ignore */
+  }
+  const text = JSON.stringify(state);
+  try {
+    storage.setItem(STORAGE_KEY, text);
+  } catch {
+    // Out of space: the live record matters more than yesterday's copy.
+    try {
+      storage.removeItem(SNAPSHOT_KEY);
+      storage.setItem(STORAGE_KEY, text);
+    } catch {
+      /* private mode – nothing more can be done */
+    }
+  }
+}
+
+/** The start-of-day copy, if one exists and is readable. */
+export function readSnapshot(storage: StorageLike | undefined): { state: AppState; day: string } | null {
+  if (!storage) return null;
+  try {
+    const raw = storage.getItem(SNAPSHOT_KEY);
+    const day = storage.getItem(SNAPSHOT_DAY_KEY);
+    if (!raw || !day) return null;
+    return { state: migrate(JSON.parse(raw)), day };
+  } catch {
+    return null;
   }
 }
 

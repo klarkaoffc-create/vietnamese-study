@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../learning/store';
 import { allGrammar, lessons, lessonLabel } from '../data/content';
-import { exportState, parseImport } from '../learning/state';
+import { exportState, parseImport, readSnapshot } from '../learning/state';
 import { completedLessonNumbers, lessonStatus } from '../learning/progression';
 import { makeSrsId, mastery } from '../learning/srs';
 import { skillScores } from '../learning/skills';
@@ -41,6 +41,19 @@ export function ProgressPage() {
     a.click();
     URL.revokeObjectURL(url);
     setMsg('Wyeksportowano plik JSON z postępem.');
+  };
+  const snapshot = (() => {
+    try {
+      return readSnapshot(window.localStorage);
+    } catch {
+      return null;
+    }
+  })();
+  const doRestoreSnapshot = () => {
+    if (!snapshot) return;
+    if (!window.confirm(`Przywrócić postęp z początku dnia ${snapshot.day}? Wszystko, co zrobiono od tamtej pory, zostanie zastąpione.`)) return;
+    dispatch({ type: 'import', state: snapshot.state });
+    setMsg('Przywrócono postęp z początku dnia.');
   };
   const doImport = async (file: File) => {
     try {
@@ -172,6 +185,11 @@ export function ProgressPage() {
           <button type="button" className="btn primary" onClick={doExport}>Exportuj postęp</button>
           <button type="button" className="btn" onClick={() => fileRef.current?.click()}>Importuj postęp</button>
           <input ref={fileRef} type="file" accept="application/json" style={{ display: 'none' }} onChange={(e) => e.target.files?.[0] && doImport(e.target.files[0])} />
+          {snapshot && (
+            <button type="button" className="btn ghost" onClick={doRestoreSnapshot} title="Kopia zapisywana automatycznie raz dziennie, przed pierwszą zmianą danego dnia">
+              Przywróć stan z początku dnia
+            </button>
+          )}
           <span className="spacer" />
           <button type="button" className="btn danger" onClick={() => { if (window.confirm('Usunąć cały postęp z tej przeglądarki?')) { dispatch({ type: 'reset' }); setMsg('Postęp wyzerowany.'); } }}>Wyzeruj postęp</button>
         </div>
